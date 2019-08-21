@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b3a066efaae3241abf2be2ab06e975, type: 3}
+  m_Name: Dark
+  m_EditorClassIdentifier: 
+  effectName: Dark Effect
+  profile: {fileID: 11400000, guid: a714e4c28228a294599ed7ddb36fcfbd, type: 2}
+  AA: 1
+  skyColor: {r: 0.41509432, g: 0.4122149, b: 0.38572443, a: 1}
+  equatorColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
+  groundColor: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 1}
+  ambientColor: {r: 0.5798772, g: 0.5798772, b: 0.7830189, a: 1}
+  ambientIntensity: 2
+  reflectionIntensity: 1.5
+  lights:
+  - name: MoonLight
+    color: {r: 0.38020647, g: 0.9056604, b: 0.8568616, a: 1}
+    intensity: 0.4
+    rotation: {x: 50, y: -30, z: 0}

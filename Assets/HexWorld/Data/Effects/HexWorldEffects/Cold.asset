@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b3a066efaae3241abf2be2ab06e975, type: 3}
+  m_Name: Cold
+  m_EditorClassIdentifier: 
+  effectName: Cold Effect
+  profile: {fileID: 11400000, guid: 3a0341cb374842a4185c4604c488350d, type: 2}
+  AA: 2
+  skyColor: {r: 0.4494482, g: 0.9433962, b: 0.9433962, a: 1}
+  equatorColor: {r: 0, g: 0, b: 0, a: 0}
+  groundColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  ambientColor: {r: 0, g: 0, b: 1, a: 1}
+  ambientIntensity: 1
+  reflectionIntensity: 1.2
+  lights:
+  - name: Sun
+    color: {r: 0.9622642, g: 0.8197007, b: 0.31318974, a: 1}
+    intensity: 1.2
+    rotation: {x: 50, y: -30, z: 0}
+  - name: Ambient
+    color: {r: 0.4245283, g: 0.33842114, b: 0.33842114, a: 1}
+    intensity: 0.3
+    rotation: {x: 50, y: -30, z: 0}
