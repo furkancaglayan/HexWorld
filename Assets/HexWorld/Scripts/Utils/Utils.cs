@@ -148,14 +148,13 @@ public static class Utils  {
 
 
         var fileInfo = new System.IO.FileInfo(path + "/" + mapName + ".asset");
-        static_data.SetSize(fileInfo.Length);
+        static_data.SetSize((long)(fileInfo.Length / 1000F));
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-
         EditorUtility.DisplayDialog("Save Successful!", "Map Name: " + mapName + "\n" +
                                                         "Path: " + path + "\n" +
-                                                        "Size: " + fileInfo.Length.ToString(), "Ok");
+                                                        "Size: " + (fileInfo.Length / 1000F)+" kb", "Ok");
 #endif
     }
 
@@ -201,7 +200,7 @@ public static class Utils  {
         if(!retVal)
             EditorUtility.DisplayDialog(title,message , "Ok");
         else if(showFinalDialog)
-        EditorUtility.DisplayDialog("Valid","Directory seems to be valid." , "Ok");
+            EditorUtility.DisplayDialog("Valid","Directory seems to be valid." , "Ok");
 #endif
 
         return retVal;
