@@ -29,7 +29,15 @@ public class HexWorldPrefabSet
         {
             return false;
         }
-        
+        catch (NullReferenceException e)
+        {
+            return false;
+        }
+        catch (IndexOutOfRangeException e)
+        {
+            return false;
+        }
+
     }
     public bool Create()
     {
