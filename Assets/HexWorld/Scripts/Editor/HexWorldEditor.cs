@@ -707,6 +707,7 @@ public class HexWorldEditor : EditorWindow
 
         saveLoadSectionFoldout = EditorGUILayout.Foldout(saveLoadSectionFoldout,
             new GUIContent("Save&Load", AssetPreview.GetMiniTypeThumbnail(typeof(GameObject))), true);
+        GUILayout.Space(5);
         if (!saveLoadSectionFoldout)
             GUILayout.Label("Use this section to save and load");
         else
@@ -714,8 +715,7 @@ public class HexWorldEditor : EditorWindow
             GUILayout.BeginVertical(GUILayout.Height(186), GUILayout.MaxHeight(186),
                 GUILayout.Width(position.width - 40));
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Space(10);
+            GUILayout.BeginHorizontal(GUI.skin.box);
             saveLoadToolbar = GUILayout.Toolbar(saveLoadToolbar, new[] {"Save", "Load"}, EditorStyles.toolbarButton,
                 GUILayout.Width(position.width - 40));
             GUILayout.EndHorizontal();
