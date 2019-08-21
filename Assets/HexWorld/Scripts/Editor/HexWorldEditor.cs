@@ -106,6 +106,7 @@ public class HexWorldEditor : EditorWindow
 
     private string PrefabsDirectory = "Assets/HexWorld/Prefabs/Tiles";
     private string MapsDirectory = "HexWorld/Data/Maps";
+    private string MapPrefabDirectory = "HexWorld/Data/Maps";
 
     private string GameObjectName = "Hexworld_Prefab";
     private string MapName = "Hexworld_MAP";
@@ -630,53 +631,57 @@ public class HexWorldEditor : EditorWindow
             GUILayout.Space(10);
             GUILayout.Label("Easy Maps", headingStyle);
 
-            bool validPrefabSelected = hexWorldPrefabSet.validIndices(selectedPrefabFolder, selectedPrefab);
-            if (selectedPrefab != -1 && selectedPrefabFolder != -1 && hexWorldPrefabSet != null&&validPrefabSelected)
+            
+            if (selectedPrefab != -1 && selectedPrefabFolder != -1 && hexWorldPrefabSet != null)
             {
+                bool validPrefabSelected = hexWorldPrefabSet.validIndices(selectedPrefabFolder, selectedPrefab);
+                if (validPrefabSelected)
+                {
+                    HexWorldPrefab selectedHexWorldPrefab = hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab);
+
+                    GUILayout.BeginHorizontal(EditorStyles.helpBox, GUILayout.MaxWidth(position.width - 40));
+                    if (selectedHexWorldPrefab.GetContent().image == null)
+                        GUILayout.Label(IconPack.GetHexworldEditorLogo(), EditorStyles.helpBox);
+                    else
+                        GUILayout.Label(selectedHexWorldPrefab.GetContent().image);
+                    GUILayout.Space(44);
+                    GUI.color = colorSetTwo;
+                    GUILayout.BeginVertical(GUILayout.MaxWidth(position.width - 40));
+                    GUILayout.Space(44);
+                    GUILayout.Label("Selected Prefab: " + selectedHexWorldPrefab.GetContent().text
+                        , fontStyle);
+                    if (GUILayout.Button("Take a closer look", toolbarStyle, GUILayout.Width(position.width - 296)))
+                    {
+                        ModelViewer.Init(selectedHexWorldPrefab.GetObject());
+                    }
+
+                    if (GUILayout.Button("Fill all with selected prefab", toolbarStyle,
+                        GUILayout.Width(position.width - 296)))
+                    {
+                        if (mapData != null)
+                            mapData.FillMap(selectedHexWorldPrefab, rotationType, randomRotation);
+                        else
+                        {
+                            EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
+                        }
+                    }
+
+                    if (GUILayout.Button("Fill empty space with selected prefab", toolbarStyle,
+                        GUILayout.Width(position.width - 296)))
+                    {
+                        if (mapData != null)
+                            mapData.FillEmptyTiles(selectedHexWorldPrefab, rotationType, randomRotation);
+                        else
+                        {
+                            EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
+                        }
+                    }
+
+                    GUILayout.EndVertical();
+                    GUI.color = editorColor;
+                    GUILayout.EndHorizontal();
+                }
                 
-                HexWorldPrefab selectedHexWorldPrefab = hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab);
-
-                GUILayout.BeginHorizontal(EditorStyles.helpBox, GUILayout.MaxWidth(position.width - 40));
-                if(selectedHexWorldPrefab.GetContent().image==null)
-                    GUILayout.Label(IconPack.GetHexworldEditorLogo(), EditorStyles.helpBox);
-                else
-                    GUILayout.Label(selectedHexWorldPrefab.GetContent().image);
-                GUILayout.Space(44);
-                GUI.color = colorSetTwo;
-                GUILayout.BeginVertical(GUILayout.MaxWidth(position.width - 40));
-                GUILayout.Space(44);
-                GUILayout.Label("Selected Prefab: " + selectedHexWorldPrefab.GetContent().text
-                    , fontStyle);
-                if (GUILayout.Button("Take a closer look", toolbarStyle, GUILayout.Width(position.width - 296)))
-                {
-                    ModelViewer.Init(selectedHexWorldPrefab.GetObject());
-                }
-
-                if (GUILayout.Button("Fill all with selected prefab", toolbarStyle,
-                    GUILayout.Width(position.width - 296)))
-                {
-                    if (mapData != null)
-                        mapData.FillMap(selectedHexWorldPrefab, rotationType, randomRotation);
-                    else
-                    {
-                        EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
-                    }
-                }
-
-                if (GUILayout.Button("Fill empty space with selected prefab", toolbarStyle,
-                    GUILayout.Width(position.width - 296)))
-                {
-                    if (mapData != null)
-                        mapData.FillEmptyTiles(selectedHexWorldPrefab, rotationType, randomRotation);
-                    else
-                    {
-                        EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
-                    }
-                }
-
-                GUILayout.EndVertical();
-                GUI.color = editorColor;
-                GUILayout.EndHorizontal();
             }
             else
             {
@@ -735,6 +740,13 @@ public class HexWorldEditor : EditorWindow
                     GUILayout.Label("Drag&Drop your saved maps to continue painting.", txtStyle,
                         GUILayout.Width(position.width - 40));
                     GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal(GUILayout.Width(position.width - 40));
+                    GUILayout.Space(position.width / 2-64);
+                    GUILayout.Label(IconPack.GetHexworldEditorLogo(), txtStyle,
+                        GUILayout.Width(128));
+                    GUILayout.EndHorizontal();
+
                 }
                 else
                 {
@@ -771,7 +783,7 @@ public class HexWorldEditor : EditorWindow
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
-                        GUILayout.Label("File Size: <b>" + staticData.GetSize().ToString() + "</b> bytes", txtStyle);
+                        GUILayout.Label("File Size: <b>" + staticData.GetSize().ToString() + "</b> kb", txtStyle);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
@@ -830,10 +842,10 @@ public class HexWorldEditor : EditorWindow
                     EditorStyles.boldLabel, GUILayout.Height(32), GUILayout.Width(200));
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Assets/", EditorStyles.miniLabel, GUILayout.Width(45));
-                MapsDirectory = GUILayout.TextField(MapsDirectory, EditorStyles.textField,
+                MapPrefabDirectory = GUILayout.TextField(MapPrefabDirectory, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
                 if (GUILayout.Button("Check Directory", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    Utils.CheckIfDirectoryIsValid("Assets/" + MapsDirectory, true);
+                    Utils.CheckIfDirectoryIsValid("Assets/" + MapPrefabDirectory, true);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
@@ -841,7 +853,7 @@ public class HexWorldEditor : EditorWindow
                 GameObjectName = GUILayout.TextField(GameObjectName, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
                 if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    Utils.SavePrefab(GameObjectName,MapsDirectory,mapData);
+                    Utils.SavePrefab(GameObjectName, MapPrefabDirectory, mapData);
                 GUILayout.EndHorizontal();
 
                 GUILayout.EndVertical();
