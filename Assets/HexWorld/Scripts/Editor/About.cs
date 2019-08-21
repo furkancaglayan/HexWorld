@@ -12,13 +12,18 @@ public class About : EditorWindow {
 
         birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
         About window = (About)GetWindow(typeof(About));
-        window.minSize.Set(250, 600);
         window.autoRepaintOnSceneChange = true;
         window.titleContent = new GUIContent("About Us", birchgamesLogo);
         window.Show(false);
+
+        window.maxSize = new Vector2(450, 600);
+        window.minSize = window.maxSize;
+
+
     }
     public static void OnEnable()
     {
+        
 
         birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
     }
@@ -75,7 +80,7 @@ public class About : EditorWindow {
         Link("https://www.youtube.com/channel/UCpbaG9ieaTReZYD3kaP3U6g","Our Youtube Channel",urlStyle);
 
         GUILayout.Space(20);
-        GUILayout.Label("Out other social accounts:", uIStyle);
+        GUILayout.Label("Our other social accounts:", uIStyle);
         Link("https://www.patreon.com/birchgames","Patreon",urlStyle);
         Link("https://twitter.com/GamesBirch", "Twitter", urlStyle);
         GUILayout.EndVertical();    

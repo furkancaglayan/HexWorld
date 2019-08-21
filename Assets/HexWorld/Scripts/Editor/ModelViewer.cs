@@ -30,8 +30,7 @@ public class ModelViewer : EditorWindow {
             if (modelView == null)
                 modelView = Editor.CreateEditor(content);
             GUI.color = Color.gray;
-            modelView.OnPreviewGUI(GUILayoutUtility.GetRect(512, 512),GUI.skin.box);
-            modelView.OnPreviewGUI(GUILayoutUtility.GetRect(512, 512), EditorStyles.helpBox);
+            modelView.OnPreviewGUI(GUILayoutUtility.GetRect(512, 512), GUI.skin.box);
         }
     }
 }
