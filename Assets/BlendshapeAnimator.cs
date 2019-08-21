@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TriggerAnim : MonoBehaviour
+public class BlendshapeAnimator : MonoBehaviour
 {
     int curIndex;
     public float totalAnimationTime;
