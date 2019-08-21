@@ -1,0 +1,1 @@
+https://birchgames.com/hexworld-quick-effects-in-v1-2/
