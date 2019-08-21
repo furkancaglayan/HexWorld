@@ -48,9 +48,9 @@ public class HexWorldEditor : EditorWindow
 #region Editor
 
     private readonly Color editorColor = Color.white;
-    private Color colorSetOne = new Color(232F / 255F, 246F / 255F, 101F / 255F);
+    private Color colorSetOne = new Color(255F / 255F, 255F / 255F, 148F / 255F);
     private Color colorSetTwo = new Color(.388f, .658f, 1);
-    private Color windowColor = new Color(200F / 255F, 200F / 255F, 200F / 255F);
+    private Color windowColor = new Color(241F / 255F, 235F / 255F, 235F / 255F);
     private Vector2 editorScroll;
 
 #endregion
@@ -438,13 +438,15 @@ public class HexWorldEditor : EditorWindow
 #endregion
 #region PrefabSection
         GUI.color = editorColor;
+        GUI.backgroundColor = windowColor;
+
         GUILayout.Space(20);
 
         if (prefabSectionFoldout)
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(140));
         else
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(40));
-
+        GUI.backgroundColor = editorColor;
         prefabSectionFoldout = EditorGUILayout.Foldout(prefabSectionFoldout,
             new GUIContent("Brush&Prefabs", IconPack.GetHexworldEditorLogo()), true);
         if (!prefabSectionFoldout)
@@ -570,8 +572,7 @@ public class HexWorldEditor : EditorWindow
                     , GUILayout.Width(position.width - 20));
 
 
-                GUI.backgroundColor = windowColor;
-                GUI.color = windowColor;
+                GUI.backgroundColor = new Color(210F / 255F, 220F / 255F, 240F / 255F);
 
                 if (prefabContents != null)
                 {
@@ -697,13 +698,14 @@ public class HexWorldEditor : EditorWindow
 #region SaveLoadSection
 
         GUI.color = editorColor;
-        GUI.backgroundColor = editorColor;
         GUILayout.Space(20);
-
+        GUI.backgroundColor = windowColor;
         if (saveLoadSectionFoldout)
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(140));
         else
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(40));
+        GUI.backgroundColor = editorColor;
+
 
         saveLoadSectionFoldout = EditorGUILayout.Foldout(saveLoadSectionFoldout,
             new GUIContent("Save&Load", AssetPreview.GetMiniTypeThumbnail(typeof(GameObject))), true);
@@ -716,8 +718,10 @@ public class HexWorldEditor : EditorWindow
                 GUILayout.Width(position.width - 40));
 
             GUILayout.BeginHorizontal(GUI.skin.box);
+            GUI.color = new Color(240F/255, 240F / 255, 240F / 255);
             saveLoadToolbar = GUILayout.Toolbar(saveLoadToolbar, new[] {"Save", "Load"}, EditorStyles.toolbarButton,
                 GUILayout.Width(position.width - 40));
+            GUI.color = editorColor;
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
@@ -797,10 +801,11 @@ public class HexWorldEditor : EditorWindow
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
+                        GUI.color = colorSetOne;
                         if (GUILayout.Button("Load To Scene", EditorStyles.toolbarButton,
                             GUILayout.Width(position.width - 60)))
                             LoadMap(staticData, gridMat);
-
+                        GUI.color = editorColor;
                         GUILayout.EndHorizontal();
 
                         GUILayout.EndVertical();
@@ -817,16 +822,19 @@ public class HexWorldEditor : EditorWindow
                 GUILayout.Label("Assets/", EditorStyles.miniLabel, GUILayout.Width(45));
                 MapsDirectory = GUILayout.TextField(MapsDirectory, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
+                GUI.color = colorSetOne;
                 if (GUILayout.Button("Check Directory", EditorStyles.toolbarButton, GUILayout.Width(290)))
                     Utils.CheckIfDirectoryIsValid("Assets/" + MapsDirectory, true);
+                GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:", EditorStyles.miniLabel, GUILayout.Width(45));
                 MapName = GUILayout.TextField(MapName, EditorStyles.textField, GUILayout.Width(position.width - 380));
+                GUI.color = colorSetOne;
                 if (GUILayout.Button("Save Map", EditorStyles.toolbarButton, GUILayout.Width(290)))
                     SaveMapData("Assets/" + MapsDirectory, MapName, mapData);
-
+                GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
                 GUILayout.EndVertical();
@@ -844,16 +852,20 @@ public class HexWorldEditor : EditorWindow
                 GUILayout.Label("Assets/", EditorStyles.miniLabel, GUILayout.Width(45));
                 MapPrefabDirectory = GUILayout.TextField(MapPrefabDirectory, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
+                GUI.color = colorSetOne;
                 if (GUILayout.Button("Check Directory", EditorStyles.toolbarButton, GUILayout.Width(290)))
                     Utils.CheckIfDirectoryIsValid("Assets/" + MapPrefabDirectory, true);
+                GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:", EditorStyles.miniLabel, GUILayout.Width(45));
                 GameObjectName = GUILayout.TextField(GameObjectName, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
+                GUI.color = colorSetOne;
                 if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
                     Utils.SavePrefab(GameObjectName, MapPrefabDirectory, mapData);
+                GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
                 GUILayout.EndVertical();
@@ -871,11 +883,12 @@ public class HexWorldEditor : EditorWindow
         GUI.color = editorColor;
         GUILayout.Space(20);
 
+        GUI.backgroundColor = windowColor;
         if (cameraSectionFoldout)
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(140));
         else
             GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(40));
-
+        GUI.backgroundColor = editorColor;
         cameraSectionFoldout = EditorGUILayout.Foldout(cameraSectionFoldout,
             new GUIContent("Rendering", AssetPreview.GetMiniTypeThumbnail(typeof(Light))), true);
        
@@ -925,10 +938,12 @@ public class HexWorldEditor : EditorWindow
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
+            GUI.color = colorSetTwo;
             if (GUILayout.Button("Add Camera Controller", EditorStyles.toolbarButton, GUILayout.Width(position.width-40)))
             {
                 Utils.AddCameraController(minHeight,maxHeight,rotSpeed,Speed,ScrollSensitivity);
             }
+            GUI.color = editorColor;
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
