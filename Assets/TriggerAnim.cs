@@ -13,6 +13,8 @@ public class TriggerAnim : MonoBehaviour
     float elapsedTime;
     float timePerKey;
     public bool loop;
+    public bool playOnStart;
+    bool play;
 
     void Start()
     {
@@ -20,26 +22,46 @@ public class TriggerAnim : MonoBehaviour
         keyCount = skinnedMesh.sharedMesh.blendShapeCount;
         curIndex = 0;
         timePerKey = totalAnimationTime / keyCount;
+        if(playOnStart)
+        {
+            play = true;
+        }
     }
 
     void Update()
     {
-        elapsedTime += Time.deltaTime;
-
-        if(elapsedTime > timePerKey)
+        if (play)
         {
-            skinnedMesh.SetBlendShapeWeight(curIndex, 0f);
-            elapsedTime = 0f;
-            if(curIndex != keyCount - 1)
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime > timePerKey)
             {
-                curIndex++;
+                skinnedMesh.SetBlendShapeWeight(curIndex, 0f);
+                elapsedTime = 0f;
+                if (curIndex != keyCount - 1)
+                {
+                    curIndex++;
+                }
+                else
+                {
+                    if (loop)
+                    {
+                        curIndex = 0;
+                    }
+                    else
+                    {
+                        play = false;
+                    }
+                }
             }
-            else
-            {
-                curIndex = 0;
-            }
+            skinnedMesh.SetBlendShapeWeight(curIndex, 100f);
         }
-        skinnedMesh.SetBlendShapeWeight(curIndex, 100f);
-        
+    }
+
+    void Play()
+    {
+        play = true;
+        curIndex = 0;
+        elapsedTime = 0;
     }
 }
