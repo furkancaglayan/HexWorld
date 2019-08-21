@@ -58,7 +58,7 @@ public class BlendshapeAnimator : MonoBehaviour
         }
     }
 
-    void Play()
+    public void Play()
     {
         play = true;
         curIndex = 0;
