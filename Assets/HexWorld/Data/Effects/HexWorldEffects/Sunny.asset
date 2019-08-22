@@ -3,8 +3,9 @@
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
@@ -12,20 +13,18 @@ MonoBehaviour:
   m_Name: Sunny
   m_EditorClassIdentifier: 
   effectName: Sunny Effect
-  profile: {fileID: 11400000, guid: b093f419a39ce8b4d9da08c0779ff43b, type: 2}
-  AA: 1
   skyColor: {r: 1, g: 0.903612, b: 0, a: 1}
   equatorColor: {r: 0.6886792, g: 0.63995194, b: 0.63995194, a: 1}
   groundColor: {r: 1, g: 1, b: 1, a: 1}
   ambientColor: {r: 0.76557493, g: 0.76557493, b: 0.8679245, a: 1}
   ambientIntensity: 2
-  reflectionIntensity: 1.5
+  reflectionIntensity: 1.1
   lights:
   - name: Sun
     color: {r: 1, g: 0.9351021, b: 0.3160377, a: 1}
-    intensity: 1.2
+    intensity: 1
     rotation: {x: 50, y: -30, z: 0}
   - name: Ambient
     color: {r: 0.9811321, g: 0.86913943, b: 0.6525454, a: 1}
-    intensity: 0.35
+    intensity: 0.25
     rotation: {x: 50, y: 30, z: 0}
