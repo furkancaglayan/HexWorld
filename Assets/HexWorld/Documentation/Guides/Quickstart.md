@@ -1,1 +1,1 @@
-https://birchgames.com/quickstart-hexworld-v1-2/
+https://birchgames.com/hexworld-1-2-is-out-new-features/
