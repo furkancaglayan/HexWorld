@@ -54,10 +54,6 @@ public class ChunkContainer
     public void AddChunk(HexWorldChunk chunk)
     {
         hexWorldChunks.Add(chunk);
-#if UNITY_EDITOR
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-#endif
     }
     public List<HexWorldChunk> GetChunkList()
     {

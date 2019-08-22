@@ -70,7 +70,7 @@ public class HexWorldEditor : EditorWindow
 
 #region MapData
 
-    private HexWorldMapData mapData;
+    private HexWorldMap mapData;
     private GameObject mapObject;
 
     private bool isMapCreated
@@ -115,7 +115,7 @@ public class HexWorldEditor : EditorWindow
 
 #region HelperFunctions
 
-    private void SaveMapData(string savePath, string mapName, HexWorldMapData data)
+    private void SaveMapData(string savePath, string mapName, HexWorldMap data)
     {
         bool valid = Utils.CheckIfDirectoryIsValid(savePath, false);
         if (!valid)
@@ -231,7 +231,7 @@ public class HexWorldEditor : EditorWindow
     /// For the given MapData, draws to borders with Handles.
     /// </summary>
     /// <param name="hexWorldMap"></param>
-    private void GUIDrawBordersAndArea(HexWorldMapData hexWorldMap)
+    private void GUIDrawBordersAndArea(HexWorldMap hexWorldMap)
     {
         if (hexWorldMap == null)
             return;

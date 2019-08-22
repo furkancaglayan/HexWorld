@@ -1,28 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 #pragma warning disable 0414 
-
 [System.Serializable]
-public class HexWorldChunk
+public sealed class HexWorldChunk
 {
-    [SerializeField] private int chunk_size;
-    [SerializeField] private int id_x;
-    [SerializeField] private int id_y;
-    [System.NonSerialized] private GameObject chunkGameObject, chunkTileObject,meshGameObject;
+    [SerializeField] public int capacity { get;}
+    [SerializeField] public int id_x { get;}
+    [SerializeField] public int id_y { get;}
+    [SerializeField] public Vector3[] chunkCorners { get; set; }
+    [SerializeField] public TileList tileList { get; set; }
+    [SerializeField] public float hex_radius { get;}
 
-    [SerializeField] private Vector3[] chunkCorners = new Vector3[4];
-
-    [SerializeField] private TileList tileList;
-    [System.NonSerialized] private Collider chunkCollider;
-
-
-    [SerializeField] private float hex_radius;
+    [NonSerialized] public Collider chunkCollider;
+    [NonSerialized] public GameObject chunkGameObject;
+    [NonSerialized] public GameObject chunkTileObject;
+    [NonSerialized] public GameObject meshGameObject;
 
 
-    public HexWorldChunk(int chunk_size, int id_x, int id_y, Vector3 left_down_corner, float hex_radius)
+
+public HexWorldChunk(int capacity, int id_x, int id_y, Vector3 left_down_corner, float hex_radius)
     {
-        this.chunk_size = chunk_size;
+        this.capacity = capacity;
         this.id_x = id_x;
         this.id_y = id_y;
         this.hex_radius = hex_radius;
@@ -31,29 +29,25 @@ public class HexWorldChunk
         chunkCorners[0] = left_down_corner;
         chunkCorners[1] = left_down_corner +
                           new Vector3(
-                              Constants.SHORT_SIDE * chunk_size * hex_radius + Constants.SHORT_SIDE * hex_radius / 2, 0,
+                              Constants.SHORT_SIDE * capacity * hex_radius + Constants.SHORT_SIDE * hex_radius / 2, 0,
                               0);
         chunkCorners[2] = left_down_corner +
                           new Vector3(
-                              Constants.SHORT_SIDE * chunk_size * hex_radius + Constants.SHORT_SIDE * hex_radius / 2, 0,
-                              Constants.LONG_SIDE * chunk_size * hex_radius * 3 / 4 + hex_radius / 2);
+                              Constants.SHORT_SIDE * capacity * hex_radius + Constants.SHORT_SIDE * hex_radius / 2, 0,
+                              Constants.LONG_SIDE * capacity * hex_radius * 3 / 4 + hex_radius / 2);
         chunkCorners[3] = left_down_corner +
-                          new Vector3(0, 0, Constants.LONG_SIDE * chunk_size * hex_radius * 3 / 4 + hex_radius / 2);
+                          new Vector3(0, 0, Constants.LONG_SIDE * capacity * hex_radius * 3 / 4 + hex_radius / 2);
 
        
     }
-
-    
     /// <summary>
     /// Creates scene representation of the HexWorldChunk.
     /// Creates a gameobject, draws tiles, creates mesh and collider.
     /// </summary>
-    /// <param name="chunkCapacity"></param>
-    /// <param name="drawChunk"></param>
     /// <param name="mat"></param>
     /// <param name="hexRadius"></param>
     /// <returns></returns>
-    public GameObject CreateSceneReference(int chunkCapacity, Material mat, float hexRadius)
+    public GameObject CreateSceneReference(Material mat, float hexRadius)
     {
         chunkGameObject = new GameObject("Chunk_" + id_x.ToString() + id_y.ToString())
         {
@@ -87,10 +81,10 @@ public class HexWorldChunk
     {
         TileList lst = new TileList();
 
-        for (int i = 0; i < chunk_size; i++)
+        for (int i = 0; i < capacity; i++)
         {
             lst.AddContainer();
-            for (int j = 0; j < chunk_size; j++)
+            for (int j = 0; j < capacity; j++)
             {
                 Vector3 center;
                 if (i % 2 == 0)
@@ -146,7 +140,7 @@ public class HexWorldChunk
     {
         foreach (var lst in tileList.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                if (VARIABLE.isEmpty())
+                if (VARIABLE.isFull)
                     HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
     }
 
@@ -159,7 +153,7 @@ public class HexWorldChunk
         {
             foreach (var o in lst.GetTileList())
             {
-                center = o.GetCenter();
+                center = o.center;
                 float val = Vector3.Distance(center, pos);
                 if (val < dist)
                 {
@@ -178,12 +172,10 @@ public class HexWorldChunk
     {
         foreach (var lst in tileList.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                if (!VARIABLE.isEmpty())
+                if (VARIABLE.isFull)
                     return false;
         return true;
     }
-    #region Getter-Setter
-
     public Vector3 GetChunkCenter()
     {
         float x = (chunkCorners[1].x - chunkCorners[0].x) / 2;
@@ -194,62 +186,10 @@ public class HexWorldChunk
         return center;
     }
 
-    public int[] GetChunkIDs()
-    {
-        return new[] {id_x, id_y};
-    }
-
-    public TileList GetTiles()
-    {
-        return tileList;
-    }
-
-    public int GetTilesCount()
-    {
-        return tileList.GetContainers().Count* tileList.GetContainers().Count;
-    }
-
-    public GameObject GetChunkObject()
-    {
-        return chunkGameObject;
-    }
-    public GameObject GetChunkTileObject()
-    {
-        return chunkTileObject;
-    }
-    
-    public Vector3[] GetChunkCorners()
-    {
-        return chunkCorners;
-    }
-
-    public int GetChunkCapacity()
-    {
-        return chunk_size;
-    }
-
-    public float GetLongerSideLength()
-    {
-        return Constants.SHORT_SIDE * chunk_size * hex_radius + Constants.SHORT_SIDE * hex_radius / 2;
-    }
-
-    public float GetShorterSideLength()
-    {
-        return Constants.LONG_SIDE * chunk_size * hex_radius * 3 / 4 + hex_radius / 2;
-    }
-
-    public HexWorldTile WorldPos2Tile(Vector3 point)
-    {
-        return null;
-    }
-
-    #endregion
-
-
-    public void Renew()
+    public void RenewChunk()
     {
         foreach (var lst in tileList.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                    VARIABLE.Renew(this);
+                    VARIABLE.RenewTile(this);
     }
 }

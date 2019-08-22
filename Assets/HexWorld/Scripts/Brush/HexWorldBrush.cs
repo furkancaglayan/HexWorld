@@ -31,7 +31,7 @@ public static class HexWorldBrush
                 tile.RemovePrefab();
                 break;
             case Enums.BrushType.Select:
-                gameObject = tile.GetGameObject();
+                gameObject = tile.tileGameObject;
                 break;
             case Enums.BrushType.RotateRight:
                 tile.Rotate(60, rotationType);
@@ -97,7 +97,7 @@ public static class HexWorldBrush
         DrawHexagon(tile,0);
         DrawHexagon(tile, size);
         for (int i = 0; i < 6; i++)
-            Handles.DrawLine(tile.GetCorners()[i], tile.GetCorners()[i]+new Vector3(0,size,0));
+            Handles.DrawLine(tile._corners[i], tile._corners[i]+new Vector3(0,size,0));
 #endif
     }
 
@@ -106,8 +106,8 @@ public static class HexWorldBrush
 #if UNITY_EDITOR
         Vector3[] arr = new Vector3[7];
         for (int i = 0; i < 6; i++)
-            arr[i] = tile.GetCorners()[i]+new Vector3(0,size,0);
-        arr[6]= tile.GetCorners()[0] + new Vector3(0, size, 0);
+            arr[i] = tile._corners[i]+new Vector3(0,size,0);
+        arr[6]= tile._corners[0] + new Vector3(0, size, 0);
         Handles.DrawAAPolyLine(arr);
 #endif
     }
