@@ -6,7 +6,7 @@ public static class MeshCreator  {
 
     public static GameObject CreateMesh(HexWorldChunk chunk, Material mat,out GameObject mesh)
     {
-        GameObject @object = chunk.chunkGameObject;
+        GameObject @object = chunk.GetChunkObject();
         GameObject tiles = CreateTileMeshes(chunk,mat);
         tiles.transform.parent = @object.transform;
 
@@ -17,12 +17,12 @@ public static class MeshCreator  {
 
     private static GameObject CreateTileMeshes(HexWorldChunk chunk,Material mat)
     {
-        TileList tiles = chunk.tileList;
+        TileList tiles = chunk.GetTiles();
         HexWorldTile current_tile = null;
         Vector3[] currentCorners = null;
 
 
-        int capacity = chunk.capacity;
+        int capacity = chunk.GetChunkCapacity();
 
         
 
@@ -41,7 +41,7 @@ public static class MeshCreator  {
                 current_tile = tiles.Get(j, i);
                 if (current_tile==null)
                     continue;
-                currentCorners = current_tile._corners;
+                currentCorners = current_tile.GetCorners();
                 
 
                 for (int k = 0; k < 6; k++)

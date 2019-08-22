@@ -1,55 +1,38 @@
-﻿using UnityEngine;
-using System;
-using Object = UnityEngine.Object;
-#pragma warning disable 0414
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+#pragma warning disable 0414 
 
 [System.Serializable]
-public sealed class HexWorldTile
+public class HexWorldTile
 {
-   
     [System.Serializable]
     public struct HexWorldEdge
     {
-        ///
         [SerializeField] private Vector3 PointA;
         [SerializeField] private Vector3 PointB;
 
-        /// <summary>
-        /// Defines the edges of the tiles.
-        /// </summary>
-        /// <param name="PointA">Point one</param>
-        /// <param name="PointB">Point two</param>
         public HexWorldEdge(Vector3 PointA, Vector3 PointB)
         {
             this.PointA = PointA;
             this.PointB = PointB;
         }
-        /// <summary>
-        /// Given 2 points, sets the edges.
-        /// </summary>
-        /// <param name="PointA">Point one</param>
-        /// <param name="PointB">Point two</param>
+
         public void Create(Vector3 PointA, Vector3 PointB)
         {
             this.PointA = PointA;
             this.PointB = PointB;
         }
-        /// <summary>
-        /// Returns the points
-        /// </summary>
-        /// <returns>2 element array. First point and second point</returns>
+
         public Vector3[] GetPoints()
         {
             return new[] {PointA , PointB};
         }
-        /// <summary>
-        /// Checks equality of 2 edges.
-        /// </summary>
-        /// <param name="edge"></param>
-        /// <returns></returns>
-        public bool Equals(HexWorldEdge edge)
+
+        public bool Equals(HexWorldEdge other)
         {
-            Vector3[] other_points = edge.GetPoints();
+            Vector3[] other_points = other.GetPoints();
             Vector3 otherA = other_points[0], otherB=other_points[1];
 
             if (otherA.Equals(PointA) && otherB.Equals(PointB))
@@ -61,27 +44,28 @@ public sealed class HexWorldTile
     }
 
 
-    [SerializeField] public Vector3 center { get; set; }
-    [SerializeField] public Vector3[] _corners { get; set; }
-    [SerializeField] public float radius { get; set; }
-    [SerializeField] public int mID_X { get; set; }
-    [SerializeField] public int mID_Y{ get; set; }
-    [SerializeField] public Quaternion tileRotation { get; set; }
-    [SerializeField] public Object @tileReference { get; set; }
-    [SerializeField] public bool isFull { get; set; }
+    [SerializeField] private Vector3 center;
+    [SerializeField] private float radius;
+    [SerializeField] private int mID_X, mID_Y;
 
-    [NonSerialized] public HexWorldChunk _ownerChunk;
-    [NonSerialized] public GameObject tileGameObject;
+    [System.NonSerialized] private GameObject tileGameObject;
+    [SerializeField] private Quaternion tileRotation = Quaternion.identity;
+
+    //use this for saving
+    [SerializeField] private Object @tileReference;
+
+    [SerializeField] private bool isFull;
 
 
-    /// <summary>
-    /// Default tile constructor.
-    /// </summary>
-    /// <param name="_ownerChunk"></param>
-    /// <param name="mID_X"></param>
-    /// <param name="mID_Y"></param>
-    /// <param name="center"></param>
-    /// <param name="radius"></param>
+    //[SerializeField] private NeighborInfo _tileNeighborInfo;
+    [System.NonSerialized]private HexWorldChunk _ownerChunk;
+
+
+    //[SerializeField] private HexWorldEdge[] _tileEdges;
+
+
+    [SerializeField] private Vector3[] _corners;
+
     public HexWorldTile(HexWorldChunk _ownerChunk,int mID_X, int mID_Y, Vector3 center,float radius)
     {
         this.radius = radius;
@@ -89,15 +73,15 @@ public sealed class HexWorldTile
         this._ownerChunk = _ownerChunk;
         this.mID_Y = mID_Y;
         this.mID_X = mID_X;
+        //create address
+        //create corners
         _corners = CreateCorners(center,radius);
+        //create edges
+        //_tileEdges = CreateEdges(_corners);
     }
-    #region Behaviours
-    /// <summary>
-    /// Creates corners of the tile with given center and radius. 
-    /// </summary>
-    /// <param name="center">Center of the tile</param>
-    /// <param name="radius">Radius of the tile</param>
-    /// <returns></returns>
+
+  
+
     private Vector3[] CreateCorners(Vector3 center,float radius)
     {
         Vector3[] crs = new Vector3[6];
@@ -109,27 +93,19 @@ public sealed class HexWorldTile
         crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
         return crs;
     }
-    /// <summary>
-    /// Creates edges by connecting the corners.
-    /// </summary>
-    /// <param name="corners"></param>
-    /// <returns></returns>
+
     private HexWorldEdge[] CreateEdges(Vector3[] corners)
     {
         HexWorldEdge[] edges = new HexWorldEdge[6];
         for (int i = 0; i < 6; i++)
         {
             Vector3 pt1 = corners[i % 6];
-            Vector3 pt2 = corners[(i + 1) % 6];
-            edges[i] = new HexWorldEdge(pt1, pt2);
+            Vector3 pt2 = corners[(i+1) % 6];
+            edges[i] = new HexWorldEdge(pt1,pt2);
         }
         return edges;
     }
-    /// <summary>
-    /// Rotates tile tile's game object by given <paramref name="rotation"/> value
-    /// </summary>
-    /// <param name="rotation">Degrees to rotate</param>
-    /// <param name="rotationType">Rotation axis</param>
+
     public void Rotate(float rotation,Enums.RotationType rotationType)
     {
         if (tileGameObject == null)
@@ -150,13 +126,6 @@ public sealed class HexWorldTile
 
         tileRotation = tileGameObject.transform.rotation;
     }
-    /// <summary>
-    /// Creates and places the prefab gameobject on the tile.
-    /// </summary>
-    /// <param name="prefab"></param>
-    /// <param name="rotation"></param>
-    /// <param name="rotationType"></param>
-    /// <returns></returns>
     public GameObject PlacePrefab(HexWorldPrefab prefab,float rotation,Enums.RotationType rotationType)
     {
         RemovePrefab();
@@ -169,13 +138,11 @@ public sealed class HexWorldTile
         @tileReference = prefab.GetObject();
         isFull = true;
 
-        tileGameObject.transform.parent = _ownerChunk.chunkTileObject.transform;
+        tileGameObject.transform.parent = _ownerChunk.GetChunkTileObject().transform;
         return tileGameObject;
 
     }
-    /// <summary>
-    /// Removes the game object of tile thus empties it.
-    /// </summary>
+
     public void RemovePrefab()
     {
         isFull = false;
@@ -186,11 +153,34 @@ public sealed class HexWorldTile
             tileGameObject = null;
 
     }
-    /// <summary>
-    /// Renews the loaded tile by creating the gameobject of the tile.
-    /// </summary>
-    /// <param name="owner">Parent chunk of the tile.</param>
-    public void RenewTile(HexWorldChunk owner)
+    #region Getter-Setter
+    /*public HexWorldEdge[] GetEdges()
+    {
+        return _tileEdges;
+    }*/
+
+
+    public bool isEmpty()
+    {
+        return !isFull;
+    }
+    public Vector3 GetCenter()
+    {
+        return center;
+    }
+
+    public Vector3[] GetCorners()
+    {
+        return _corners;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return tileGameObject;
+    }
+    #endregion
+
+    public void Renew(HexWorldChunk owner)
     {
         _ownerChunk = owner;
         if (!isFull)
@@ -201,10 +191,6 @@ public sealed class HexWorldTile
         go.transform.rotation = tileRotation;
         tileGameObject = go;
 
-        tileGameObject.transform.parent = _ownerChunk.chunkTileObject.transform;
+        tileGameObject.transform.parent = _ownerChunk.GetChunkTileObject().transform;
     }
-    #endregion
-    
-
-  
 }

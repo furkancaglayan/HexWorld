@@ -3,11 +3,11 @@
 [System.Serializable]
 public class HexWorldStaticData : ScriptableObject
 {
-    [SerializeField, HideInInspector] private HexWorldMap data;
+    [SerializeField, HideInInspector] private HexWorldMapData data;
     [SerializeField, HideInInspector] private long size;
     [SerializeField, TextArea] private string Description = "You can write here to remember what is it.";
 
-    public void LoadData(HexWorldMap data)
+    public void LoadData(HexWorldMapData data)
     {
         this.data = data;
     }
@@ -20,7 +20,7 @@ public class HexWorldStaticData : ScriptableObject
     {
         return size;
     }
-    public HexWorldMap GetMapData()
+    public HexWorldMapData GetMapData()
     {
         return data;
     }
