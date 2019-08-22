@@ -365,7 +365,7 @@ public class HexWorldEditor : EditorWindow
 
 
         GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(140));
-        GUILayout.Label("Create&Load Maps", fontStyle);
+        GUILayout.Label("Create Maps", fontStyle);
         GUILayout.Space(10);
         GUI.color = new Color(255F / 255F, 211F / 255F, 89F / 255F, .8F);
 
@@ -426,8 +426,24 @@ public class HexWorldEditor : EditorWindow
         if (GUILayout.Button("Create Map", EditorStyles.toolbarButton, GUILayout.Width(position.width - 40)))
             CreateMap(mapSize, HexSize, gridMat);
         if (GUILayout.Button("Delete Map", EditorStyles.toolbarButton, GUILayout.Width(position.width - 40)))
+        {
+            if (mapData != null)
+            {
+                if (mapData.GetGameObject() != null && !mapData.isEmpty())
+                {
+                    int chosen = EditorUtility.DisplayDialogComplex("Delete Map", "Are you sure you want to delete map?", "Yes",
+                        "No", "Save the map");
+                    if (chosen == 1)
+                        return;
+                    else if (chosen == 2)
+                        SaveMapData("Assets/" + MapsDirectory, MapName, mapData);
+                }
+            }
+           
             DeleteMap();
-        
+
+        }
+
         GUILayout.EndVertical();
         GUILayout.EndHorizontal();
         GUILayout.Space(20);
