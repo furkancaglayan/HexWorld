@@ -1,1 +1,1 @@
-https://birchgames.com/hexworld-1-2-is-out-new-features/
+https://www.youtube.com/watch?v=gueAu3t1PGU
