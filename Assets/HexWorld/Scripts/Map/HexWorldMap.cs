@@ -1,23 +1,23 @@
-﻿using UnityEditor;
+﻿using System;
 using UnityEngine;
-#pragma warning disable 0219
-[System.Serializable]
-public class HexWorldMapData
-{
-    [SerializeField] private int mapSize;
-    [SerializeField] private Enums.MapSize mapSizeEnum;
+using Object = UnityEngine.Object;
 
+#pragma warning disable 0219
+[Serializable]
+public class HexWorldMap
+{
+    [SerializeField] public Enums.MapSize mapSize;
+    [SerializeField] public ChunkList chunkList;
+    [SerializeField] public GameObject gameObject;
 
     [SerializeField] private float hexRadius;
     [SerializeField] private string mapName;
-    [SerializeField] private ChunkList Chunks;
-    [SerializeField] private GameObject sceneGameObject;
+    
 
 
-    public HexWorldMapData(Enums.MapSize mapSize, float hexRadius, Material mat)
+    public HexWorldMap(Enums.MapSize mapSize, float hexRadius, Material mat)
     {
-        this.mapSize = (int)mapSize;
-        this.mapSizeEnum = mapSize;
+        this.mapSize = mapSize;
         this.hexRadius = hexRadius;
 
 
@@ -26,28 +26,27 @@ public class HexWorldMapData
         int chunkCount = DetermineChunkSize((int)mapSize, chunk_capacity);
 
         //init chunks
-        Chunks = Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
+        chunkList = Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
 
         mapName = CreateObjectName();
-        sceneGameObject = CreateSceneReferences( mat, mapName, Chunks, chunk_capacity);
+        gameObject = CreateSceneReferences( mat, mapName, chunkList, chunk_capacity);
     }
 
-    public HexWorldMapData(HexWorldStaticData staticData, Material mat)
+    public HexWorldMap(HexWorldStaticData staticData, Material mat)
     {
         var copy = Object.Instantiate(staticData);
-        this.mapSize = (int)copy.GetMapData().GetMapSize();
-        this.mapSizeEnum = copy.GetMapData().GetMapSize();
-        this.hexRadius = copy.GetMapData().GetHexSize();
+        this.mapSize =copy.GetMapData().mapSize;
+        this.hexRadius = copy.GetMapData().hexRadius;
 
 
         //find chunk size, constant chunk capacity is 20x20.
         int chunk_capacity = 20;
 
         //init chunks
-        Chunks = copy.GetMapData().GetHexWorldChunks();
+        chunkList = copy.GetMapData().chunkList;
 
-        mapName = copy.GetMapData().GetName();
-        sceneGameObject = CreateSceneReferences( mat, mapName, Chunks, chunk_capacity);
+        mapName = copy.GetMapData().mapName;
+        gameObject = CreateSceneReferences( mat, mapName, chunkList, chunk_capacity);
         Renew();
 
 
@@ -56,7 +55,7 @@ public class HexWorldMapData
 
     public HexWorldChunk FindChunkWithPos(Vector3 pos)
     {
-        foreach (var lst in Chunks.GetContainers())
+        foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                 if (VARIABLE.LocationInChunk(pos))
                     return VARIABLE;
@@ -74,13 +73,10 @@ public class HexWorldMapData
     /// <param name="chunk_capacity">How many tiles there should be in a chunk.
     /// if chunk_capacity is 20, then chunk has 20x20 tiles.</param>
     /// <returns></returns>
-    private int DetermineChunkSize(int mapSize, int chunk_capacity)
+    private int DetermineChunkSize(int mSize, int chunk_capacity)
     {
         //map is mapSize x mapSize
-        //TODO:error handle for different values of mapsize
-        int length = Mathf.CeilToInt((float) mapSize / chunk_capacity);
-
-        //TODO:check if this is correct
+        int length = Mathf.CeilToInt((float)mSize / chunk_capacity);
         return length;
     }
 
@@ -99,7 +95,7 @@ public class HexWorldMapData
         int chunk_capacity)
     {
         GameObject main = new GameObject(map_name);
-        GameObject chunkObj = new GameObject("Chunks");
+        GameObject chunkObj = new GameObject("chunkList");
         chunkObj.transform.parent = main.transform;
         foreach (var lst in chunks.GetContainers())
         {
@@ -163,7 +159,7 @@ public class HexWorldMapData
     {
         //TODO:Remove time and add id based name
         string time = System.DateTime.UtcNow.ToLocalTime().ToLongTimeString();
-        string name = "[HexWorld_" + time + "_" + mapSizeEnum.ToString() + "]";
+        string name = "[HexWorld_" + time + "_" + mapSize.ToString() + "]";
 
         return name;
     }
@@ -177,8 +173,8 @@ public class HexWorldMapData
     {
         Vector3[] corners = new Vector3[4];
 
-        float @long = mapSize * hexRadius * 3 / 2 + hexRadius * Constants.LONG_SIDE / 4;
-        float @short = (mapSize * hexRadius + hexRadius / 2) * Constants.SHORT_SIDE;
+        float @long = (int)mapSize * hexRadius * 3 / 2 + hexRadius * Constants.LONG_SIDE / 4;
+        float @short = ((int)mapSize * hexRadius + hexRadius / 2) * Constants.SHORT_SIDE;
 
         corners[0] = Vector3.zero;
         corners[1] = corners[0] + new Vector3(@short, 0, 0);
@@ -190,60 +186,28 @@ public class HexWorldMapData
 
     public void FillMap(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in Chunks.GetContainers())
+        foreach (var lst in chunkList.GetContainers())
         foreach (var VARIABLE in lst.GetChunkList())
                 VARIABLE.Fill(prefab, rotationType, randomRot);
     }
     public void FillEmptyTiles(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in Chunks.GetContainers())
+        foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                 VARIABLE.FillEmpty(prefab, rotationType, randomRot);
     }
 
     public bool isEmpty()
     {
-        foreach (var lst in Chunks.GetContainers())
+        foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                 if (!VARIABLE.isEmpty()) return false;
         return true;
     }
-    #region Getter-Setter
-
-    public int GetChunkCount()
-    {
-        return Chunks.GetContainers().Count * Chunks.GetContainers().Count;
-    }
-
-    public ChunkList GetHexWorldChunks()
-    {
-        return Chunks;
-    }
-
-    public GameObject GetGameObject()
-    {
-        return sceneGameObject;
-    }
-
-    public Enums.MapSize GetMapSize()
-    {
-        return mapSizeEnum;
-    }
-    public float GetHexSize()
-    {
-        return hexRadius;
-    }
-
-    public string GetName()
-    {
-        return mapName;
-    }
-    #endregion
-
-
+    
     public void Renew()
     {
-        foreach (var lst in Chunks.GetContainers())
+        foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                     VARIABLE.Renew();
     }

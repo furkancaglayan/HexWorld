@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-
+using Object=UnityEngine.Object;
 #pragma warning disable 0414 
 
-[System.Serializable]
+[Serializable]
 public class HexWorldTile
 {
-    [System.Serializable]
+    [Serializable]
     public struct HexWorldEdge
     {
         [SerializeField] private Vector3 PointA;
@@ -44,40 +43,37 @@ public class HexWorldTile
     }
 
 
-    [SerializeField] private Vector3 center;
-    [SerializeField] private float radius;
-    [SerializeField] private int mID_X, mID_Y;
+    [SerializeField] public Vector3 center;
+    [SerializeField] public float radius;
+    [SerializeField] public int idX, idY;
 
-    [System.NonSerialized] private GameObject tileGameObject;
-    [SerializeField] private Quaternion tileRotation = Quaternion.identity;
+    [NonSerialized] public GameObject gameObject;
+    [SerializeField] private Quaternion rotation = Quaternion.identity;
 
-    //use this for saving
-    [SerializeField] private Object @tileReference;
+    [SerializeField] private Object @object;
 
-    [SerializeField] private bool isFull;
-
-
-    //[SerializeField] private NeighborInfo _tileNeighborInfo;
-    [System.NonSerialized]private HexWorldChunk _ownerChunk;
+    [SerializeField] public bool isFull;
 
 
-    //[SerializeField] private HexWorldEdge[] _tileEdges;
+    [NonSerialized]private HexWorldChunk chunk;
 
 
-    [SerializeField] private Vector3[] _corners;
 
-    public HexWorldTile(HexWorldChunk _ownerChunk,int mID_X, int mID_Y, Vector3 center,float radius)
+
+    [SerializeField] public Vector3[] corners;
+
+    public HexWorldTile(HexWorldChunk chunk,int idX, int idY, Vector3 center,float radius)
     {
         this.radius = radius;
         this.center = center;
-        this._ownerChunk = _ownerChunk;
-        this.mID_Y = mID_Y;
-        this.mID_X = mID_X;
+        this.chunk = chunk;
+        this.idY = idY;
+        this.idX = idX;
         //create address
         //create corners
-        _corners = CreateCorners(center,radius);
+        corners = CreateCorners(center,radius);
         //create edges
-        //_tileEdges = CreateEdges(_corners);
+        //_tileEdges = CreateEdges(corners);
     }
 
   
@@ -108,23 +104,23 @@ public class HexWorldTile
 
     public void Rotate(float rotation,Enums.RotationType rotationType)
     {
-        if (tileGameObject == null)
+        if (gameObject == null)
             return;
         switch (rotationType)
         {
             case Enums.RotationType.X:
-                tileGameObject.transform.Rotate(Vector3.right, rotation);
+                gameObject.transform.Rotate(Vector3.right, rotation);
                 break;
             case Enums.RotationType.Y:
-                tileGameObject.transform.Rotate(Vector3.up, rotation);
+                gameObject.transform.Rotate(Vector3.up, rotation);
                 break;
             case Enums.RotationType.Z:
-                tileGameObject.transform.Rotate(Vector3.forward, rotation);
+                gameObject.transform.Rotate(Vector3.forward, rotation);
                 break;
 
         }
 
-        tileRotation = tileGameObject.transform.rotation;
+        this.rotation = gameObject.transform.rotation;
     }
     public GameObject PlacePrefab(HexWorldPrefab prefab,float rotation,Enums.RotationType rotationType)
     {
@@ -132,65 +128,40 @@ public class HexWorldTile
         
         GameObject go = Object.Instantiate(prefab.GetGameObject());
         go.transform.position = center;
-        tileGameObject = go;
+        gameObject = go;
 
         Rotate(rotation, rotationType);
-        @tileReference = prefab.GetObject();
+        @object = prefab.GetObject();
         isFull = true;
 
-        tileGameObject.transform.parent = _ownerChunk.GetChunkTileObject().transform;
-        return tileGameObject;
+        gameObject.transform.parent = chunk.gameObject.transform;
+        return gameObject;
 
     }
 
     public void RemovePrefab()
     {
         isFull = false;
-        @tileReference = null;
-        if (tileGameObject)
-            Object.DestroyImmediate(tileGameObject);
+        @object = null;
+        if (gameObject)
+            Object.DestroyImmediate(gameObject);
         else
-            tileGameObject = null;
+            gameObject = null;
 
     }
-    #region Getter-Setter
-    /*public HexWorldEdge[] GetEdges()
-    {
-        return _tileEdges;
-    }*/
-
-
-    public bool isEmpty()
-    {
-        return !isFull;
-    }
-    public Vector3 GetCenter()
-    {
-        return center;
-    }
-
-    public Vector3[] GetCorners()
-    {
-        return _corners;
-    }
-
-    public GameObject GetGameObject()
-    {
-        return tileGameObject;
-    }
-    #endregion
+   
 
     public void Renew(HexWorldChunk owner)
     {
-        _ownerChunk = owner;
+        chunk = owner;
         if (!isFull)
             return;
 
-        GameObject go = GameObject.Instantiate(@tileReference as GameObject);
+        GameObject go = GameObject.Instantiate(@object as GameObject);
         go.transform.position = center;
-        go.transform.rotation = tileRotation;
-        tileGameObject = go;
+        go.transform.rotation = rotation;
+        gameObject = go;
 
-        tileGameObject.transform.parent = _ownerChunk.GetChunkTileObject().transform;
+        gameObject.transform.parent = chunk.tileObject.transform;
     }
 }

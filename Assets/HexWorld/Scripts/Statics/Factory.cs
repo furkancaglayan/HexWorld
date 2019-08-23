@@ -9,15 +9,15 @@ public static class Factory  {
     {
             return new HexWorldTile(chunk, idx, idy, center, hexRadius);
     }
-    public static HexWorldMapData create_map(Enums.MapSize mapSize, float hexRad, Material mat)
+    public static HexWorldMap create_map(Enums.MapSize mapSize, float hexRad, Material mat)
     {
 
-        return new HexWorldMapData(mapSize, hexRad, mat);
+        return new HexWorldMap(mapSize, hexRad, mat);
     }
-    public static HexWorldMapData create_map(HexWorldStaticData staticData, Material mat)
+    public static HexWorldMap create_map(HexWorldStaticData staticData, Material mat)
     {
 
-        return new HexWorldMapData(staticData, mat);
+        return new HexWorldMap(staticData, mat);
     }
 
     public static HexWorldChunk create_chunk(int chunkSize, int id_x, int id_y, Vector3 left_down_corner, float hex_radius)

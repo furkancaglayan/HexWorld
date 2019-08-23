@@ -70,12 +70,12 @@ public class HexWorldEditor : EditorWindow
 
 #region MapData
 
-    private HexWorldMapData mapData;
+    private HexWorldMap _map;
     private GameObject mapObject;
 
     private bool isMapCreated
     {
-        get { return mapData != null; }
+        get { return _map != null; }
     }
 
 #endregion
@@ -115,7 +115,7 @@ public class HexWorldEditor : EditorWindow
 
 #region HelperFunctions
 
-    private void SaveMapData(string savePath, string mapName, HexWorldMapData data)
+    private void SaveMapData(string savePath, string mapName, HexWorldMap data)
     {
         bool valid = Utils.CheckIfDirectoryIsValid(savePath, false);
         if (!valid)
@@ -125,7 +125,7 @@ public class HexWorldEditor : EditorWindow
             EditorUtility.DisplayDialog("Map is null.", "Please create a map first.", "Ok");
         else
         {
-            if (data.GetGameObject() == null)
+            if (data.gameObject == null)
                 EditorUtility.DisplayDialog("Map is empty.", "It can not be saved.", "Ok");
             else
             {
@@ -163,15 +163,15 @@ public class HexWorldEditor : EditorWindow
     private void CreateMap(Enums.MapSize mapSize, float hexSize, Material mat)
     {
         DeleteMap();
-        mapData = Factory.create_map(mapSize, hexSize, mat);
-        mapObject = mapData.GetGameObject();
+        _map = Factory.create_map(mapSize, hexSize, mat);
+        mapObject = _map.gameObject;
     }
 
     private void LoadMap(HexWorldStaticData staticData, Material mat)
     {
         DeleteMap();
-        mapData = Factory.create_map(staticData, mat);
-        mapObject = mapData.GetGameObject();
+        _map = Factory.create_map(staticData, mat);
+        mapObject = _map.gameObject;
     }
 
     private void BrushToolsKeyControl()
@@ -209,7 +209,7 @@ public class HexWorldEditor : EditorWindow
     {
         
         DestroyImmediate(mapObject);
-        mapData = null;
+        _map = null;
         mapObject = null;
     }
 
@@ -231,11 +231,11 @@ public class HexWorldEditor : EditorWindow
     /// For the given MapData, draws to borders with Handles.
     /// </summary>
     /// <param name="hexWorldMap"></param>
-    private void GUIDrawBordersAndArea(HexWorldMapData hexWorldMap)
+    private void GUIDrawBordersAndArea(HexWorldMap hexWorldMap)
     {
         if (hexWorldMap == null)
             return;
-        if (!hexWorldMap.GetGameObject())
+        if (!hexWorldMap.gameObject)
             return;
 
         Vector3[] corners = hexWorldMap.DefineCorners();
@@ -287,11 +287,11 @@ public class HexWorldEditor : EditorWindow
 
     void OnDestroy()
     {
-        if (mapData != null)
+        if (_map != null)
         {
-            if (mapData.GetGameObject() != null)
+            if (_map.gameObject != null)
             {
-                if (!mapData.isEmpty())
+                if (!_map.isEmpty())
                 {
 
                     int chosen = EditorUtility.DisplayDialogComplex("Exiting..", "Want to save map before leaving?",
@@ -300,7 +300,7 @@ public class HexWorldEditor : EditorWindow
                         chosen = EditorUtility.DisplayDialogComplex("Exiting..", "Want to save map before leaving?",
                             "Yes, please", "No", "Come again?");
                     if (chosen == 0)
-                        SaveMapData("Assets/" + MapsDirectory, MapName, mapData);
+                        SaveMapData("Assets/" + MapsDirectory, MapName, _map);
                 }
 
             }
@@ -427,16 +427,16 @@ public class HexWorldEditor : EditorWindow
             CreateMap(mapSize, HexSize, gridMat);
         if (GUILayout.Button("Delete Map", EditorStyles.toolbarButton, GUILayout.Width(position.width - 40)))
         {
-            if (mapData != null)
+            if (_map != null)
             {
-                if (mapData.GetGameObject() != null && !mapData.isEmpty())
+                if (_map.gameObject != null && !_map.isEmpty())
                 {
                     int chosen = EditorUtility.DisplayDialogComplex("Delete Map", "Are you sure you want to delete map?", "Yes",
                         "No", "Save the map");
                     if (chosen == 1)
                         return;
                     else if (chosen == 2)
-                        SaveMapData("Assets/" + MapsDirectory, MapName, mapData);
+                        SaveMapData("Assets/" + MapsDirectory, MapName, _map);
                 }
             }
            
@@ -675,8 +675,8 @@ public class HexWorldEditor : EditorWindow
                     if (GUILayout.Button("Fill all with selected prefab", toolbarStyle,
                         GUILayout.Width(position.width - 296)))
                     {
-                        if (mapData != null)
-                            mapData.FillMap(selectedHexWorldPrefab, rotationType, randomRotation);
+                        if (_map != null)
+                            _map.FillMap(selectedHexWorldPrefab, rotationType, randomRotation);
                         else
                         {
                             EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
@@ -686,8 +686,8 @@ public class HexWorldEditor : EditorWindow
                     if (GUILayout.Button("Fill empty space with selected prefab", toolbarStyle,
                         GUILayout.Width(position.width - 296)))
                     {
-                        if (mapData != null)
-                            mapData.FillEmptyTiles(selectedHexWorldPrefab, rotationType, randomRotation);
+                        if (_map != null)
+                            _map.FillEmptyTiles(selectedHexWorldPrefab, rotationType, randomRotation);
                         else
                         {
                             EditorUtility.DisplayDialog("Null Reference Exception", "Create a map first.", "Ok");
@@ -793,12 +793,12 @@ public class HexWorldEditor : EditorWindow
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
-                        GUILayout.Label("Map Size: <b>" + staticData.GetMapData().GetMapSize() + "</b>", txtStyle);
+                        GUILayout.Label("Map Size: <b>" + staticData.GetMapData().mapSize + "</b>", txtStyle);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
-                        GUILayout.Label("Hex Size: <b>" + staticData.GetMapData().GetHexSize() + "</b>", txtStyle);
+                        GUILayout.Label("Hex Size: <b>" + staticData.GetMapData().mapSize + "</b>", txtStyle);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
@@ -809,7 +809,7 @@ public class HexWorldEditor : EditorWindow
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
                         GUILayout.Label(
-                            "Tile Count: <b>" + (staticData.GetMapData().GetHexWorldChunks().GetTileCount()) + "</b>",
+                            "Tile Count: <b>" + (staticData.GetMapData().chunkList.GetTileCount()) + "</b>",
                             txtStyle);
                         GUILayout.EndHorizontal();
 
@@ -849,7 +849,7 @@ public class HexWorldEditor : EditorWindow
                 MapName = GUILayout.TextField(MapName, EditorStyles.textField, GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
                 if (GUILayout.Button("Save Map", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    SaveMapData("Assets/" + MapsDirectory, MapName, mapData);
+                    SaveMapData("Assets/" + MapsDirectory, MapName, _map);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -880,7 +880,7 @@ public class HexWorldEditor : EditorWindow
                     GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
                 if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    Utils.SavePrefab(GameObjectName, MapPrefabDirectory, mapData);
+                    Utils.SavePrefab(GameObjectName, MapPrefabDirectory, _map);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -1065,11 +1065,11 @@ GUILayout.Space(10);
     {
         BrushToolsKeyControl();
         HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
-        if (mapData != null)
-            if (!mapData.GetGameObject())
+        if (_map != null)
+            if (!_map.gameObject)
                 DeleteMap();
         if (isMapCreated)
-            GUIDrawBordersAndArea(mapData);
+            GUIDrawBordersAndArea(_map);
         else
             return;
 
@@ -1083,7 +1083,7 @@ GUILayout.Space(10);
             {
                 Vector3 mouseLoc = new Vector3(hit.point.x, 0, hit.point.z);
 
-                HexWorldChunk currentChunk = mapData.FindChunkWithPos(mouseLoc);
+                HexWorldChunk currentChunk = _map.FindChunkWithPos(mouseLoc);
                 if (currentChunk == null)
                     return;
                 currentSelectedTile = currentChunk.Position2Tile(mouseLoc);

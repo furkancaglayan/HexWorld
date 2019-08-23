@@ -116,7 +116,7 @@ public static class Utils  {
 
     }
 
-    public static void SaveMap(string path, string mapName, HexWorldMapData map)
+    public static void SaveMap(string path, string mapName, HexWorldMap map)
     {
 
 
@@ -225,24 +225,24 @@ public static class Utils  {
 
     }
 
-    public static void SavePrefab(string gameObjectName, string mapsDirectory, HexWorldMapData mapData)
+    public static void SavePrefab(string gameObjectName, string mapsDirectory, HexWorldMap map)
     {
 #if UNITY_EDITOR
         bool valid = CheckIfDirectoryIsValid("Assets/"+mapsDirectory,false);
         if (!valid)
             return;
-        if (mapData == null)
+        if (map == null)
         {
             EditorUtility.DisplayDialog("Null Exception", "Create a map first.", "Ok");
             return;
         }
 
-        if (mapData.GetGameObject() == null)
+        if (map.gameObject == null)
         {
             EditorUtility.DisplayDialog("Null Exception", "Map object is missing.", "Ok");
             return;
         }
-        if (mapData.isEmpty())
+        if (map.isEmpty())
         {
             EditorUtility.DisplayDialog("Map is Empty", "Add some tiles first.", "Ok");
             return;
@@ -251,7 +251,7 @@ public static class Utils  {
 
 
 
-        GameObject prefab = mapData.GetGameObject();
+        GameObject prefab = map.gameObject;
 
         GameObject copy = GameObject.Instantiate(prefab);
         try
