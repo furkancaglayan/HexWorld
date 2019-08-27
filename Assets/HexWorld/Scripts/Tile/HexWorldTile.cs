@@ -134,7 +134,7 @@ public class HexWorldTile
         @object = prefab.GetObject();
         isFull = true;
 
-        gameObject.transform.parent = chunk.gameObject.transform;
+        gameObject.transform.parent = chunk.tileObject.transform;
         return gameObject;
 
     }

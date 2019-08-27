@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
-
 #pragma warning disable 0219
 [Serializable]
 public class HexWorldMap
