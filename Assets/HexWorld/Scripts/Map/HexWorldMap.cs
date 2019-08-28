@@ -9,7 +9,7 @@ public class HexWorldMap : IMapElement
     [SerializeField] public ChunkList chunkList;
     [SerializeField] public GameObject gameObject;
 
-    [SerializeField] private float _hexRadius;
+    [SerializeField] public float hexRadius;
     [SerializeField] private string _mapName;
     
 
@@ -17,7 +17,7 @@ public class HexWorldMap : IMapElement
     public HexWorldMap(Enums.MapSize mapSize, float hexRadius, Material mat)
     {
         this.mapSize = mapSize;
-        this._hexRadius = hexRadius;
+        this.hexRadius = hexRadius;
 
 
         //find chunk size, constant chunk capacity is 20x20.
@@ -35,7 +35,7 @@ public class HexWorldMap : IMapElement
     {
         var copy = Object.Instantiate(staticData);
         this.mapSize =copy.GetMapData().mapSize;
-        this._hexRadius = copy.GetMapData()._hexRadius;
+        this.hexRadius = copy.GetMapData().hexRadius;
 
 
         //find chunk size, constant chunk capacity is 20x20.
@@ -104,7 +104,7 @@ public class HexWorldMap : IMapElement
         {
             foreach (var VARIABLE in lst.GetChunkList())
             {
-                GameObject newChunk = VARIABLE.CreateSceneReference(chunk_capacity,  mat, _hexRadius);
+                GameObject newChunk = VARIABLE.CreateSceneReference(chunk_capacity,  mat, hexRadius);
                 newChunk.transform.parent = chunkObj.transform;
             }
             
@@ -141,7 +141,7 @@ public class HexWorldMap : IMapElement
                 Vector3 left_down_corner = new Vector3(chunk_short * i
                     , 0, chunk_long * j);
                 //TODO:Add height feature
-                HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, _hexRadius);
+                HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, hexRadius);
                 hexWorldChunk.CreateTiles();
                 arr.Add(i, hexWorldChunk);
                 cloneMapSize -= chunk_capacity * chunk_capacity;
@@ -168,7 +168,7 @@ public class HexWorldMap : IMapElement
     }
 
     /// <summary>
-    /// Creates map corners using mapSize and _hexRadius. Dependent on these variables
+    /// Creates map corners using mapSize and hexRadius. Dependent on these variables
     /// since there are no parameters. This method is called in HexWorldEditor.
     /// </summary>
     /// <returns></returns>
@@ -176,8 +176,8 @@ public class HexWorldMap : IMapElement
     {
         Vector3[] corners = new Vector3[4];
 
-        float @long = (int)mapSize * _hexRadius * 3 / 2 + _hexRadius * Constants.LONG_SIDE / 4;
-        float @short = ((int)mapSize * _hexRadius + _hexRadius / 2) * Constants.SHORT_SIDE;
+        float @long = (int)mapSize * hexRadius * 3 / 2 + hexRadius * Constants.LONG_SIDE / 4;
+        float @short = ((int)mapSize * hexRadius + hexRadius / 2) * Constants.SHORT_SIDE;
 
         corners[0] = Vector3.zero;
         corners[1] = corners[0] + new Vector3(@short, 0, 0);

@@ -6,31 +6,27 @@ using UnityEngine;
 
 public class HexWorldFolder
 {
+    public string folderPath;
+    public string tooltip;
 
-    private string path;
-    private string shortName;
+    public Texture2D texture;
+    public GUIContent content;
 
-    private List<HexWorldPrefab> prefabs;
-    private Texture2D contentTexture;
+    public List<HexWorldPrefab> prefabs;
 
-    private GUIContent folderContent;
-    public HexWorldFolder(string path,Texture2D contentTexture)
+    public HexWorldFolder(string folderPath,Texture2D texture)
     {
-        this.path = path;
-        this.contentTexture = contentTexture;
+        this.folderPath = folderPath;
+        this.texture = texture;
 
-        string tooltip;
-        shortName = CreateShortenedFolderName(this.path, 6, out tooltip);
-        folderContent = CreateContent(shortName, this.contentTexture, tooltip);
+        string shortName = CreateShortenedFolderName(this.folderPath, 6, out tooltip);
+        content = CreateContent(shortName, this.texture, tooltip);
 
-        prefabs = CreatePrefabs(this.path, this.contentTexture);
+        prefabs = CreatePrefabs(this.folderPath, this.texture);
 
     }
 
-    public GUIContent GetFolderContent()
-    {
-        return folderContent;
-    }
+
 
     public int Size()
     {
@@ -41,10 +37,7 @@ public class HexWorldFolder
         return new GUIContent(name, texture, tooltip);
     }
 
-    public List<HexWorldPrefab> GetPrefabs()
-    {
-        return prefabs;
-    }
+
 
     private List<HexWorldPrefab> CreatePrefabs(string folderPath,Texture2D texture)
     {
@@ -58,11 +51,11 @@ public class HexWorldFolder
 
     }
     /// <summary>
-    /// Create a shortened name for a given folder path. For example
+    /// Create a shortened name for a given folder folderPath. For example
     /// 'Plain Tiles' is 11 character long. return name will be
     /// 'Plain Ti..' , thus will be shortened.
     /// </summary>
-    /// <param name="folderPath">folder path to separate and shorten</param>
+    /// <param name="folderPath">folder folderPath to separate and shorten</param>
     /// <param name="separator">separator to use-> \\ for paths</param>
     /// <param name="tooltip">out tooltip variable->full name of the folder</param>
     /// <returns></returns>

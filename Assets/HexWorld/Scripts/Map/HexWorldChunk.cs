@@ -153,7 +153,7 @@ public class HexWorldChunk : IMapElement
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
+                BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
     }
     /// <summary>
     /// Fills the empty spots of the chunk with given <paramref name="prefab"/>
@@ -166,7 +166,7 @@ public class HexWorldChunk : IMapElement
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
                 if (VARIABLE.IsEmpty())
-                    HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
+                    BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
     }
 
     /// <summary>

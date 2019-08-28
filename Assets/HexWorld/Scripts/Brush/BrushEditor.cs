@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public static class HexWorldBrush
+public static class BrushEditor
 {
     private static int brushRadius;
 

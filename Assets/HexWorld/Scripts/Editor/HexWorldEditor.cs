@@ -132,7 +132,7 @@ public class HexWorldEditor : EditorWindow
                 if (data.IsEmpty())
                     EditorUtility.DisplayDialog("Map is empty.", "Add some tiles first.", "Ok");
                 else
-                    Utils.SaveMap(savePath, mapName, data);
+                    EditorUtils.SaveMap(savePath, mapName, data);
             }
         }
     }
@@ -262,7 +262,7 @@ public class HexWorldEditor : EditorWindow
     [MenuItem("Window/HexWorld/Create Worlds", priority = 0)]
     public static void Init()
     {
-        Utils.AddTag("HexWorld");
+        EditorUtils.AddTag("HexWorld");
         HexWorldEditor window = (HexWorldEditor) GetWindow(typeof(HexWorldEditor));
 
         IconPack.Load();
@@ -798,7 +798,7 @@ public class HexWorldEditor : EditorWindow
 
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(10);
-                        GUILayout.Label("Hex Size: <b>" + staticData.GetMapData().mapSize + "</b>", txtStyle);
+                        GUILayout.Label("Hex Size: <b>" + staticData.GetMapData().hexRadius + "</b>", txtStyle);
                         GUILayout.EndHorizontal();
 
                         GUILayout.BeginHorizontal();
@@ -880,7 +880,7 @@ public class HexWorldEditor : EditorWindow
                     GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
                 if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    Utils.SavePrefab(GameObjectName, MapPrefabDirectory, _map);
+                    EditorUtils.SavePrefab(GameObjectName, MapPrefabDirectory, _map);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -991,11 +991,11 @@ public class HexWorldEditor : EditorWindow
             if (GUILayout.Button("Add Effects", EditorStyles.toolbarButton, GUILayout.Width(194)))
             {
                 HexWorldEffect effect = GetEffect(colorScheme);
-                Utils.AddEffect(effect);
+                EditorUtils.AddEffect(effect);
             }
             GUILayout.EndHorizontal();
 
-GUILayout.Space(10);
+            GUILayout.Space(10);
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Use Custom", txtStyle, GUILayout.Width(100));
@@ -1003,16 +1003,13 @@ GUILayout.Space(10);
                 (HexWorldEffect)EditorGUILayout.ObjectField(customEffect,typeof(HexWorldEffect),false, GUILayout.Width(position.width - 340));
             if (GUILayout.Button("Add Effects", EditorStyles.toolbarButton, GUILayout.Width(194)))
             {
-                Utils.AddEffect(customEffect);
+                EditorUtils.AddEffect(customEffect);
             }
             GUILayout.EndHorizontal();
 
 
             GUILayout.Space(10);
 #elif !UNITY_2018_1_OR_NEWER
-
-
-
 
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
@@ -1099,7 +1096,7 @@ GUILayout.Space(10);
                         if (Event.current.button == 0 &&
                             (Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseDown))
                         {
-                            HexWorldBrush.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile,
+                            BrushEditor.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile,
                                 hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab),
                                 randomRotation, rotationType, out currentGameObject);
                         }
@@ -1110,7 +1107,7 @@ GUILayout.Space(10);
                 }
 
                 if (currentSelectedTile != null)
-                    HexWorldBrush.DrawBrush(currentSelectedTile, (Enums.BrushType) selectedBrush, HexSize);
+                    BrushEditor.DrawBrush(currentSelectedTile, (Enums.BrushType) selectedBrush, HexSize);
                 SceneView.RepaintAll();
                 Repaint();
             }
