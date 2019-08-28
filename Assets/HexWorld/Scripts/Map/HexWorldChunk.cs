@@ -5,7 +5,7 @@ using UnityEngine;
 #pragma warning disable 0414 
 
 [Serializable]
-public class HexWorldChunk
+public class HexWorldChunk : IMapElement
 {
     [SerializeField] public int capacity;
     [SerializeField] public int idX;
@@ -131,29 +131,49 @@ public class HexWorldChunk
         boxCollider.size = new Vector3(x, y, z);
         return boxCollider;
     }
-
-    public bool LocationInChunk(Vector3 pos)
+    /// <summary>
+    /// Given a vector3 <paramref name="pos"/>, checks if this vector3 is in bounds of the chunk. 
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns>Returns true if in bounds</returns>
+    public bool IsLocationInChunk(Vector3 pos)
     {
         if (_chunkCorners[0].x < pos.x && _chunkCorners[1].x > pos.x)
             if (_chunkCorners[0].z < pos.z && _chunkCorners[2].z > pos.z)
                 return true;
         return false;
     }
-
+    /// <summary>
+    /// Fills the chunk with given <paramref name="prefab"/>.
+    /// </summary>
+    /// <param name="prefab"></param>
+    /// <param name="rotationType"></param>
+    /// <param name="randomRot"></param>
     public void Fill(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
                 HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
     }
+    /// <summary>
+    /// Fills the empty spots of the chunk with given <paramref name="prefab"/>
+    /// </summary>
+    /// <param name="prefab"></param>
+    /// <param name="rotationType"></param>
+    /// <param name="randomRot"></param>
     public void FillEmpty(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                if (!VARIABLE.isFull)
+                if (VARIABLE.IsEmpty())
                     HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
     }
 
+    /// <summary>
+    /// Given a vector3 <paramref name="pos"/>, returns the closest tile.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     public HexWorldTile Position2Tile(Vector3 pos)
     {
         Vector3 center;
@@ -178,11 +198,25 @@ public class HexWorldChunk
 
         return obj;
     }
-    public bool isEmpty()
+
+
+    public void Renew()
+    {
+        foreach (var lst in tiles.GetContainers())
+        {
+            foreach (var VARIABLE in lst.GetTileList())
+            {
+                VARIABLE.SetOwnerChunk(this);
+                VARIABLE.Renew();
+            }
+        }
+    }
+
+    public bool IsEmpty()
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                if (VARIABLE.isFull)
+                if (!VARIABLE.IsEmpty())
                     return false;
         return true;
     }
@@ -197,13 +231,6 @@ public class HexWorldChunk
         return center;
     }
 
-  
 
-
-    public void Renew()
-    {
-        foreach (var lst in tiles.GetContainers())
-            foreach (var VARIABLE in lst.GetTileList())
-                    VARIABLE.Renew(this);
-    }
+ 
 }

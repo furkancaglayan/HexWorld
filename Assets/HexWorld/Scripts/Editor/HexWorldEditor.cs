@@ -129,7 +129,7 @@ public class HexWorldEditor : EditorWindow
                 EditorUtility.DisplayDialog("Map is empty.", "It can not be saved.", "Ok");
             else
             {
-                if (data.isEmpty())
+                if (data.IsEmpty())
                     EditorUtility.DisplayDialog("Map is empty.", "Add some tiles first.", "Ok");
                 else
                     Utils.SaveMap(savePath, mapName, data);
@@ -291,7 +291,7 @@ public class HexWorldEditor : EditorWindow
         {
             if (_map.gameObject != null)
             {
-                if (!_map.isEmpty())
+                if (!_map.IsEmpty())
                 {
 
                     int chosen = EditorUtility.DisplayDialogComplex("Exiting..", "Want to save map before leaving?",
@@ -429,7 +429,7 @@ public class HexWorldEditor : EditorWindow
         {
             if (_map != null)
             {
-                if (_map.gameObject != null && !_map.isEmpty())
+                if (_map.gameObject != null && !_map.IsEmpty())
                 {
                     int chosen = EditorUtility.DisplayDialogComplex("Delete Map", "Are you sure you want to delete map?", "Yes",
                         "No", "Save the map");

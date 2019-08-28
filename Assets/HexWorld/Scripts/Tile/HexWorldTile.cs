@@ -4,7 +4,7 @@ using Object=UnityEngine.Object;
 #pragma warning disable 0414 
 
 [Serializable]
-public class HexWorldTile
+public class HexWorldTile : IMapElement
 {
     [Serializable]
     public struct HexWorldEdge
@@ -52,7 +52,7 @@ public class HexWorldTile
 
     [SerializeField] private Object @object;
 
-    [SerializeField] public bool isFull;
+    [SerializeField] private bool _isFull;
 
 
     [NonSerialized]private HexWorldChunk chunk;
@@ -132,7 +132,7 @@ public class HexWorldTile
 
         Rotate(rotation, rotationType);
         @object = prefab.GetObject();
-        isFull = true;
+        _isFull = true;
 
         gameObject.transform.parent = chunk.tileObject.transform;
         return gameObject;
@@ -141,7 +141,7 @@ public class HexWorldTile
 
     public void RemovePrefab()
     {
-        isFull = false;
+        _isFull = false;
         @object = null;
         if (gameObject)
             Object.DestroyImmediate(gameObject);
@@ -149,12 +149,19 @@ public class HexWorldTile
             gameObject = null;
 
     }
-   
 
-    public void Renew(HexWorldChunk owner)
+    public void SetOwnerChunk(HexWorldChunk owner)
     {
         chunk = owner;
-        if (!isFull)
+    }
+    public bool IsEmpty()
+    {
+        return !_isFull;
+    }
+    public void Renew()
+    {
+        
+        if (!_isFull)
             return;
 
         GameObject go = GameObject.Instantiate(@object as GameObject);

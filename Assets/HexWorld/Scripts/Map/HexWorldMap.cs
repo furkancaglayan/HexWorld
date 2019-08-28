@@ -3,21 +3,21 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 #pragma warning disable 0219
 [Serializable]
-public class HexWorldMap
+public class HexWorldMap : IMapElement
 {
     [SerializeField] public Enums.MapSize mapSize;
     [SerializeField] public ChunkList chunkList;
     [SerializeField] public GameObject gameObject;
 
-    [SerializeField] private float hexRadius;
-    [SerializeField] private string mapName;
+    [SerializeField] private float _hexRadius;
+    [SerializeField] private string _mapName;
     
 
 
     public HexWorldMap(Enums.MapSize mapSize, float hexRadius, Material mat)
     {
         this.mapSize = mapSize;
-        this.hexRadius = hexRadius;
+        this._hexRadius = hexRadius;
 
 
         //find chunk size, constant chunk capacity is 20x20.
@@ -27,15 +27,15 @@ public class HexWorldMap
         //init chunks
         chunkList = Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
 
-        mapName = CreateObjectName();
-        gameObject = CreateSceneReferences( mat, mapName, chunkList, chunk_capacity);
+        this._mapName = CreateObjectName();
+        gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
     }
 
     public HexWorldMap(HexWorldStaticData staticData, Material mat)
     {
         var copy = Object.Instantiate(staticData);
         this.mapSize =copy.GetMapData().mapSize;
-        this.hexRadius = copy.GetMapData().hexRadius;
+        this._hexRadius = copy.GetMapData()._hexRadius;
 
 
         //find chunk size, constant chunk capacity is 20x20.
@@ -44,19 +44,23 @@ public class HexWorldMap
         //init chunks
         chunkList = copy.GetMapData().chunkList;
 
-        mapName = copy.GetMapData().mapName;
-        gameObject = CreateSceneReferences( mat, mapName, chunkList, chunk_capacity);
+        _mapName = copy.GetMapData()._mapName;
+        gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
         Renew();
 
 
     }
 
-
+    /// <summary>
+    /// Given a vector3 <paramref name="pos"/>, find the HexWorldChunk object that includes it.
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <returns></returns>
     public HexWorldChunk FindChunkWithPos(Vector3 pos)
     {
         foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
-                if (VARIABLE.LocationInChunk(pos))
+                if (VARIABLE.IsLocationInChunk(pos))
                     return VARIABLE;
         
 
@@ -100,7 +104,7 @@ public class HexWorldMap
         {
             foreach (var VARIABLE in lst.GetChunkList())
             {
-                GameObject newChunk = VARIABLE.CreateSceneReference(chunk_capacity,  mat, hexRadius);
+                GameObject newChunk = VARIABLE.CreateSceneReference(chunk_capacity,  mat, _hexRadius);
                 newChunk.transform.parent = chunkObj.transform;
             }
             
@@ -137,7 +141,7 @@ public class HexWorldMap
                 Vector3 left_down_corner = new Vector3(chunk_short * i
                     , 0, chunk_long * j);
                 //TODO:Add height feature
-                HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, hexRadius);
+                HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, _hexRadius);
                 hexWorldChunk.CreateTiles();
                 arr.Add(i, hexWorldChunk);
                 cloneMapSize -= chunk_capacity * chunk_capacity;
@@ -164,7 +168,7 @@ public class HexWorldMap
     }
 
     /// <summary>
-    /// Creates map corners using mapSize and hexRadius. Dependent on these variables
+    /// Creates map corners using mapSize and _hexRadius. Dependent on these variables
     /// since there are no parameters. This method is called in HexWorldEditor.
     /// </summary>
     /// <returns></returns>
@@ -172,8 +176,8 @@ public class HexWorldMap
     {
         Vector3[] corners = new Vector3[4];
 
-        float @long = (int)mapSize * hexRadius * 3 / 2 + hexRadius * Constants.LONG_SIDE / 4;
-        float @short = ((int)mapSize * hexRadius + hexRadius / 2) * Constants.SHORT_SIDE;
+        float @long = (int)mapSize * _hexRadius * 3 / 2 + _hexRadius * Constants.LONG_SIDE / 4;
+        float @short = ((int)mapSize * _hexRadius + _hexRadius / 2) * Constants.SHORT_SIDE;
 
         corners[0] = Vector3.zero;
         corners[1] = corners[0] + new Vector3(@short, 0, 0);
@@ -186,7 +190,7 @@ public class HexWorldMap
     public void FillMap(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
         foreach (var lst in chunkList.GetContainers())
-        foreach (var VARIABLE in lst.GetChunkList())
+            foreach (var VARIABLE in lst.GetChunkList())
                 VARIABLE.Fill(prefab, rotationType, randomRot);
     }
     public void FillEmptyTiles(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
@@ -196,11 +200,11 @@ public class HexWorldMap
                 VARIABLE.FillEmpty(prefab, rotationType, randomRot);
     }
 
-    public bool isEmpty()
+    public bool IsEmpty()
     {
         foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
-                if (!VARIABLE.isEmpty()) return false;
+                if (!VARIABLE.IsEmpty()) return false;
         return true;
     }
     

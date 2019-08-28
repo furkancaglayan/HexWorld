@@ -242,7 +242,7 @@ public static class Utils  {
             EditorUtility.DisplayDialog("Null Exception", "Map object is missing.", "Ok");
             return;
         }
-        if (map.isEmpty())
+        if (map.IsEmpty())
         {
             EditorUtility.DisplayDialog("Map is Empty", "Add some tiles first.", "Ok");
             return;

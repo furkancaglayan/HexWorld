@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 #if UNITY_POST_PROCESSING_STACK_V2
@@ -11,7 +11,7 @@ public class HexWorldEffect : ScriptableObject
 {
 
     public string effectName = "Effect";
-    [System.Serializable]
+    [Serializable]
     public struct LightReference
     {
         public string name;
