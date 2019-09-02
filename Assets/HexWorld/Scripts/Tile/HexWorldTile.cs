@@ -12,19 +12,15 @@ public class HexWorldTile : IMapElement
     [SerializeField] public Vector3 center;
     [SerializeField] public float radius;
     [SerializeField] public int idX, idY;
-    [SerializeField] public bool isBorderTile;
-    [NonSerialized] public GameObject gameObject;
     [SerializeField] private Quaternion rotation = Quaternion.identity;
 
     [SerializeField] private Object @object;
-
+    [SerializeField] public TileAddress[] neighbors;
     [SerializeField] private bool _isFull;
 
-
-    [NonSerialized]public HexWorldChunk chunk;
-    //Starting with left bottom
-    [SerializeField] public TileAddress[] neighbors;
+    [NonSerialized] public GameObject gameObject;
     [NonSerialized] public TileAddress address;
+    [NonSerialized]public HexWorldChunk chunk;
 
 
 
@@ -115,10 +111,7 @@ public class HexWorldTile : IMapElement
     public void SetOwnerChunk(HexWorldChunk owner)
     {
         chunk = owner;
-        if (idX == chunk.capacity || idX == 0 || idY == chunk.capacity || idY == 0)
-            isBorderTile = true;
-        else
-            isBorderTile = false;
+       
     }
     public bool IsEmpty()
     {
