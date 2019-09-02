@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -8,13 +9,22 @@ public class ChunkList
 {
 
     [SerializeField]private List<ChunkContainer> chunkContainer;
-    public ChunkList()
+    public ChunkList(int containerSize)
     {
         chunkContainer = new List<ChunkContainer>();
+        for (int i = 0; i < containerSize; i++)
+            AddContainer();
     }
-    public HexWorldChunk Get(int i, int j)
+    public HexWorldChunk Get(int x, int y)
     {
-        return chunkContainer[i].GetChunk(j);
+        try
+        {
+            return chunkContainer[x].GetChunk(y);
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            return null;
+        }
     }
     public void Add(int i, HexWorldChunk chunk)
     {

@@ -274,7 +274,7 @@ public class HexWorldEditor : EditorWindow
 
     public void OnEnable()
     {
-        hexWorldPrefabSet = LoadPrefabs(PrefabsDirectory);
+        //hexWorldPrefabSet = LoadPrefabs(PrefabsDirectory);
 #if UNITY_2019_1_OR_NEWER
         SceneView.duringSceneGui -= this.OnSceneGUI;
         SceneView.duringSceneGui += this.OnSceneGUI;
@@ -1025,6 +1025,7 @@ GUILayout.Space(10);
             GUILayout.Label("Please install Post-Processing Stack from Package Manager or AssetStore");
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
+            
 
 
 #endif
@@ -1096,7 +1097,7 @@ GUILayout.Space(10);
                         if (Event.current.button == 0 &&
                             (Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseDown))
                         {
-                            BrushEditor.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile,
+                            BrushEditor.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile, currentChunk,
                                 hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab),
                                 randomRotation, rotationType, out currentGameObject);
                         }
@@ -1107,7 +1108,31 @@ GUILayout.Space(10);
                 }
 
                 if (currentSelectedTile != null)
+                {
                     BrushEditor.DrawBrush(currentSelectedTile, (Enums.BrushType) selectedBrush, HexSize);
+
+                    if(currentSelectedTile.neighbors[0]!=null)
+                    BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[0]), (Enums.BrushType)selectedBrush,
+                        HexSize, Color.red);
+                    if (currentSelectedTile.neighbors[1] != null)
+                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[1]), (Enums.BrushType)selectedBrush,
+                        HexSize, Color.yellow);
+                    if (currentSelectedTile.neighbors[2] != null)
+                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[2]), (Enums.BrushType)selectedBrush,
+                        HexSize, Color.white);
+                    if (currentSelectedTile.neighbors[5] != null)
+                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[5]), (Enums.BrushType)selectedBrush,
+                        HexSize, Color.blue);
+                    if (currentSelectedTile.neighbors[4] != null)
+                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[4]), (Enums.BrushType)selectedBrush,
+                            HexSize, Color.cyan);
+                    if (currentSelectedTile.neighbors[3] != null)
+                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[3]), (Enums.BrushType)selectedBrush,
+                            HexSize, Color.black);
+
+
+
+                }
                 SceneView.RepaintAll();
                 Repaint();
             }

@@ -11,7 +11,8 @@ public class HexWorldMap : IMapElement
 
     [SerializeField] public float hexRadius;
     [SerializeField] private string _mapName;
-    
+
+    [NonSerialized] public int chunkCount;
 
 
     public HexWorldMap(Enums.MapSize mapSize, float hexRadius, Material mat)
@@ -22,11 +23,10 @@ public class HexWorldMap : IMapElement
 
         //find chunk size, constant chunk capacity is 20x20.
         int chunk_capacity = 20;
-        int chunkCount = DetermineChunkSize((int)mapSize, chunk_capacity);
+        chunkCount = DetermineChunkSize((int)mapSize, chunk_capacity);
 
         //init chunks
-        chunkList = Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
-
+        Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
         this._mapName = CreateObjectName();
         gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
     }
@@ -121,37 +121,27 @@ public class HexWorldMap : IMapElement
     /// <param name="hex_radius"></param>
     /// <param name="mapSize"></param>
     /// <returns></returns>
-    private ChunkList Create2DChunkArray(int chunk_count, int chunk_capacity, float hex_radius, int mapSize)
+    private void Create2DChunkArray(int chunk_count, int chunk_capacity, float hex_radius, int mapSize)
     {
         float chunk_short = Constants.SHORT_SIDE * chunk_capacity * hex_radius;
         float chunk_long = Constants.LONG_SIDE * chunk_capacity * hex_radius * 3 / 4;
 
         int cloneMapSize = mapSize * mapSize;
-        ChunkList arr = new ChunkList();
-      
+        chunkList = new ChunkList(chunk_count);
 
         for (int i = 0; i < chunk_count; i++)
         {
-            arr.AddContainer();
             for (int j = 0; j < chunk_count; j++)
             {
-                if (cloneMapSize < 0)
-                    break;
-
                 Vector3 left_down_corner = new Vector3(chunk_short * i
                     , 0, chunk_long * j);
                 //TODO:Add height feature
                 HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, hexRadius);
-                hexWorldChunk.CreateTiles();
-                arr.Add(i, hexWorldChunk);
-                cloneMapSize -= chunk_capacity * chunk_capacity;
+                hexWorldChunk.CreateTiles(this);
+                chunkList.Add(i, hexWorldChunk);
             }
 
-            if (cloneMapSize < 0)
-                break;
         }
-
-        return arr;
     }
 
     /// <summary>
@@ -187,6 +177,213 @@ public class HexWorldMap : IMapElement
         return corners;
     }
 
+    public TileAddress GetAddress(HexWorldTile hexWorldTile)
+    {
+        return new TileAddress(hexWorldTile.chunk.idX, hexWorldTile.chunk.idX, hexWorldTile.idX, hexWorldTile.idY);
+        
+    }
+    public TileAddress GetNeighbor(HexWorldTile tile, int neighborId)
+    {
+        TileAddress tileAddress = tile.address;
+
+        int chunkX = tileAddress.chunkIdX;
+        int chunkY = tileAddress.chunkIdY;
+
+        int tileX = tileAddress.idX;
+        int tileY = tileAddress.idY;
+
+        try
+        {
+            if (neighborId == 5)
+            {
+
+                if (tileX == 0)
+                {
+                    if (chunkX == 0)
+                        return null;
+                    HexWorldChunk left = chunkList.Get(chunkX - 1,chunkY );
+                    return left.tiles.Get(19, tileY).address;
+                }
+                return tile.chunk.tiles.Get(tileX - 1,tileY ).address;
+
+            }
+            if (neighborId == 2)
+            {
+
+                if (tileX == 19)
+                {
+
+                    HexWorldChunk right = chunkList.Get(chunkX + 1, chunkY);
+                    return right.tiles.Get(0, tileY).address;
+                }
+                return tile.chunk.tiles.Get(tileX + 1, tileY).address;
+
+            }
+            if (neighborId == 0)
+            {
+                if (tileY == 0 && chunkY == 0)
+                    return null;
+
+                if (tileX == 0)
+                {
+
+                    if (tileY != 0)
+                    {
+                        HexWorldChunk left = chunkList.Get(chunkX - 1, chunkY); ;
+                        if (tileY%2==0)
+                            return left.tiles.Get(19, tileY - 1).address;
+                        return tile.chunk.tiles.Get(tileX, tileY - 1).address;
+
+                    }
+                    HexWorldChunk leftDown = chunkList.Get(chunkX - 1, chunkY-1);
+                    return leftDown.tiles.Get(19, 19).address;
+
+
+                }
+                else
+                {
+                    if (tileY == 0)
+                    {
+                        HexWorldChunk down = chunkList.Get(chunkX , chunkY - 1);
+                        return down.tiles.Get(tileX-1, 19).address;
+                    }
+                    if(tileY%2==0)
+                        return tile.chunk.tiles.Get(tileX-1, tileY-1).address;
+                    return tile.chunk.tiles.Get(tileX, tileY - 1).address;
+                }
+
+
+            }
+            if (neighborId == 1)
+            {
+                
+
+                if (tileX == 19)
+                {
+                    
+
+                    if (tileY != 0)
+                    {
+                        HexWorldChunk right = chunkList.Get(chunkX + 1, chunkY);
+                        
+                        if (tileY % 2 != 0)
+                            return right.tiles.Get(0, tileY - 1).address;
+                        return tile.chunk.tiles.Get(tileX, tileY - 1).address;
+
+                    }
+                    HexWorldChunk down = chunkList.Get(chunkX, chunkY - 1);
+                    return down.tiles.Get(19, 19).address;
+
+
+                }
+                else
+                {
+                    if (tileY == 0)
+                    {
+                        HexWorldChunk down = chunkList.Get(chunkX, chunkY - 1);
+                        return down.tiles.Get(tileX, 19).address;
+                    }
+                    if (tileY % 2 == 0)
+                        return tile.chunk.tiles.Get(tileX, tileY - 1).address;
+                    return tile.chunk.tiles.Get(tileX+1, tileY - 1).address;
+                }
+
+
+            }
+            if (neighborId == 4)
+            {
+                if (tileY == 19 && chunkY == chunkCount-1)
+                    return null;
+
+                if (tileX == 0)
+                {
+                    
+
+                    if (tileY != 19)
+                    {
+                        HexWorldChunk left = chunkList.Get(chunkX - 1, chunkY); ;
+                        if (tileY % 2 == 0)
+                            return left.tiles.Get(19, tileY + 1).address;
+                        return tile.chunk.tiles.Get(tileX, tileY + 1).address;
+
+                    }
+                    HexWorldChunk top = chunkList.Get(chunkX, chunkY + 1);
+                    return top.tiles.Get(0, 0).address;
+
+
+                }
+                else
+                {
+                    if (tileY == 19)
+                    {
+                        HexWorldChunk top = chunkList.Get(chunkX, chunkY +1);
+                        return top.tiles.Get(tileX , 0).address;
+                    }
+                    if (tileY % 2 == 0)
+                        return tile.chunk.tiles.Get(tileX - 1, tileY + 1).address;
+                    return tile.chunk.tiles.Get(tileX, tileY + 1).address;
+                }
+
+
+            }
+            if (neighborId == 3)
+            {
+                if (tileY == 19 && chunkY == chunkCount - 1)
+                    return null;
+
+                if (tileX == 19)
+                {
+                    
+
+                    if (tileY != 19)
+                    {
+                        HexWorldChunk right = chunkList.Get(chunkX + 1, chunkY); ;
+                        if (tileY % 2 != 0)
+                            return right.tiles.Get(0, tileY + 1).address;
+                        return tile.chunk.tiles.Get(tileX, tileY + 1).address;
+
+                    }
+                    HexWorldChunk topR = chunkList.Get(chunkX+1, chunkY + 1);
+                    return topR.tiles.Get(0, 0).address;
+
+
+                }
+                else
+                {
+                    if (tileY == 19)
+                    {
+                        HexWorldChunk top = chunkList.Get(chunkX, chunkY + 1);
+                        return top.tiles.Get(tileX+1, 0).address;
+                    }
+                    if (tileY % 2 == 0)
+                        return tile.chunk.tiles.Get(tileX , tileY + 1).address;
+                    return tile.chunk.tiles.Get(tileX+1, tileY + 1).address;
+                }
+
+
+            }
+            return null;
+        }
+        catch (NullReferenceException e)
+        {
+            return null;
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            return null;
+        }
+    }
+    public HexWorldTile GetTile(TileAddress tileAddress)
+    {
+        int chunkX = tileAddress.chunkIdX;
+        int chunkY = tileAddress.chunkIdY;
+
+        int tileX = tileAddress.idX;
+        int tileY = tileAddress.idY;
+
+        return chunkList.Get(chunkX,chunkY).tiles.Get(tileX, tileY);
+    }
+
     public void FillMap(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
         foreach (var lst in chunkList.GetContainers())
@@ -213,5 +410,10 @@ public class HexWorldMap : IMapElement
         foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                     VARIABLE.Renew();
+    }
+    public HexWorldTile GetTile(int cidx, int cidy, int idx, int idy)
+    {
+        //TODO: add number check
+        return chunkList.Get(cidx, cidy).tiles.Get(idx, idy);
     }
 }

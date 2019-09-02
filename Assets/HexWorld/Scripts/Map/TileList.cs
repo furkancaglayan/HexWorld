@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -8,17 +9,33 @@ public class TileList
 {
 
     [SerializeField] private List<TileContainer> tileContainers;
-    public TileList()
+    public TileList(int containerCount)
     {
         tileContainers = new List<TileContainer>();
+        for (int i = 0; i < containerCount; i++)
+            AddContainer();
     }
-    public HexWorldTile Get(int i, int j)
+    public HexWorldTile Get(int x, int y)
     {
-        return tileContainers[i].GetTile(j);
+        try
+        {
+            
+            return tileContainers[y].GetTile(x);
+        }
+        catch (NullReferenceException e)
+        {
+            return null;
+        }
+        catch (ArgumentOutOfRangeException e)
+        {
+            return null;
+        }
     }
-    public void Add(int i, HexWorldTile chunk)
+    
+    public HexWorldTile Add(int i, HexWorldTile tile)
     {
-        tileContainers[i].AddTile(chunk);
+        tileContainers[i].AddTile(tile);
+        return tile;
         
     }
 

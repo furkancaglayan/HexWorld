@@ -22,7 +22,6 @@ public class HexWorldChunk : IMapElement
 
 
 
-
     public HexWorldChunk(int chunk_size, int id_x, int id_y, Vector3 left_down_corner, float gridRadius)
     {
         this.capacity = chunk_size;
@@ -45,7 +44,7 @@ public class HexWorldChunk : IMapElement
         _chunkCorners[3] = left_down_corner +
                           new Vector3(0, 0, Constants.LONG_SIDE * chunk_size * gridRadius * 3 / 4 + gridRadius / 2);
 
-       
+
     }
 
     
@@ -87,13 +86,13 @@ public class HexWorldChunk : IMapElement
     /// <param name="corners"></param>
     /// <param name="hex_radius"></param>
     /// <returns>2d list of tiles.</returns>
-    public void CreateTiles()
+    public void CreateTiles(HexWorldMap map)
     {
-        TileList lst = new TileList();
+        tiles = new TileList(capacity);
 
         for (int i = 0; i < capacity; i++)
         {
-            lst.AddContainer();
+            
             for (int j = 0; j < capacity; j++)
             {
                 Vector3 center;
@@ -105,11 +104,21 @@ public class HexWorldChunk : IMapElement
                     center = _chunkCorners[0] + new Vector3(
                                  Constants.SHORT_SIDE * gridRadius + j * Constants.SHORT_SIDE * gridRadius
                                  , 0, gridRadius * i * (1.5F)) + new Vector3(0, 0, gridRadius);
-                lst.Add(i,Factory.create_tile(this, j, i, center, gridRadius));
+
+                HexWorldTile hexWorldTile = Factory.create_tile(this, j, i, center, gridRadius);
+                hexWorldTile=tiles.Add(i, hexWorldTile);
             }
         }
 
-        tiles= lst;
+        for (int i = 0; i < capacity; i++)
+        {
+            for (int j = 0; j < capacity; j++)
+            {
+                HexWorldTile t = tiles.Get(i,j);
+                t.UpdateNeighbors(map);
+            }
+        }
+
     }
 
     /// <summary>
@@ -153,7 +162,7 @@ public class HexWorldChunk : IMapElement
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
+                BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE,this, prefab, randomRot, rotationType);
     }
     /// <summary>
     /// Fills the empty spots of the chunk with given <paramref name="prefab"/>
@@ -166,7 +175,7 @@ public class HexWorldChunk : IMapElement
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
                 if (VARIABLE.IsEmpty())
-                    BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, prefab, randomRot, rotationType);
+                    BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, this, prefab, randomRot, rotationType);
     }
 
     /// <summary>

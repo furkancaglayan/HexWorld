@@ -6,47 +6,13 @@ using Object=UnityEngine.Object;
 [Serializable]
 public class HexWorldTile : IMapElement
 {
-    [Serializable]
-    public struct HexWorldEdge
-    {
-        [SerializeField] private Vector3 PointA;
-        [SerializeField] private Vector3 PointB;
-
-        public HexWorldEdge(Vector3 PointA, Vector3 PointB)
-        {
-            this.PointA = PointA;
-            this.PointB = PointB;
-        }
-
-        public void Create(Vector3 PointA, Vector3 PointB)
-        {
-            this.PointA = PointA;
-            this.PointB = PointB;
-        }
-
-        public Vector3[] GetPoints()
-        {
-            return new[] {PointA , PointB};
-        }
-
-        public bool Equals(HexWorldEdge other)
-        {
-            Vector3[] other_points = other.GetPoints();
-            Vector3 otherA = other_points[0], otherB=other_points[1];
-
-            if (otherA.Equals(PointA) && otherB.Equals(PointB))
-                return true;
-            if (otherB.Equals(PointA) && otherA.Equals(PointB))
-                return true;
-            return false;
-        }
-    }
+    
 
 
     [SerializeField] public Vector3 center;
     [SerializeField] public float radius;
     [SerializeField] public int idX, idY;
-
+    [SerializeField] public bool isBorderTile;
     [NonSerialized] public GameObject gameObject;
     [SerializeField] private Quaternion rotation = Quaternion.identity;
 
@@ -55,14 +21,16 @@ public class HexWorldTile : IMapElement
     [SerializeField] private bool _isFull;
 
 
-    [NonSerialized]private HexWorldChunk chunk;
-
+    [NonSerialized]public HexWorldChunk chunk;
+    //Starting with left bottom
+    [SerializeField] public TileAddress[] neighbors;
+    [NonSerialized] public TileAddress address;
 
 
 
     [SerializeField] public Vector3[] corners;
 
-    public HexWorldTile(HexWorldChunk chunk,int idX, int idY, Vector3 center,float radius)
+    public HexWorldTile(HexWorldChunk chunk, int idX, int idY, Vector3 center,float radius)
     {
         this.radius = radius;
         this.center = center;
@@ -74,9 +42,11 @@ public class HexWorldTile : IMapElement
         corners = CreateCorners(center,radius);
         //create edges
         //_tileEdges = CreateEdges(corners);
+        neighbors = new TileAddress[6];
+        address = CreateAddress();
     }
 
-  
+
 
     private Vector3[] CreateCorners(Vector3 center,float radius)
     {
@@ -90,17 +60,7 @@ public class HexWorldTile : IMapElement
         return crs;
     }
 
-    private HexWorldEdge[] CreateEdges(Vector3[] corners)
-    {
-        HexWorldEdge[] edges = new HexWorldEdge[6];
-        for (int i = 0; i < 6; i++)
-        {
-            Vector3 pt1 = corners[i % 6];
-            Vector3 pt2 = corners[(i+1) % 6];
-            edges[i] = new HexWorldEdge(pt1,pt2);
-        }
-        return edges;
-    }
+    
 
     public void Rotate(float rotation,Enums.RotationType rotationType)
     {
@@ -122,10 +82,10 @@ public class HexWorldTile : IMapElement
 
         this.rotation = gameObject.transform.rotation;
     }
-    public GameObject PlacePrefab(HexWorldPrefab prefab,float rotation,Enums.RotationType rotationType)
+    public GameObject PlacePrefab(HexWorldPrefab prefab,HexWorldChunk owner,float rotation,Enums.RotationType rotationType)
     {
         RemovePrefab();
-        
+        SetOwnerChunk(owner);
         GameObject go = Object.Instantiate(prefab.GetGameObject());
         go.transform.position = center;
         gameObject = go;
@@ -135,6 +95,8 @@ public class HexWorldTile : IMapElement
         _isFull = true;
 
         gameObject.transform.parent = chunk.tileObject.transform;
+
+
         return gameObject;
 
     }
@@ -153,6 +115,10 @@ public class HexWorldTile : IMapElement
     public void SetOwnerChunk(HexWorldChunk owner)
     {
         chunk = owner;
+        if (idX == chunk.capacity || idX == 0 || idY == chunk.capacity || idY == 0)
+            isBorderTile = true;
+        else
+            isBorderTile = false;
     }
     public bool IsEmpty()
     {
@@ -163,12 +129,49 @@ public class HexWorldTile : IMapElement
         
         if (!_isFull)
             return;
-
-        GameObject go = GameObject.Instantiate(@object as GameObject);
+        GameObject go = Object.Instantiate(@object as GameObject);
         go.transform.position = center;
         go.transform.rotation = rotation;
         gameObject = go;
 
         gameObject.transform.parent = chunk.tileObject.transform;
     }
+    public void UpdateNeighbors(HexWorldMap map)
+    {
+       //left neighbor
+       for (int i = 0; i < 6; i++)
+       {
+           TileAddress tileAddress= map.GetNeighbor(this, i);
+           if(tileAddress != null)
+               SetNeighbor(tileAddress, i, map);
+       }
+        
+    }
+   public TileAddress CreateAddress()
+   {
+       return new TileAddress(chunk.idX,chunk.idY,idX,idY);
+   }
+    private void SetNeighbor(TileAddress neighborAddress, int neighborID,HexWorldMap map)
+    {
+
+        
+
+        try
+        {
+            neighbors[neighborID] = neighborAddress;
+            map.GetTile(neighborAddress).neighbors[(neighborID+3)%6] = address;
+        }
+        catch (ArgumentException e)
+        {
+        }
+        catch (NullReferenceException e)
+        {
+        }
+    }
+
+    public override string ToString()
+    {
+        return "idX : " + idX.ToString() + " - idY : " + idY.ToString();
+    }
+
 }

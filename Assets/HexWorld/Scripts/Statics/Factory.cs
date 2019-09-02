@@ -7,7 +7,7 @@ public static class Factory  {
 
     public static HexWorldTile create_tile(HexWorldChunk chunk,int idx, int idy, Vector3 center, float hexRadius)
     {
-            return new HexWorldTile(chunk, idx, idy, center, hexRadius);
+        return new HexWorldTile(chunk, idx, idy, center, hexRadius);
     }
     public static HexWorldMap create_map(Enums.MapSize mapSize, float hexRad, Material mat)
     {

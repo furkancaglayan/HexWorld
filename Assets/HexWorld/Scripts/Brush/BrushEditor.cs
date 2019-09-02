@@ -8,7 +8,7 @@ public static class BrushEditor
     private static int brushRadius;
 
     //TODO:Change this to tile list later.
-    public static void ApplyStroke(Enums.BrushType brushType, HexWorldTile tile, HexWorldPrefab selectedPrefab,
+    public static void ApplyStroke(Enums.BrushType brushType, HexWorldTile tile, HexWorldChunk chunk, HexWorldPrefab selectedPrefab,
         bool randomRotation, Enums.RotationType rotationType, out GameObject gameObject)
     {
         gameObject = null;
@@ -25,7 +25,7 @@ public static class BrushEditor
         switch (brushType)
         {
             case Enums.BrushType.Place:
-                gameObject = tile.PlacePrefab(selectedPrefab, rotation, rotationType);
+                gameObject = tile.PlacePrefab(selectedPrefab, chunk,rotation, rotationType);
                 break;
             case Enums.BrushType.Delete:
                 tile.RemovePrefab();
@@ -42,7 +42,7 @@ public static class BrushEditor
         }
     }
 
-    public static void ApplySimpleStroke(Enums.BrushType brushType, HexWorldTile tile, HexWorldPrefab selectedPrefab,
+    public static void ApplySimpleStroke(Enums.BrushType brushType, HexWorldTile tile, HexWorldChunk chunk, HexWorldPrefab selectedPrefab,
         bool randomRotation, Enums.RotationType rotationType)
     {
         float rotation = 0;
@@ -55,7 +55,7 @@ public static class BrushEditor
         switch (brushType)
         {
             case Enums.BrushType.Place:
-                tile.PlacePrefab(selectedPrefab, rotation, rotationType);
+                tile.PlacePrefab(selectedPrefab,chunk,rotation, rotationType);
                 break;
             case Enums.BrushType.Delete:
                 tile.RemovePrefab();
@@ -69,7 +69,7 @@ public static class BrushEditor
         }
     }
 
-    public static void DrawBrush(HexWorldTile tile,Enums.BrushType brushType,float size)
+    public static void DrawBrush(HexWorldTile tile, Enums.BrushType brushType, float size)
     {
 #if UNITY_EDITOR
         switch (brushType)
@@ -94,10 +94,20 @@ public static class BrushEditor
                 break;
 
         }
-        DrawHexagon(tile,0);
+        DrawHexagon(tile, 0);
         DrawHexagon(tile, size);
         for (int i = 0; i < 6; i++)
-            Handles.DrawLine(tile.corners[i], tile.corners[i]+new Vector3(0,size,0));
+            Handles.DrawLine(tile.corners[i], tile.corners[i] + new Vector3(0, size, 0));
+#endif
+    }
+    public static void DrawBrush(HexWorldTile tile, Enums.BrushType brushType, float size,Color col)
+    {
+#if UNITY_EDITOR
+        Handles.color = col;
+        DrawHexagon(tile, 0);
+        DrawHexagon(tile, size);
+        for (int i = 0; i < 6; i++)
+            Handles.DrawLine(tile.corners[i], tile.corners[i] + new Vector3(0, size, 0));
 #endif
     }
 
