@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+#pragma warning disable 0168 
 
-[System.Serializable]
+[Serializable]
 public class TileList 
 {
 
@@ -51,7 +50,7 @@ public class TileList
         return tileContainers;
     }
 }
-[System.Serializable]
+[Serializable]
 public class TileContainer 
 {
     [SerializeField] private List<HexWorldTile> hexWorldTiles;

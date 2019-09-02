@@ -2,6 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 #pragma warning disable 0219
+#pragma warning disable 0168 
 [Serializable]
 public class HexWorldMap : IMapElement
 {

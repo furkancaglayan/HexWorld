@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-
-[System.Serializable]
+#pragma warning disable 0168 
+[Serializable]
 public class ChunkList 
 {
 
@@ -46,7 +46,7 @@ public class ChunkList
         return (int)Mathf.Pow( chunkContainer[0].GetChunkList().Count*20,2);
     }
 }
-[System.Serializable]
+[Serializable]
 public class ChunkContainer
 {
     [SerializeField] private List<HexWorldChunk> hexWorldChunks;

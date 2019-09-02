@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object=UnityEngine.Object;
 #pragma warning disable 0414 
-
+#pragma warning disable 0168 
 [Serializable]
 public class HexWorldTile : IMapElement
 {
