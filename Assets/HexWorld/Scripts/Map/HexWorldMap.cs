@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 #pragma warning disable 0219
@@ -31,7 +32,6 @@ public class HexWorldMap : IMapElement
         this._mapName = CreateObjectName();
         gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
     }
-
     public HexWorldMap(HexWorldStaticData staticData, Material mat)
     {
         var copy = Object.Instantiate(staticData);
@@ -51,7 +51,6 @@ public class HexWorldMap : IMapElement
 
 
     }
-
     /// <summary>
     /// Given a vector3 <paramref name="pos"/>, find the HexWorldChunk object that includes it.
     /// </summary>
@@ -67,7 +66,6 @@ public class HexWorldMap : IMapElement
 
         return null;
     }
-
     /// <summary>
     /// Determines the chunk count of the map. For example for a 40x40 map
     /// this method will return 4 if the chunk capacity is 20
@@ -83,7 +81,6 @@ public class HexWorldMap : IMapElement
         int length = Mathf.CeilToInt((float)mSize / chunk_capacity);
         return length;
     }
-
     /// <summary>
     /// Creates the scene references of the map. This includes
     /// main map gameobject and chunk references.
@@ -113,7 +110,6 @@ public class HexWorldMap : IMapElement
 
         return main;
     }
-
     /// <summary>
     /// Creates 2d array of chunks. Defines their corners, centers and colliders.
     /// </summary>
@@ -144,7 +140,6 @@ public class HexWorldMap : IMapElement
 
         }
     }
-
     /// <summary>
     /// Returns a unique map name.
     /// </summary>
@@ -157,7 +152,6 @@ public class HexWorldMap : IMapElement
 
         return name;
     }
-
     /// <summary>
     /// Creates map corners using mapSize and hexRadius. Dependent on these variables
     /// since there are no parameters. This method is called in HexWorldEditor.
@@ -176,12 +170,6 @@ public class HexWorldMap : IMapElement
         corners[3] = corners[2] - new Vector3(@short, 0, 0);
 
         return corners;
-    }
-
-    public TileAddress GetAddress(HexWorldTile hexWorldTile)
-    {
-        return new TileAddress(hexWorldTile.chunk.idX, hexWorldTile.chunk.idX, hexWorldTile.idX, hexWorldTile.idY);
-        
     }
     public TileAddress GetNeighbor(HexWorldTile tile, int neighborId)
     {
@@ -384,7 +372,6 @@ public class HexWorldMap : IMapElement
 
         return chunkList.Get(chunkX,chunkY).tiles.Get(tileX, tileY);
     }
-
     public void FillMap(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
         foreach (var lst in chunkList.GetContainers())
@@ -397,7 +384,6 @@ public class HexWorldMap : IMapElement
             foreach (var VARIABLE in lst.GetChunkList())
                 VARIABLE.FillEmpty(prefab, rotationType, randomRot);
     }
-
     public bool IsEmpty()
     {
         foreach (var lst in chunkList.GetContainers())
@@ -405,16 +391,46 @@ public class HexWorldMap : IMapElement
                 if (!VARIABLE.IsEmpty()) return false;
         return true;
     }
-    
     public void Renew()
     {
         foreach (var lst in chunkList.GetContainers())
             foreach (var VARIABLE in lst.GetChunkList())
                     VARIABLE.Renew();
     }
-    public HexWorldTile GetTile(int cidx, int cidy, int idx, int idy)
+
+    public List<HexWorldTile> GetTilesInRadius(HexWorldTile centerTile, int radius)
     {
-        //TODO: add number check
-        return chunkList.Get(cidx, cidy).tiles.Get(idx, idy);
+        
+        if (radius == 1)
+            return new List<HexWorldTile>{centerTile};
+        if(radius == 2)
+        {
+            List<HexWorldTile> tiles = new List<HexWorldTile>
+            {
+                centerTile
+            };
+            for (int i = 0; i < 6; i++)
+            {
+                TileAddress address = centerTile.neighbors[i];
+                if (address != null)
+                    tiles.Add(GetTile(address));
+            }
+            return tiles;
+        }
+        List<HexWorldTile> lst = new List<HexWorldTile>(GetTilesInRadius(centerTile, radius-1));
+        List<HexWorldTile> lstCopy = new List<HexWorldTile>(lst);
+        foreach (var tile in lst)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                TileAddress address = tile.neighbors[i];
+                if(address!=null)
+                    if(!lst.Contains(GetTile(address)))
+                        lstCopy.Add(GetTile(address));
+            }
+        }
+
+        return lstCopy;
     }
+   
 }

@@ -1097,9 +1097,14 @@ GUILayout.Space(10);
                         if (Event.current.button == 0 &&
                             (Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseDown))
                         {
-                            BrushEditor.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile, currentChunk,
+                            /*BrushEditor.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile, currentChunk,
                                 hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab),
-                                randomRotation, rotationType, out currentGameObject);
+                                randomRotation, rotationType, out currentGameObject);*/
+
+                            HexWorldBrush.ApplyStroke(currentSelectedTile,
+                                hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab)
+                                , currentChunk, _map, (Enums.BrushType) selectedBrush, 5, randomRotation, false,
+                                rotationType);
                         }
 
                         SceneView.RepaintAll();

@@ -22,7 +22,7 @@ public class HexWorldChunk : IMapElement
 
 
 
-    public HexWorldChunk(int chunk_size, int id_x, int id_y, Vector3 left_down_corner, float gridRadius)
+    public HexWorldChunk(int chunk_size, int id_x, int id_y, Vector3 leftDownCorner, float gridRadius)
     {
         this.capacity = chunk_size;
         this.idX = id_x;
@@ -31,24 +31,31 @@ public class HexWorldChunk : IMapElement
 
         //TODO:Make this a separate function.
         //create corners
-        _chunkCorners = new Vector3[4];
-        _chunkCorners[0] = left_down_corner;
-        _chunkCorners[1] = left_down_corner +
-                          new Vector3(
-                              Constants.SHORT_SIDE * chunk_size * gridRadius + Constants.SHORT_SIDE * gridRadius / 2, 0,
-                              0);
-        _chunkCorners[2] = left_down_corner +
-                          new Vector3(
-                              Constants.SHORT_SIDE * chunk_size * gridRadius + Constants.SHORT_SIDE * gridRadius / 2, 0,
-                              Constants.LONG_SIDE * chunk_size * gridRadius * 3 / 4 + gridRadius / 2);
-        _chunkCorners[3] = left_down_corner +
-                          new Vector3(0, 0, Constants.LONG_SIDE * chunk_size * gridRadius * 3 / 4 + gridRadius / 2);
+        CreateCorners(leftDownCorner, capacity);
 
 
     }
-
-    
     /// <summary>
+    /// Given a chunk size and a reference corner, creates the chunk corners.
+    /// </summary>
+    /// <param name="left_down_corner"></param>
+    /// <param name="chunkSize"></param>
+    private void CreateCorners(Vector3 leftDownCorner,int chunkSize)
+    {
+        _chunkCorners = new Vector3[4];
+        _chunkCorners[0] = leftDownCorner;
+        _chunkCorners[1] = leftDownCorner +
+                           new Vector3(
+                               Constants.SHORT_SIDE * chunkSize * gridRadius + Constants.SHORT_SIDE * gridRadius / 2, 0,
+                               0);
+        _chunkCorners[2] = leftDownCorner +
+                           new Vector3(
+                               Constants.SHORT_SIDE * chunkSize * gridRadius + Constants.SHORT_SIDE * gridRadius / 2, 0,
+                               Constants.LONG_SIDE * chunkSize * gridRadius * 3 / 4 + gridRadius / 2);
+        _chunkCorners[3] = leftDownCorner +
+                           new Vector3(0, 0, Constants.LONG_SIDE * chunkSize * gridRadius * 3 / 4 + gridRadius / 2);
+    }
+    /// <summary> 
     /// Creates scene representation of the HexWorldChunk.
     /// Creates a gameobject, draws tiles, creates _mesh and _collider.
     /// </summary>
@@ -78,7 +85,6 @@ public class HexWorldChunk : IMapElement
 
         return gameObject;
     }
-
     /// <summary>
     /// Create tiles for the chunk.
     /// </summary>
@@ -120,7 +126,6 @@ public class HexWorldChunk : IMapElement
         }
 
     }
-
     /// <summary>
     /// Creates a box _collider and adds it to the "obj" which is also chunk. 
     /// </summary>
@@ -162,7 +167,7 @@ public class HexWorldChunk : IMapElement
     {
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
-                BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE,this, prefab, randomRot, rotationType);
+                HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE,this, prefab, randomRot, rotationType);
     }
     /// <summary>
     /// Fills the empty spots of the chunk with given <paramref name="prefab"/>
@@ -175,9 +180,8 @@ public class HexWorldChunk : IMapElement
         foreach (var lst in tiles.GetContainers())
             foreach (var VARIABLE in lst.GetTileList())
                 if (VARIABLE.IsEmpty())
-                    BrushEditor.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, this, prefab, randomRot, rotationType);
+                    HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, this, prefab, randomRot, rotationType);
     }
-
     /// <summary>
     /// Given a vector3 <paramref name="pos"/>, returns the closest tile.
     /// </summary>
@@ -207,8 +211,9 @@ public class HexWorldChunk : IMapElement
 
         return obj;
     }
-
-
+    /// <summary>
+    /// Renews the chunk by calling the renew function in tiles.
+    /// </summary>
     public void Renew()
     {
         foreach (var lst in tiles.GetContainers())
@@ -220,16 +225,10 @@ public class HexWorldChunk : IMapElement
             }
         }
     }
-
-    public bool IsEmpty()
-    {
-        foreach (var lst in tiles.GetContainers())
-            foreach (var VARIABLE in lst.GetTileList())
-                if (!VARIABLE.IsEmpty())
-                    return false;
-        return true;
-    }
-
+    /// <summary>
+    /// Calculates the center of the chunk
+    /// </summary>
+    /// <returns>Center point of the chunk as vec3</returns>
     public Vector3 GetChunkCenter()
     {
         float x = (_chunkCorners[1].x - _chunkCorners[0].x) / 2;
@@ -239,7 +238,14 @@ public class HexWorldChunk : IMapElement
         Vector3 center = new Vector3((idX + 1) * x, 0, (idY + 1) * z);
         return center;
     }
+    public bool IsEmpty()
+    {
+        foreach (var lst in tiles.GetContainers())
+        foreach (var VARIABLE in lst.GetTileList())
+            if (!VARIABLE.IsEmpty())
+                return false;
+        return true;
+    }
 
 
- 
 }
