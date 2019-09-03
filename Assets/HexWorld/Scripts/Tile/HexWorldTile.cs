@@ -20,8 +20,7 @@ public class HexWorldTile : IMapElement
 
     [NonSerialized] public GameObject gameObject;
     [NonSerialized] public TileAddress address;
-    [NonSerialized]public HexWorldChunk chunk;
-
+    [NonSerialized] public HexWorldChunk chunk;
 
 
     [SerializeField] public Vector3[] corners;
@@ -41,23 +40,11 @@ public class HexWorldTile : IMapElement
         neighbors = new TileAddress[6];
         address = CreateAddress();
     }
-
-
-
-    private Vector3[] CreateCorners(Vector3 center,float radius)
-    {
-        Vector3[] crs = new Vector3[6];
-        crs[0] = center - new Vector3(radius*Mathf.Sqrt(3)/2,0,.5f*radius);
-        crs[1] = center - new Vector3(0, 0, radius);
-        crs[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-        crs[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-        crs[4] = center + new Vector3(0, 0, radius);
-        crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
-        return crs;
-    }
-
-    
-
+    /// <summary>
+    /// Rotates the hexagon by given <paramref name="rotation"/> around rotation axis <paramref name="rotationType"/>
+    /// </summary>
+    /// <param name="rotation"></param>
+    /// <param name="rotationType"></param>
     public void Rotate(float rotation,Enums.RotationType rotationType)
     {
         if (gameObject == null)
@@ -78,6 +65,14 @@ public class HexWorldTile : IMapElement
 
         this.rotation = gameObject.transform.rotation;
     }
+    /// <summary>
+    /// Places the given <paramref name="prefab"/> on the tile
+    /// </summary>
+    /// <param name="prefab">prefab</param>
+    /// <param name="owner"></param>
+    /// <param name="rotation"></param>
+    /// <param name="rotationType"></param>
+    /// <returns></returns>
     public GameObject PlacePrefab(HexWorldPrefab prefab,HexWorldChunk owner,float rotation,Enums.RotationType rotationType)
     {
         RemovePrefab();
@@ -96,7 +91,9 @@ public class HexWorldTile : IMapElement
         return gameObject;
 
     }
-
+    /// <summary>
+    /// Removes the prefab from the tile.
+    /// </summary>
     public void RemovePrefab()
     {
         _isFull = false;
@@ -107,16 +104,18 @@ public class HexWorldTile : IMapElement
             gameObject = null;
 
     }
-
+    /// <summary>
+    /// Sets the given <paramref name="owner"/> as the tiles owner.
+    /// </summary>
+    /// <param name="owner"></param>
     public void SetOwnerChunk(HexWorldChunk owner)
     {
         chunk = owner;
        
     }
-    public bool IsEmpty()
-    {
-        return !_isFull;
-    }
+    /// <summary>
+    /// Renews the tile by placing the object again.
+    /// </summary>
     public void Renew()
     {
         
@@ -129,6 +128,11 @@ public class HexWorldTile : IMapElement
 
         gameObject.transform.parent = chunk.tileObject.transform;
     }
+    /// <summary>
+    /// Checks the neighboring tiles and add them to the list
+    /// if they are available.
+    /// </summary>
+    /// <param name="map"></param>
     public void UpdateNeighbors(HexWorldMap map)
     {
        //left neighbor
@@ -140,14 +144,22 @@ public class HexWorldTile : IMapElement
        }
         
     }
-   public TileAddress CreateAddress()
-   {
-       return new TileAddress(chunk.idX,chunk.idY,idX,idY);
-   }
+    public bool IsEmpty()
+    {
+       return !_isFull;
+    }
+    public override string ToString()
+    {
+       return "idX : " + idX.ToString() + " - idY : " + idY.ToString();
+    }
+    /// <summary>
+    /// Given a <paramref name="neighborAddress"/>, sets it this tiles neighbor.
+    /// </summary>
+    /// <param name="neighborAddress"></param>
+    /// <param name="neighborID"></param>
+    /// <param name="map"></param>
     private void SetNeighbor(TileAddress neighborAddress, int neighborID,HexWorldMap map)
     {
-
-        
 
         try
         {
@@ -161,10 +173,30 @@ public class HexWorldTile : IMapElement
         {
         }
     }
-
-    public override string ToString()
+    /// <summary>
+    /// Given a <paramref name="center"/> and a <paramref name="radius"/>, creates the corners of the hexagon.
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="radius"></param>
+    /// <returns>vec3 array of corners</returns>
+    private Vector3[] CreateCorners(Vector3 center, float radius)
+   {
+       Vector3[] crs = new Vector3[6];
+       crs[0] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+       crs[1] = center - new Vector3(0, 0, radius);
+       crs[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+       crs[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+       crs[4] = center + new Vector3(0, 0, radius);
+       crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
+       return crs;
+   }
+    /// <summary>
+    /// Creates the address of the tile.
+    /// </summary>
+    /// <returns></returns>
+    private TileAddress CreateAddress()
     {
-        return "idX : " + idX.ToString() + " - idY : " + idY.ToString();
+        return new TileAddress(chunk.idX, chunk.idY, idX, idY);
     }
 
 }
