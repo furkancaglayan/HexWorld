@@ -17,6 +17,8 @@ public class HexWorldEditor : EditorWindow
     private Enums.ColorScheme colorScheme = Enums.ColorScheme.COLD;
 #region Brush
 
+    private int brushRadius = 1;
+    private bool inheritRotation = true;
     private string[] brushes = {"Place", "Delete", "Select", "Rotate Right", "Rotate Left"};
 
     private string[] brushIcons =
@@ -472,6 +474,15 @@ public class HexWorldEditor : EditorWindow
             GUILayout.Label("Prefabs", headingStyle);
             GUILayout.Space(10);
 
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Brush Radius", txtStyle, GUILayout.Width(150));
+            brushRadius = EditorGUILayout.IntSlider(brushRadius,1,5,
+                GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+           
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Rotation Axis", txtStyle, GUILayout.Width(150));
             rotationType =
@@ -482,6 +493,14 @@ public class HexWorldEditor : EditorWindow
             GUILayout.Label("Enable Random Rotation", txtStyle, GUILayout.Width(150));
             randomRotation = GUILayout.Toggle(randomRotation, "", GUILayout.Width(position.width - 180));
             GUILayout.EndHorizontal();
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Inherit Rotation", txtStyle, GUILayout.Width(150));
+            inheritRotation = GUILayout.Toggle(inheritRotation, "", GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Current GameObject", txtStyle, GUILayout.Width(150));
@@ -533,6 +552,9 @@ public class HexWorldEditor : EditorWindow
             GUI.backgroundColor = editorColor;
             GUI.color = editorColor;
 
+           
+
+            
             GUILayout.BeginHorizontal();
             GUILayout.Space(10);
             selectedBrush = GUILayout.Toolbar(selectedBrush, brushContents, EditorStyles.toolbarButton,
@@ -1103,7 +1125,7 @@ GUILayout.Space(10);
 
                             HexWorldBrush.ApplyStroke(currentSelectedTile,
                                 hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab)
-                                , currentChunk, _map, (Enums.BrushType) selectedBrush, 5, randomRotation, false,
+                                , currentChunk, _map, (Enums.BrushType) selectedBrush, brushRadius, randomRotation, inheritRotation,
                                 rotationType);
                         }
 
@@ -1113,31 +1135,7 @@ GUILayout.Space(10);
                 }
 
                 if (currentSelectedTile != null)
-                {
-                    BrushEditor.DrawBrush(currentSelectedTile, (Enums.BrushType) selectedBrush, HexSize);
-
-                    if(currentSelectedTile.neighbors[0]!=null)
-                    BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[0]), (Enums.BrushType)selectedBrush,
-                        HexSize, Color.red);
-                    if (currentSelectedTile.neighbors[1] != null)
-                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[1]), (Enums.BrushType)selectedBrush,
-                        HexSize, Color.yellow);
-                    if (currentSelectedTile.neighbors[2] != null)
-                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[2]), (Enums.BrushType)selectedBrush,
-                        HexSize, Color.white);
-                    if (currentSelectedTile.neighbors[5] != null)
-                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[5]), (Enums.BrushType)selectedBrush,
-                        HexSize, Color.blue);
-                    if (currentSelectedTile.neighbors[4] != null)
-                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[4]), (Enums.BrushType)selectedBrush,
-                            HexSize, Color.cyan);
-                    if (currentSelectedTile.neighbors[3] != null)
-                        BrushEditor.DrawBrush(_map.GetTile(currentSelectedTile.neighbors[3]), (Enums.BrushType)selectedBrush,
-                            HexSize, Color.black);
-
-
-
-                }
+                    BrushEditor.DrawBrush(currentSelectedTile,_map, (Enums.BrushType) selectedBrush, HexSize,brushRadius);
                 SceneView.RepaintAll();
                 Repaint();
             }

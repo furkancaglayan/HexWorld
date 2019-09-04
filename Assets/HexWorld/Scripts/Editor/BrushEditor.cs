@@ -1,12 +1,11 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class BrushEditor
 {
     
-
-    
-    public static void DrawBrush(HexWorldTile tile, Enums.BrushType brushType, float size)
+    public static void DrawBrush(HexWorldTile tile,HexWorldMap map, Enums.BrushType brushType, float rad,int brushRadius)
     {
         switch (brushType)
         {
@@ -30,10 +29,18 @@ public static class BrushEditor
                 break;
 
         }
-        DrawHexagon(tile, 0);
-        DrawHexagon(tile, size);
-        for (int i = 0; i < 6; i++)
-            Handles.DrawLine(tile.corners[i], tile.corners[i] + new Vector3(0, size, 0));
+
+        List<HexWorldTile> tileLst = map.GetTilesInRadius(tile,brushRadius);
+        for (int i = 0; i < tileLst.Count; i++)
+        {
+            if (tileLst[i] == null)
+                continue;
+            DrawHexagon(tileLst[i], 0);
+            DrawHexagon(tileLst[i], rad);
+            for (int j = 0; j < 6; j++)
+                Handles.DrawLine(tileLst[i].corners[j], tileLst[i].corners[j] + new Vector3(0, rad, 0));
+        }
+       
     }
     public static void DrawBrush(HexWorldTile tile, Enums.BrushType brushType, float size,Color col)
     {
