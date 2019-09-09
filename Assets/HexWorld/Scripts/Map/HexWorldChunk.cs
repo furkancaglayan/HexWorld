@@ -29,8 +29,7 @@ public class HexWorldChunk : IMapElement
         this.idY = id_y;
         this.gridRadius = gridRadius;
 
-        //TODO:Make this a separate function.
-        //create corners
+        
         CreateCorners(leftDownCorner, capacity);
 
 
@@ -241,9 +240,9 @@ public class HexWorldChunk : IMapElement
     public bool IsEmpty()
     {
         foreach (var lst in tiles.GetContainers())
-        foreach (var VARIABLE in lst.GetTileList())
-            if (!VARIABLE.IsEmpty())
-                return false;
+            foreach (var VARIABLE in lst.GetTileList())
+                if (!VARIABLE.IsEmpty())
+                    return false;
         return true;
     }
 

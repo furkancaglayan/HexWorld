@@ -156,15 +156,14 @@ public class HexWorldTile : IMapElement
     /// Given a <paramref name="neighborAddress"/>, sets it this tiles neighbor.
     /// </summary>
     /// <param name="neighborAddress"></param>
-    /// <param name="neighborID"></param>
+    /// <param name="neighborId"></param>
     /// <param name="map"></param>
-    private void SetNeighbor(TileAddress neighborAddress, int neighborID,HexWorldMap map)
+    private void SetNeighbor(TileAddress neighborAddress, int neighborId,HexWorldMap map)
     {
-
         try
         {
-            neighbors[neighborID] = neighborAddress;
-            map.GetTile(neighborAddress).neighbors[(neighborID+3)%6] = address;
+            neighbors[neighborId] = neighborAddress;
+            map.GetTile(neighborAddress).neighbors[(neighborId+3)%6] = address;
         }
         catch (ArgumentException e)
         {

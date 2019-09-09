@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 699493ecf9520d84890426ae0a385989, type: 3}
+  m_Name: Desert
+  m_EditorClassIdentifier: 
+  path: Assets/HexWorld/Prefabs/Tiles/Plain Tiles
+  ecosystemName: Mountains
+  prefabType: 1
+  hexWorldPrefabSet:
+    folders:
+    - folderPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles
+      tooltip: Plain Tiles
+      texture: {fileID: 0}
+      content:
+        m_Text: Plai..
+        m_Image: {fileID: 0}
+        m_Tooltip: Plain Tiles
+      prefabs:
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Dead_Gray_Ground.prefab
+        shortName: Dead_Gray_Ground
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Dead_Gray_Ground.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1955856864525350, guid: a454ab1f951c23a4a83ecd2ef3395f93,
+          type: 3}
+        prefabContent:
+          m_Text: Dead_Gray_Ground
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Desert.prefab
+        shortName: Desert
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Desert.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1388691854768454, guid: 702890334e4d2aa43bd0938129d1cdbf,
+          type: 3}
+        prefabContent:
+          m_Text: Desert
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Dirt.prefab
+        shortName: Dirt
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Dirt.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1631914415893578, guid: 6254f8f8c1af7af47b7ca24363e24835,
+          type: 3}
+        prefabContent:
+          m_Text: Dirt
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Field_01.prefab
+        shortName: Field_01
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Field_01.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1866897286083090, guid: 7d3f169398984d0428e715be7b3a09a3,
+          type: 3}
+        prefabContent:
+          m_Text: Field_01
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Field_02.prefab
+        shortName: Field_02
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Field_02.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1398626613321578, guid: 6c292764bc65e384895b971c041b9e01,
+          type: 3}
+        prefabContent:
+          m_Text: Field_02
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Sand.prefab
+        shortName: Sand
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Sand.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1522285658450662, guid: f683f133eb0711149beada6af63eef4d,
+          type: 3}
+        prefabContent:
+          m_Text: Sand
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Sea.prefab
+        shortName: Sea
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Sea.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1522663958549934, guid: 15b6ec39a10c9a043a0e3ebad7366802,
+          type: 3}
+        prefabContent:
+          m_Text: Sea
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - fullPath: Assets/HexWorld/Prefabs/Tiles/Plain Tiles\Tundra.prefab
+        shortName: Tundra
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Plain Tiles/Tundra.prefab
+        texture: {fileID: 0}
+        objectReference: {fileID: 1353167069580980, guid: cf9f75c335250c34da81b11aac5fac94,
+          type: 3}
+        prefabContent:
+          m_Text: Tundra
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+    path: Assets/HexWorld/Prefabs/Tiles/Plain Tiles
