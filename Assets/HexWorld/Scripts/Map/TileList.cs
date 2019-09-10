@@ -7,19 +7,18 @@ using UnityEngine;
 public class TileList 
 {
 
-    [SerializeField] private List<TileContainer> tileContainers;
+    [SerializeField] public HexWorldTile[] list;
     public TileList(int containerCount)
     {
-        tileContainers = new List<TileContainer>();
-        for (int i = 0; i < containerCount; i++)
-            AddContainer();
+        list = new HexWorldTile[containerCount * containerCount];
+       
     }
     public HexWorldTile Get(int x, int y)
     {
         try
         {
-            
-            return tileContainers[y].GetTile(x);
+
+            return list[x * 20 + y];
         }
         catch (NullReferenceException e)
         {
@@ -30,49 +29,10 @@ public class TileList
             return null;
         }
     }
-    
-    public HexWorldTile Add(int i, HexWorldTile tile)
-    {
-        tileContainers[i].AddTile(tile);
-        return tile;
-        
-    }
 
-    
-    public void AddContainer()
+    internal HexWorldTile Add(int i, int j, HexWorldTile hexWorldTile)
     {
-       
-        tileContainers.Add(new TileContainer());
+        list[i * 20 + j] = hexWorldTile;
+        return list[i * 20 + j];
     }
-
-    public List<TileContainer> GetContainers()
-    {
-        return tileContainers;
-    }
-}
-[Serializable]
-public class TileContainer 
-{
-    [SerializeField] private List<HexWorldTile> hexWorldTiles;
-
-    public TileContainer()
-    {
-        hexWorldTiles = new List<HexWorldTile>();
-    }
-
-    public HexWorldTile GetTile(int j)
-    {
-        return hexWorldTiles[j];
-    }
-
-    public void AddTile(HexWorldTile tile)
-    {
-        hexWorldTiles.Add(tile);
-    }
-    public List<HexWorldTile> GetTileList()
-    {
-        return hexWorldTiles;
-    }
-
-
 }

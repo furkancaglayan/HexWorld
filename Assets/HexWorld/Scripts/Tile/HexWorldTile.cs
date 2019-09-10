@@ -4,7 +4,7 @@ using Object=UnityEngine.Object;
 #pragma warning disable 0414 
 #pragma warning disable 0168 
 [Serializable]
-public class HexWorldTile : IMapElement
+public class HexWorldTile
 {
     
 
@@ -12,18 +12,23 @@ public class HexWorldTile : IMapElement
     [SerializeField] public Vector3 center;
     [SerializeField] public float radius;
     [SerializeField] public int idX, idY;
-    [SerializeField] private Quaternion rotation = Quaternion.identity;
-
-    [SerializeField] private Object @object;
+    [SerializeField] public Vector3[] corners;
     [SerializeField] public TileAddress[] neighbors;
-    [SerializeField] private bool _isFull;
+
 
     [NonSerialized] public GameObject gameObject;
     [NonSerialized] public TileAddress address;
     [NonSerialized] public HexWorldChunk chunk;
 
 
-    [SerializeField] public Vector3[] corners;
+    [SerializeField] private bool _isFull;
+    [SerializeField] private Object _object;
+    [SerializeField] private Quaternion _rotation = Quaternion.identity;
+
+    [SerializeField] public Infrastructure infrastructure;
+    public bool IsEmpty => !_isFull;
+
+
 
     public HexWorldTile(HexWorldChunk chunk, int idX, int idY, Vector3 center,float radius)
     {
@@ -39,9 +44,12 @@ public class HexWorldTile : IMapElement
         //_tileEdges = CreateEdges(corners);
         neighbors = new TileAddress[6];
         address = CreateAddress();
+
     }
+    #region PUBLIC
+
     /// <summary>
-    /// Rotates the hexagon by given <paramref name="rotation"/> around rotation axis <paramref name="rotationType"/>
+    /// Rotates the hexagon by given <paramref name="rotation"/> around _rotation axis <paramref name="rotationType"/>
     /// </summary>
     /// <param name="rotation"></param>
     /// <param name="rotationType"></param>
@@ -63,7 +71,7 @@ public class HexWorldTile : IMapElement
 
         }
 
-        this.rotation = gameObject.transform.rotation;
+        this._rotation = gameObject.transform.rotation;
     }
     /// <summary>
     /// Places the given <paramref name="prefab"/> on the tile
@@ -77,17 +85,20 @@ public class HexWorldTile : IMapElement
     {
         RemovePrefab();
         SetOwnerChunk(owner);
-        GameObject go = Object.Instantiate(prefab.GetGameObject());
+
+     
+
+
+
+        GameObject go = Object.Instantiate(prefab.GameObject);
         go.transform.position = center;
         gameObject = go;
 
         Rotate(rotation, rotationType);
-        @object = prefab.GetObject();
+        _object = prefab.GameObject;
         _isFull = true;
 
         gameObject.transform.parent = chunk.tileObject.transform;
-
-
         return gameObject;
 
     }
@@ -97,33 +108,30 @@ public class HexWorldTile : IMapElement
     public void RemovePrefab()
     {
         _isFull = false;
-        @object = null;
+        _object = null;
         if (gameObject)
             Object.DestroyImmediate(gameObject);
         else
             gameObject = null;
 
     }
+
     /// <summary>
     /// Sets the given <paramref name="owner"/> as the tiles owner.
     /// </summary>
     /// <param name="owner"></param>
-    public void SetOwnerChunk(HexWorldChunk owner)
-    {
-        chunk = owner;
-       
-    }
+    public void SetOwnerChunk(HexWorldChunk owner) => chunk = owner;
     /// <summary>
-    /// Renews the tile by placing the object again.
+    /// Renews the tile by placing the _object again.
     /// </summary>
     public void Renew()
     {
         
         if (!_isFull)
             return;
-        GameObject go = Object.Instantiate(@object as GameObject);
+        GameObject go = Object.Instantiate(_object as GameObject);
         go.transform.position = center;
-        go.transform.rotation = rotation;
+        go.transform.rotation = _rotation;
         gameObject = go;
 
         gameObject.transform.parent = chunk.tileObject.transform;
@@ -144,26 +152,24 @@ public class HexWorldTile : IMapElement
        }
         
     }
-    public bool IsEmpty()
-    {
-       return !_isFull;
-    }
-    public override string ToString()
-    {
-       return "idX : " + idX.ToString() + " - idY : " + idY.ToString();
-    }
+
+
+    public override string ToString() => "idX : " + idX.ToString() + " - idY : " + idY.ToString();
+    #endregion
+    #region PRIVATE
+
     /// <summary>
     /// Given a <paramref name="neighborAddress"/>, sets it this tiles neighbor.
     /// </summary>
     /// <param name="neighborAddress"></param>
     /// <param name="neighborId"></param>
     /// <param name="map"></param>
-    private void SetNeighbor(TileAddress neighborAddress, int neighborId,HexWorldMap map)
+    private void SetNeighbor(TileAddress neighborAddress, int neighborId, HexWorldMap map)
     {
         try
         {
             neighbors[neighborId] = neighborAddress;
-            map.GetTile(neighborAddress).neighbors[(neighborId+3)%6] = address;
+            map.GetTile(neighborAddress).neighbors[(neighborId + 3) % 6] = address;
         }
         catch (ArgumentException e)
         {
@@ -179,16 +185,16 @@ public class HexWorldTile : IMapElement
     /// <param name="radius"></param>
     /// <returns>vec3 array of corners</returns>
     private Vector3[] CreateCorners(Vector3 center, float radius)
-   {
-       Vector3[] crs = new Vector3[6];
-       crs[0] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-       crs[1] = center - new Vector3(0, 0, radius);
-       crs[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-       crs[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-       crs[4] = center + new Vector3(0, 0, radius);
-       crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
-       return crs;
-   }
+    {
+        Vector3[] crs = new Vector3[6];
+        crs[0] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+        crs[1] = center - new Vector3(0, 0, radius);
+        crs[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+        crs[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+        crs[4] = center + new Vector3(0, 0, radius);
+        crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
+        return crs;
+    }
     /// <summary>
     /// Creates the address of the tile.
     /// </summary>
@@ -197,5 +203,6 @@ public class HexWorldTile : IMapElement
     {
         return new TileAddress(chunk.idX, chunk.idY, idX, idY);
     }
+    #endregion
 
 }

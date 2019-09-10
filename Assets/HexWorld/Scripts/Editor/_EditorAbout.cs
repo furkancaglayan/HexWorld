@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-public class About : EditorWindow {
+public class _EditorAbout : EditorWindow {
 
     private static Texture2D birchgamesLogo;
     private static readonly string birchgamesLogoPath = "Assets/HexWorld/Textures/birchgames_logo.png";
-    [MenuItem("HexWorld/About Us", priority =1)]
+    [MenuItem("HexWorld/_EditorAbout Us", priority =1)]
     public static void Init()
     {
 
         birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
-        About window = (About)GetWindow(typeof(About));
+        _EditorAbout window = (_EditorAbout)GetWindow(typeof(_EditorAbout));
         window.autoRepaintOnSceneChange = true;
-        window.titleContent = new GUIContent("About Us", birchgamesLogo);
+        window.titleContent = new GUIContent("_EditorAbout Us", birchgamesLogo);
         window.Show(false);
 
         window.maxSize = new Vector2(450, 600);

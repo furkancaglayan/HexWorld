@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 #pragma warning disable 0219
 #pragma warning disable 0168 
 [Serializable]
-public class HexWorldMap : IMapElement
+public class HexWorldMap 
 {
     [SerializeField] public Enums.MapSize mapSize;
     [SerializeField] public ChunkList chunkList;
@@ -32,9 +32,9 @@ public class HexWorldMap : IMapElement
         this._mapName = CreateObjectName();
         gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
     }
-    public HexWorldMap(HexWorldStaticData staticData, Material mat)
+    public HexWorldMap(HexWorldSerialized serialized, Material mat)
     {
-        var copy = Object.Instantiate(staticData);
+        var copy = Object.Instantiate(serialized);
         this.mapSize =copy.GetMapData().mapSize;
         this.hexRadius = copy.GetMapData().hexRadius;
 
@@ -58,10 +58,9 @@ public class HexWorldMap : IMapElement
     /// <returns></returns>
     public HexWorldChunk FindChunkWithPos(Vector3 pos)
     {
-        foreach (var lst in chunkList.GetContainers())
-            foreach (var VARIABLE in lst.GetChunkList())
-                if (VARIABLE.IsLocationInChunk(pos))
-                    return VARIABLE;
+        foreach (var chunk in chunkList.list)
+            if (chunk.IsLocationInChunk(pos))
+                return chunk;
         
 
         return null;
@@ -98,13 +97,10 @@ public class HexWorldMap : IMapElement
         GameObject main = new GameObject(map_name);
         GameObject chunkObj = new GameObject("chunkList");
         chunkObj.transform.parent = main.transform;
-        foreach (var lst in chunks.GetContainers())
+        foreach (var chunk in chunkList.list)
         {
-            foreach (var VARIABLE in lst.GetChunkList())
-            {
-                GameObject newChunk = VARIABLE.CreateSceneReference(chunk_capacity,  mat, hexRadius);
-                newChunk.transform.parent = chunkObj.transform;
-            }
+            GameObject newChunk = chunk.CreateSceneReference(chunk_capacity,  mat, hexRadius);
+            newChunk.transform.parent = chunkObj.transform;
             
         }
 
@@ -135,7 +131,7 @@ public class HexWorldMap : IMapElement
                 //TODO:Add height feature
                 HexWorldChunk hexWorldChunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, hexRadius);
                 hexWorldChunk.CreateTiles(this);
-                chunkList.Add(i, hexWorldChunk);
+                chunkList.Add(i,j, hexWorldChunk);
             }
 
         }
@@ -146,7 +142,6 @@ public class HexWorldMap : IMapElement
     /// <returns></returns>
     private string CreateObjectName()
     {
-        //TODO:Remove time and add id based name
         string time = System.DateTime.UtcNow.ToLocalTime().ToLongTimeString();
         string name = "[HexWorld_" + time + "_" + mapSize.ToString() + "]";
 
@@ -374,28 +369,24 @@ public class HexWorldMap : IMapElement
     }
     public void FillMap(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in chunkList.GetContainers())
-            foreach (var VARIABLE in lst.GetChunkList())
-                VARIABLE.Fill(prefab, rotationType, randomRot);
+        foreach (var chunk in chunkList.list)
+            chunk.Fill(prefab, rotationType, randomRot);
     }
     public void FillEmptyTiles(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in chunkList.GetContainers())
-            foreach (var VARIABLE in lst.GetChunkList())
-                VARIABLE.FillEmpty(prefab, rotationType, randomRot);
+        foreach (var chunk in chunkList.list)
+            chunk.FillEmpty(prefab, rotationType, randomRot);
     }
     public bool IsEmpty()
     {
-        foreach (var lst in chunkList.GetContainers())
-            foreach (var VARIABLE in lst.GetChunkList())
-                if (!VARIABLE.IsEmpty()) return false;
+        foreach (var chunk in chunkList.list)
+            if (!chunk.IsEmpty()) return false;
         return true;
     }
     public void Renew()
     {
-        foreach (var lst in chunkList.GetContainers())
-            foreach (var VARIABLE in lst.GetChunkList())
-                    VARIABLE.Renew();
+        foreach (var chunk in chunkList.list)
+            chunk.Renew();
     }
 
     public List<HexWorldTile> GetTilesInRadius(HexWorldTile centerTile, int radius)

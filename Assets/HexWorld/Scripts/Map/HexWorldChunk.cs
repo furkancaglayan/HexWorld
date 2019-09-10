@@ -5,7 +5,7 @@ using UnityEngine;
 #pragma warning disable 0414 
 
 [Serializable]
-public class HexWorldChunk : IMapElement
+public class HexWorldChunk 
 {
     [SerializeField] public int capacity;
     [SerializeField] public int idX;
@@ -75,7 +75,7 @@ public class HexWorldChunk : IMapElement
         tileObject.transform.SetParent(gameObject.transform);
 
         gameObject.transform.position = GetChunkCenter();
-        gameObject = MeshCreator.CreateMesh(this, mat,out _mesh);
+        gameObject = Utils.CreateMesh(this, mat,out _mesh);
 
         _collider = GenerateCollider(gameObject);
 
@@ -111,7 +111,7 @@ public class HexWorldChunk : IMapElement
                                  , 0, gridRadius * i * (1.5F)) + new Vector3(0, 0, gridRadius);
 
                 HexWorldTile hexWorldTile = Factory.create_tile(this, j, i, center, gridRadius);
-                hexWorldTile=tiles.Add(i, hexWorldTile);
+                hexWorldTile=tiles.Add(j,i, hexWorldTile);
             }
         }
 
@@ -164,9 +164,8 @@ public class HexWorldChunk : IMapElement
     /// <param name="randomRot"></param>
     public void Fill(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in tiles.GetContainers())
-            foreach (var VARIABLE in lst.GetTileList())
-                HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE,this, prefab, randomRot, rotationType);
+        foreach (var tile in tiles.list)
+                HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, tile, this, prefab, randomRot, rotationType);
     }
     /// <summary>
     /// Fills the empty spots of the chunk with given <paramref name="prefab"/>
@@ -176,10 +175,9 @@ public class HexWorldChunk : IMapElement
     /// <param name="randomRot"></param>
     public void FillEmpty(HexWorldPrefab prefab, Enums.RotationType rotationType, bool randomRot)
     {
-        foreach (var lst in tiles.GetContainers())
-            foreach (var VARIABLE in lst.GetTileList())
-                if (VARIABLE.IsEmpty())
-                    HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, VARIABLE, this, prefab, randomRot, rotationType);
+        foreach (var tile in tiles.list)
+                if (tile.IsEmpty)
+                    HexWorldBrush.ApplySimpleStroke(Enums.BrushType.Place, tile, this, prefab, randomRot, rotationType);
     }
     /// <summary>
     /// Given a vector3 <paramref name="pos"/>, returns the closest tile.
@@ -191,17 +189,14 @@ public class HexWorldChunk : IMapElement
         Vector3 center;
         float dist = 99999;
         HexWorldTile obj = null;
-        foreach (var lst in tiles.GetContainers())
+        foreach (var o in tiles.list)
         {
-            foreach (var o in lst.GetTileList())
+            center = o.center;
+            float val = Vector3.Distance(center, pos);
+            if (val < dist)
             {
-                center = o.center;
-                float val = Vector3.Distance(center, pos);
-                if (val < dist)
-                {
-                    dist = val;
-                    obj = o;
-                }
+                dist = val;
+                obj = o;
             }
         }
           
@@ -215,13 +210,10 @@ public class HexWorldChunk : IMapElement
     /// </summary>
     public void Renew()
     {
-        foreach (var lst in tiles.GetContainers())
+        foreach (var tile in tiles.list)
         {
-            foreach (var VARIABLE in lst.GetTileList())
-            {
-                VARIABLE.SetOwnerChunk(this);
-                VARIABLE.Renew();
-            }
+            tile.SetOwnerChunk(this);
+            tile.Renew();
         }
     }
     /// <summary>
@@ -239,10 +231,9 @@ public class HexWorldChunk : IMapElement
     }
     public bool IsEmpty()
     {
-        foreach (var lst in tiles.GetContainers())
-            foreach (var VARIABLE in lst.GetTileList())
-                if (!VARIABLE.IsEmpty())
-                    return false;
+        foreach (var tile in tiles.list)
+            if (!tile.IsEmpty)
+                return false;
         return true;
     }
 

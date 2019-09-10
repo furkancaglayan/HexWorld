@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CustomEditor(typeof(HexWorldPrefabLoader))]
-public class DataEditor : Editor
+public class _EditorPrefabLoader : Editor
 {
 
  
@@ -15,7 +15,6 @@ public class DataEditor : Editor
     private bool defaultInspector;
 
 
-    private int selectedPrefab = 0;
     private int selectedPrefabFolder = 0;
     private GUIContent[][] prefabContents;
     private GUIContent[] folderContents;
@@ -52,10 +51,7 @@ public class DataEditor : Editor
 
     
 
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("Prefab Type:", labels, GUILayout.Width(labelWidth));
-        _instance.prefabType = (Enums.PrefabType)EditorGUILayout.EnumPopup(_instance.prefabType,EditorStyles.toolbarPopup);
-        GUILayout.EndHorizontal();
+      
 
 
         GUI.color = Color.green;
@@ -109,8 +105,7 @@ public class DataEditor : Editor
             fontStyle = FontStyle.Italic,
             fontSize = 12
         };
-        GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(400), GUILayout.MinWidth(400),
-            GUILayout.MinHeight(250));
+        GUILayout.BeginVertical(GUI.skin.box);
         selectedPrefabFolder =GUILayout.Toolbar(selectedPrefabFolder, folderContents, EditorStyles.toolbarButton);
         GUILayout.Space(3);
         int rows = 4;
@@ -123,8 +118,7 @@ public class DataEditor : Editor
                 /*selectedPrefab = GUILayout.SelectionGrid(selectedPrefab, prefabContents[selectedPrefabFolder],
                     3, prefabStyle,GUILayout.Height(400));*/
 
-                GUILayout.BeginVertical(GUILayout.Width(400), GUILayout.MinWidth(400),
-                    GUILayout.MinHeight(250));
+                GUILayout.BeginVertical();
                 for (int i = 0; i < prefabContents[selectedPrefabFolder].Length; i++)
                 {
                     if (i % rows == 0)
@@ -136,7 +130,7 @@ public class DataEditor : Editor
                    
 
                     GUIContent content = prefabContents[selectedPrefabFolder][i];
-                    GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(400/rows));
+                    GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(75));
                     GUILayout.Label(content.image,EditorStyles.helpBox);
                     GUILayout.Label(content.text,EditorStyles.boldLabel);
 
@@ -149,7 +143,7 @@ public class DataEditor : Editor
                     EditorGUI.ProgressBar(rect, .3f, "Rate");
 
                     if (GUILayout.Button("Delete",EditorStyles.toolbarButton,GUILayout.Width(rect.width)))
-                        _instance.hexWorldPrefabSet.folders[selectedPrefab].DeletePrefab(selectedPrefab);
+                        _instance.hexWorldPrefabSet.Get(selectedPrefabFolder).DeletePrefab(i);
 
                     GUILayout.Space(3);
                     GUILayout.EndVertical();
@@ -166,17 +160,10 @@ public class DataEditor : Editor
             else
             {
                 GUILayout.BeginVertical();
-                GUILayout.Label("No prefabs are present at : " + folderContents[selectedPrefabFolder].tooltip,
-                    GUILayout.Width(labelWidth));
+                GUILayout.Label("No prefabs are present at : " + folderContents[selectedPrefabFolder].tooltip);
                 GUILayout.Label(
                     "Enter a valid 'Prefabs Directory' and click on 'Load Prefabs'.\nThis will load the assets that are in the path.");
                 GUILayout.Space(20);
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
-                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
-                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
-                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
-                GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
         }
