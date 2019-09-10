@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7a333dbba977dc48963a069f663a675, type: 3}
+  m_Name: BaseSettings
+  m_EditorClassIdentifier: 
+  name: Config
+  hexWorldLogo: {fileID: 2800000, guid: a5617c5e9327be840bf165279777c934, type: 3}
+  birchGamesLogo: {fileID: 2800000, guid: 00427e15b305c0f4182f1e3582433e41, type: 3}
+  defaultAssetPreview: {fileID: 2800000, guid: e5d81b5dfa8c0c44b87bab8acbca7c54, type: 3}
+  postProcessLogo: {fileID: 2800000, guid: ccfde5e58162c0c468bf985aaca2eb4c, type: 3}
+  placementToolTexture: {fileID: 2800000, guid: 77f6cd65eb0caa7458dd006bf024e392,
+    type: 3}
+  deleteToolTexture: {fileID: 2800000, guid: fe04a749e874a434380ea5c690c15b4a, type: 3}
+  selectToolTexture: {fileID: 2800000, guid: 79bba7c42dcf70449ac5999efb831961, type: 3}
+  rotateLeftToolTexture: {fileID: 2800000, guid: 77a3cfab63685e446a99353ac944d0df,
+    type: 3}
+  rotateRightToolTexture: {fileID: 2800000, guid: 6ae9ee24144b364419145ece9f2eac02,
+    type: 3}
+  prefabsDirectory: Assets/HexWorld/Prefabs/Tiles
+  saveDirectory: Assets/HexWorld/SavedMaps

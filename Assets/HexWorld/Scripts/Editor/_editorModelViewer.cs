@@ -5,21 +5,20 @@ using UnityEngine;
 
 public class _EditorModelViewer : EditorWindow {
 
-    private static Texture2D birchgamesLogo;
-    private static readonly string birchgamesLogoPath = "Assets/HexWorld/Textures/birchgames_logo.png";
-
+    private static EditorConfiguration _configuration;
 
     private Editor modelView;
     private static Object content;
     public static void Init(Object contentToShow)
     {
+
         content = contentToShow;
-         birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
+        _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
         _EditorModelViewer window = (_EditorModelViewer)GetWindow(typeof(_EditorModelViewer));
         window.minSize.Set(512, 512);
         window.maxSize.Set(512, 512);
 
-        window.titleContent = new GUIContent("Model Viewer", birchgamesLogo);
+        window.titleContent = new GUIContent("Model Viewer", _configuration.birchGamesLogo);
         window.Show();
     }
     private void OnGUI()
