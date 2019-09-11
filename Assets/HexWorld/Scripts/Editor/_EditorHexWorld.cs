@@ -19,22 +19,23 @@ public class _EditorHexWorld : EditorWindow
         #region Map
         private Material _gridMaterial;
         private Map _map;
-    private GameObject mapObject;
+        private GameObject mapObject;
         private MapSize _mapSize = MapSize.Small;
         private float _hexSize = 1F;
+        private bool IsMapCreated => _map != null;
+        #endregion
     #endregion
-    #endregion
-    #region Configuration
+        #region Configuration
 
-    private static EditorConfiguration _configuration;
-    #endregion
+        private static EditorConfiguration _configuration;
+        #endregion
 
 
     #region Built-in Functions
     [MenuItem("HexWorld/Map Generator", priority = -1)]
     public static void Init()
     {
-        _EditorUtils.AddTag("HexWorld");
+        _EditorUtility.AddTag("HexWorld");
         _EditorHexWorld window = (_EditorHexWorld)GetWindow(typeof(_EditorHexWorld));
         _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
 
@@ -45,6 +46,79 @@ public class _EditorHexWorld : EditorWindow
 
     private void OnEnable()
     {
+#if UNITY_2019_1_OR_NEWER
+        SceneView.duringSceneGui -= this.OnSceneGUI;
+        SceneView.duringSceneGui += this.OnSceneGUI;
+#else
+        SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+        SceneView.onSceneGUIDelegate += this.OnSceneGUI;
+#endif
+       // brushContents = CreateBrushContents(brushes, brushIcons);
+    }
+    void OnSceneGUI(SceneView sceneView)
+    {
+        //BrushToolsKeyControl();
+        HandleUtility.AddDefaultControl(GUIUtility.GetControlID(FocusType.Passive));
+        if (_map != null)
+            if (!_map.gameObject)
+                DeleteMap();
+        if (IsMapCreated)
+            GuiDrawBordersAndArea(_map);
+        else
+            return;
+
+        /*
+        RaycastHit hit;
+        int rayMask = (3 << 8);
+        bool rayCast = Physics.Raycast(HandleUtility.GUIPointToWorldRay(Event.current.mousePosition), out hit, rayMask);
+         if (rayCast)
+        {
+            if (hit.transform.tag.Equals("HexWorld"))
+            {
+                Vector3 mouseLoc = new Vector3(hit.point.x, 0, hit.point.z);
+
+                Chunk currentChunk = _map.FindChunkWithPos(mouseLoc);
+                if (currentChunk == null)
+                    return;
+                currentSelectedTile = currentChunk.Position2Tile(mouseLoc);
+
+               if (selectedPrefab != -1 && selectedPrefabFolder != -1 && hexWorldPrefabSet != null)
+                {
+                    bool validPrefabSelected = hexWorldPrefabSet.ValidIndices(selectedPrefabFolder, selectedPrefab);
+                    if (!validPrefabSelected)
+                        selectedPrefab = 0;
+                    if (Event.current.type == EventType.MouseMove || Event.current.type == EventType.MouseDrag ||
+                        Event.current.type == EventType.MouseDown)
+                    {
+                        if (Event.current.button == 0 &&
+                            (Event.current.type == EventType.MouseDrag || Event.current.type == EventType.MouseDown))
+                        {
+                            /*_EditorBrush.ApplyStroke((Enums.BrushType) selectedBrush, currentSelectedTile, currentChunk,
+                                hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab),
+                                randomRotation, rotationType, out currentGameObject);*/
+        /*
+                                    HexWorldBrush.ApplyStroke(currentSelectedTile,
+                                        hexWorldPrefabSet.Get(selectedPrefabFolder, selectedPrefab)
+                                        , currentChunk, _map, (Enums.BrushType) selectedBrush, brushRadius, randomRotation, inheritRotation,
+                                        rotationType);
+                                }
+
+                                SceneView.RepaintAll();
+                                Repaint();
+                            }
+                        }
+
+                        if (currentSelectedTile != null)
+                            _EditorBrush.DrawBrush(currentSelectedTile,_map, (Enums.BrushType) selectedBrush, HexSize,brushRadius);
+        SceneView.RepaintAll();
+        Repaint();
+    }
+}*/
+
+
+        //TODO:Check if this is costly.
+        sceneView.Repaint();
+        Repaint();
     }
     private void OnGUI()
     {
@@ -202,6 +276,34 @@ public class _EditorHexWorld : EditorWindow
         DestroyImmediate(mapObject);
         _map = null;
         mapObject = null;
+    }
+
+    /// <summary>
+    /// For the given Map, draws to borders with Handles.
+    /// </summary>
+    /// <param name="hexWorldMap"></param>
+    private void GuiDrawBordersAndArea(Map hexWorldMap)
+    {
+        if (hexWorldMap == null)
+            return;
+        if (!hexWorldMap.gameObject)
+            return;
+
+        Vector3[] corners = hexWorldMap.DefineCorners();
+
+        Vector3 A = corners[0];
+        Vector3 B = corners[1];
+        Vector3 C = corners[2];
+        Vector3 D = corners[3];
+        Handles.color = new Color(1, 1, 1, .1F);
+        //Handles.DrawAAConvexPolygon(corners);
+
+        Handles.color = Color.red;
+        Handles.DrawLine(A, B);
+        Handles.DrawLine(C, D);
+        Handles.color = Color.blue;
+        Handles.DrawLine(D, A);
+        Handles.DrawLine(B, C);
     }
     #endregion
 }

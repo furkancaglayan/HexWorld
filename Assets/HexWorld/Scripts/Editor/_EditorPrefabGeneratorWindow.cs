@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-public class EPrefabGenerator : EditorWindow
+public class _EditorPrefabGeneratorWindow : EditorWindow
 {
-    [MenuItem("HexWorld/Prefab Generator")]
-    static void Init()
+    private static EditorConfiguration _configuration;
+    [MenuItem("HexWorld/Prefab Generator",priority =2)]
+    public static void Init()
     {
-        EPrefabGenerator window = (EPrefabGenerator)GetWindow(typeof(EPrefabGenerator));
+        _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
+        _EditorPrefabGeneratorWindow window = (_EditorPrefabGeneratorWindow)GetWindow(typeof(_EditorPrefabGeneratorWindow));
         window.autoRepaintOnSceneChange = true;
         window.minSize = new Vector2(1000,600);
         window.maxSize = window.minSize;
+        window.titleContent = new GUIContent("_EditorAbout Us", _configuration.birchGamesLogo);
         window.Show(false);
 
     }

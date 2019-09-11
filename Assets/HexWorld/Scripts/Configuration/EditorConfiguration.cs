@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;  
 
-[CreateAssetMenu(fileName ="Editor Configuration")]
 public class EditorConfiguration:Configuration
 {
     public Texture2D hexWorldLogo;

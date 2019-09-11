@@ -39,9 +39,11 @@ public class Enums  {
         DARK
     }
 
-    public enum RiverType
+    public enum DataType
     {
-        Edge,
-        Centered
+        Layered,
+        Combined
     }
+
+   
 }
