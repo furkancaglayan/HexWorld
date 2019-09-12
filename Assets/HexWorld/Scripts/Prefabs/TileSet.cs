@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [Serializable]
-public abstract class Dataset : ScriptableObject
+public abstract class TileSet : ScriptableObject
 {
     public new string name;
     public string ecosystem;

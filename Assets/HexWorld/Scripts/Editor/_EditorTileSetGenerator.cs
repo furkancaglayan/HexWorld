@@ -7,17 +7,17 @@ using DataType=Enums.DataType;
 using g = UnityEngine.GUILayout;
 using ge = UnityEditor.EditorGUILayout;
 
-public class _EditorDatasetGenerator : EditorWindow
+public class _EditorTileSetGenerator : EditorWindow
 {
     #region Init
     private static EditorConfiguration _configuration;
-    [MenuItem("HexWorld/Dataset Generator", priority = 2)]
+    [MenuItem("HexWorld/TileSet Generator", priority = 2)]
     static void Init()
     {
         _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
-        _EditorDatasetGenerator window = (_EditorDatasetGenerator)GetWindow(typeof(_EditorDatasetGenerator));
+        _EditorTileSetGenerator window = (_EditorTileSetGenerator)GetWindow(typeof(_EditorTileSetGenerator));
         window.autoRepaintOnSceneChange = true;
-        window.titleContent = new GUIContent("Dataset Generator", _configuration.birchGamesLogo);
+        window.titleContent = new GUIContent("TileSet Generator", _configuration.birchGamesLogo);
         window.Show(false);
 
     }
@@ -29,8 +29,8 @@ public class _EditorDatasetGenerator : EditorWindow
     }
     #endregion
     #region Fields
-    private string _datasetName = "Dataset1";
-    private string _datasetEcosystem = "Awesome Ecosystem";
+    private string _tilesetName = "TileSet1";
+    private string _tilesetEcosystem = "Awesome Ecosystem";
     private Vector2 _mainScrollView;
     private DataType dataType = DataType.Layered;
     private float labelWidth = 90;
@@ -44,7 +44,6 @@ public class _EditorDatasetGenerator : EditorWindow
     #region CombinedFields
     private string _path = _configuration.prefabsDirectory;
     private string _savePath = _configuration.saveDirectory;
-    private bool _loaded = false;
     #endregion
     #region ONGUI
     private void OnGUI()
@@ -69,15 +68,15 @@ public class _EditorDatasetGenerator : EditorWindow
 
 
         _mainScrollView = g.BeginScrollView(_mainScrollView,GUI.skin.window);
-        g.Label("HexWorld Dataset Generator", labelstyle);
+        g.Label("HexWorld TileSet Generator", labelstyle);
         g.BeginVertical();
 
         g.Space(10);
 
         g.BeginHorizontal();
         g.Space(10);
-        g.Label("Dataset Name:", textstyle, g.Width(labelWidth));
-        _datasetName = g.TextField(_datasetName, textfield, g.Width(FieldWidth));
+        g.Label("TileSet Name:", textstyle, g.Width(labelWidth));
+        _tilesetName = g.TextField(_tilesetName, textfield, g.Width(FieldWidth));
         g.EndHorizontal();
 
 
@@ -91,12 +90,12 @@ public class _EditorDatasetGenerator : EditorWindow
         g.BeginHorizontal();
         g.Space(10);
         g.Label("Ecosystem:", textstyle, g.Width(labelWidth));
-        _datasetEcosystem = g.TextField(_datasetEcosystem, textfield, g.Width(FieldWidth));
+        _tilesetEcosystem = g.TextField(_tilesetEcosystem, textfield, g.Width(FieldWidth));
         g.EndHorizontal();
 
         g.BeginHorizontal();
         g.Space(10);
-        g.Label("Dataset Type:", textstyle, g.Width(labelWidth));
+        g.Label("TileSet Type:", textstyle, g.Width(labelWidth));
         dataType = (DataType)ge.EnumPopup(dataType,  g.Width(FieldWidth));
         g.EndHorizontal();
 
@@ -112,21 +111,21 @@ public class _EditorDatasetGenerator : EditorWindow
             g.Space(10);
             g.BeginVertical();
             g.Space(10);
-            g.Label("Combined Dataset", labelstyle);
+            g.Label("Combined TileSet", labelstyle);
 
 
             g.BeginHorizontal(EditorStyles.helpBox, g.Width(position.width-30));
             g.Space(10);
-            g.Label("Combined Dataset allows you to import already-made, game ready tiles." +
+            g.Label("Combined TileSet allows you to import already-made, game ready tiles." +
                     " Recommended to use if your tile assets are created and merged in an external modeling software. " +
-                    "Combined dataset will include first subfolders of the root directory besides" +
+                    "Combined TileSet will include first subfolders of the root directory besides" +
                     " root directory prefabs.", textstyle);
             g.EndHorizontal();
             g.Space(10);
 
             g.BeginHorizontal();
             g.Space(10);
-            g.Label("Dataset Path:", textstyle, g.Width(labelWidth));
+            g.Label("TileSet Path:", textstyle, g.Width(labelWidth));
             _path = g.TextField(_path, textfield, g.Width(FieldWidth-50));
             g.Space(10);
             GUI.color = _color2;
@@ -141,8 +140,8 @@ public class _EditorDatasetGenerator : EditorWindow
             g.BeginHorizontal();
             g.Space(10);
             GUI.color = _color1;
-            if (g.Button("Create Dataset", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
-                _EditorDatasetUtility.CreateCombinedDataSet(_path,_datasetName,_datasetEcosystem,_savePath
+            if (g.Button("Create TileSet", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
+                _EditorDatasetUtility.CreateCombinedDataSet(_path,_tilesetName,_tilesetEcosystem,_savePath
                     );
             GUI.color = Color.white;
                 
@@ -167,11 +166,11 @@ public class _EditorDatasetGenerator : EditorWindow
             g.Space(10);
             g.BeginVertical();
             g.Space(10);
-            g.Label("Layered Dataset", labelstyle);
+            g.Label("Layered TileSet", labelstyle);
 
             g.BeginHorizontal(EditorStyles.helpBox, g.Width(position.width - 30));
             g.Space(10);
-            g.Label("Layered Dataset allows you to buraya bilgi gelecek ehehehhehe", textstyle);
+            g.Label("Layered TileSet allows you to buraya bilgi gelecek ehehehhehe", textstyle);
             g.EndHorizontal();
             g.Space(10);
 
