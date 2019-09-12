@@ -4,16 +4,17 @@ using System.IO;
 using UnityEngine;
 
 [Serializable]
-public class PropFolder
+public class PropFolder : IUpgrade
 {
+    [SerializeField] public string name;
     [SerializeField,HideInInspector] public string path;
     [SerializeField] public List<Prop> props;
 
-    public PropFolder()
+
+    public PropFolder(string name)
     {
-
+        this.name = name;
     }
-
     public void Create(string path)
     {
         string correctedPath = path.Replace("\\", "/");
@@ -26,13 +27,6 @@ public class PropFolder
                 props.Add(Factory.CreateProp(variable));
     }
 
-    public void SetProps(List<Prop> newProps)
-    {
-        this.props = newProps;
-    }
-
-    public void DeleteProp(int index)
-    {
-        props.RemoveAt(index);
-    }
+    public void SetProps(List<Prop> newProps)=> props = newProps;
+    public void DeleteProp(int index)=> props.RemoveAt(index);
 }

@@ -37,7 +37,7 @@ public static class _EditorTileSetUtility
                 return;
         }
 
-        CombinedTileSet set = Factory.CreateDataSet(path);
+        CombinedTileSet set = Factory.CreateCombinedTileSet(path);
         string fullSavePath = savePath.Trim('/')+"/"+name+".asset";
         AssetDatabase.CreateAsset(set, fullSavePath);
         set.name = name;
