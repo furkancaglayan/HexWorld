@@ -1,11 +1,45 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public static class _EditorDatasetUtility 
 {
-    public static void CreateDataSet()
+    public static void CreateCombinedDataSet(string path,string name,string ecosystem, string savePath, bool singleFolder)
     {
+
+        bool valid=_EditorUtility.CheckIfDirectoryIsValid(path, false);
+        if (!valid)
+            return;
+      
+        bool credentialsAreValid = _EditorUtility.IsStringValid(new []{name,ecosystem});
+        if (!credentialsAreValid)
+        {
+            EditorUtility.DisplayDialog("Credentials aren't correct!", "You broke the system.Congrats! Please" +
+                                                                       "try again with valid credentials", "OK");
+            return;
+        }
+
+        if (!Directory.Exists(savePath))
+        {
+            int choice=EditorUtility.DisplayDialogComplex("Directory does not exist!","Directory +'"+ savePath+"' " +
+                                                                            "does not exist. Would you like to create it?"
+                                                                            ,"Yes","No","Cancel");
+            if (choice == 0)
+                Directory.CreateDirectory(savePath);
+            else
+                return;
+        }
+
+        CombinedDataSet set = Factory.CreateDataSet(path, singleFolder);
+        string fullSavePath = savePath.Trim('/')+"/"+name+"-Combined-"+ecosystem+".asset";
+        AssetDatabase.CreateAsset(set, fullSavePath);
+        set.name = name;
+        set.ecosystem = ecosystem;
+        EditorUtility.SetDirty(set);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
 
     }
 }

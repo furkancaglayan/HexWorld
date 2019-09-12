@@ -16,10 +16,10 @@ public class PropFolder
 
     public void Create(string path)
     {
-        this.path = path;
+        string correctedPath = path.Replace("\\", "/");
+        this.path = correctedPath;
 
-
-        string[] files = Directory.GetFiles(path);
+        string[] files = Directory.GetFiles(correctedPath);
         props = new List<Prop>();
         foreach (var variable in files)
             if(!variable.Contains(".meta")&& variable.Contains(".prefab"))

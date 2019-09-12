@@ -648,6 +648,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1175322278}
   - component: {fileID: 1175322277}
+  - component: {fileID: 1175322279}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -667,46 +668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89ea563472f30444f957c182ea1d666c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xxD:
-    mapSize: 0
-    chunkList:
-      list:
-      - capacity: 0
-        idX: 0
-        idY: 0
-        gridRadius: 0
-        tiles:
-          list:
-          - center: {x: 0, y: 0, z: 0}
-            idX: 0
-            idY: 0
-            corners: []
-            neighbors: []
-            _isFull: 0
-            layerWrapper:
-              upgrade:
-                n: asdasd
-          - center: {x: 0, y: 0, z: 0}
-            idX: 0
-            idY: 0
-            corners: []
-            neighbors: []
-            _isFull: 0
-            layerWrapper:
-              upgrade:
-                n: 
-        _chunkCorners: []
-      - capacity: 0
-        idX: 0
-        idY: 0
-        gridRadius: 0
-        tiles:
-          list: []
-        _chunkCorners: []
-      containerSize: 0
-    gameObject: {fileID: 0}
-    hexRadius: 0
-    _mapName: 
 --- !u!4 &1175322278
 Transform:
   m_ObjectHideFlags: 0
@@ -721,3 +682,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1175322279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175322276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78fb30972700a914488aeca44a3f8c12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  set: {fileID: 0}

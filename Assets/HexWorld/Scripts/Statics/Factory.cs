@@ -24,7 +24,12 @@ public static class Factory  {
 
         return new Map(serialized, mat);
     }*/
-
+    public static CombinedDataSet CreateDataSet(string path, bool singleFolder)
+    {
+        CombinedDataSet set = (CombinedDataSet)ScriptableObject.CreateInstance(typeof(CombinedDataSet));
+        set.LoadPrefabs(path,singleFolder);
+        return set;
+    }
     public static Prop CreateProp(string path)
     {
         return new Prop(path);

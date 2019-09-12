@@ -102,11 +102,23 @@ public static class _EditorUtility
 
         }
         if (!retVal)
-            Utils.ShowDialog(title, message, "Ok");
+            RuntimeUtility.ShowDialog(title, message, "Ok");
         else if (showFinalDialog)
-            Utils.ShowDialog("Valid", "Directory seems to be valid.", "Ok");
+            RuntimeUtility.ShowDialog("Valid", "Directory seems to be valid.", "Ok");
 
         return retVal;
 
+    }
+
+    public static bool IsStringValid(string []strings)
+    {
+        foreach (var str in strings)
+        {
+            if (str == null)
+                return false;
+            if (str == "")
+                return false;
+        }
+        return true;
     }
 }

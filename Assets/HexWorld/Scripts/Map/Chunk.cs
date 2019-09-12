@@ -75,7 +75,7 @@ public class Chunk
         tileObject.transform.SetParent(gameObject.transform);
 
         gameObject.transform.position = GetChunkCenter();
-        gameObject = Utils.CreateMesh(this, mat,out _mesh);
+        gameObject = RuntimeUtility.CreateMesh(this, mat,out _mesh);
 
         _collider = GenerateCollider(gameObject);
 
