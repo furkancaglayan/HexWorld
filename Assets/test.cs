@@ -8,7 +8,7 @@ public class test : MonoBehaviour
     void Start()
     {
         set = (CombinedDataSet)ScriptableObject.CreateInstance(typeof(CombinedDataSet));
-        set.LoadPrefabs("Assets/HexWorld/Prefabs/Tiles",false);
+        set.LoadPrefabs("Assets/HexWorld/Prefabs/Tiles");
         //folder.Create("Assets/HexWorld/Prefabs/Tiles/Forest Tiles");
     }
 

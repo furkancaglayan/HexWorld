@@ -45,7 +45,6 @@ public class _EditorDatasetGenerator : EditorWindow
     private string _path = _configuration.prefabsDirectory;
     private string _savePath = _configuration.saveDirectory;
     private bool _loaded = false;
-    private bool _singleFolderSet = false;
     #endregion
     #region ONGUI
     private void OnGUI()
@@ -118,7 +117,10 @@ public class _EditorDatasetGenerator : EditorWindow
 
             g.BeginHorizontal(EditorStyles.helpBox, g.Width(position.width-30));
             g.Space(10);
-            g.Label("Combined Dataset allows you to buraya bilgi gelecek ehehehhehe", textstyle);
+            g.Label("Combined Dataset allows you to import already-made, game ready tiles." +
+                    " Recommended to use if your tile assets are created and merged in an external modeling software. " +
+                    "Combined dataset will include first subfolders of the root directory besides" +
+                    " root directory prefabs.", textstyle);
             g.EndHorizontal();
             g.Space(10);
 
@@ -134,22 +136,13 @@ public class _EditorDatasetGenerator : EditorWindow
             g.EndHorizontal();
 
 
-            g.BeginHorizontal();
-            g.Space(10);
-            g.Label(new GUIContent("Single Folder:", "Single Folder set uses prefabs only from the root folder. " +
-                                                    "If set to false, dataset will contain prefabs from root folder and all of its 'first' subfolders"), textstyle, g.Width(labelWidth));
-            _singleFolderSet = g.Toggle(_singleFolderSet,"");
-            g.EndHorizontal();
-
-
 
             g.Space(4);
             g.BeginHorizontal();
             g.Space(10);
             GUI.color = _color1;
             if (g.Button("Create Dataset", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
-                _EditorDatasetUtility.CreateCombinedDataSet(_path,_datasetName,_datasetEcosystem,_savePath,_singleFolderSet
-                    
+                _EditorDatasetUtility.CreateCombinedDataSet(_path,_datasetName,_datasetEcosystem,_savePath
                     );
             GUI.color = Color.white;
                 
