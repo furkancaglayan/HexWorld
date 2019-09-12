@@ -4,7 +4,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public static class _EditorDatasetUtility 
+public static class _EditorTileSetUtility 
 {
     public static void CreateCombinedDataSet(string path,string name,string ecosystem, string savePath)
     {
