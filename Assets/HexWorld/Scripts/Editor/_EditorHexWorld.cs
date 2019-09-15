@@ -25,12 +25,10 @@ public class _EditorHexWorld : EditorWindow
         private bool IsMapCreated => _map != null;
         #endregion
     #endregion
-        #region Configuration
+    #region Configuration
 
         private static EditorConfiguration _configuration;
         #endregion
-
-
     #region Built-in Functions
     [MenuItem("HexWorld/Map Generator", priority = -1)]
     public static void Init()
@@ -260,8 +258,6 @@ public class _EditorHexWorld : EditorWindow
         GUILayout.EndScrollView();
     }
     #endregion
-
-
     #region Helper Functions
     private void CreateMap(MapSize mapSize, float hexSize, Material mat)
     {
