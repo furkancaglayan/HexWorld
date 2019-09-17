@@ -8,26 +8,39 @@ using MapSize = Enums.MapSize;
 public class _EditorHexWorld : EditorWindow
 {
     #region Fields
-        #region Editor
+    #region Editor
         private readonly Color _editorColor = Color.white;
         private Color _colorSetOne = new Color(255F / 255F, 255F / 255F, 148F / 255F);
         private Color _colorSetTwo = new Color(.388f, .658f, 1);
         private Color _windowColor = new Color(241F / 255F, 235F / 255F, 235F / 255F);
         private Vector2 _editorScrollVal;
+        private bool prefabSectionFoldout;
 
-        #endregion
-        #region Map
-        private Material _gridMaterial;
+    #endregion
+    #region Map
+    private Material _gridMaterial;
         private Map _map;
         private GameObject mapObject;
         private MapSize _mapSize = MapSize.Small;
         private float _hexSize = 1F;
         private bool IsMapCreated => _map != null;
-        #endregion
+    #endregion
+    #region Directories
+    #endregion
+    #region BrushNPrefabs
+
+    private int brushRadius = 1;
+    private bool randomRotation = true;
+    private bool inheritRotation;
+    private TileSet _tileSet;
+    private GameObject currentGameObject;
+    private GUIContent[] folderContents;
+    private int selectedFolder = 0;
+    #endregion
     #endregion
     #region Configuration
 
-        private static EditorConfiguration _configuration;
+    private static EditorConfiguration _configuration;
         #endregion
     #region Built-in Functions
     [MenuItem("HexWorld/Map Generator", priority = -1)]
@@ -120,6 +133,9 @@ public class _EditorHexWorld : EditorWindow
     }
     private void OnGUI()
     {
+        if(_configuration==null)
+            _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
+
         #region Styles
 
 
@@ -134,7 +150,8 @@ public class _EditorHexWorld : EditorWindow
         GUIStyle txtStyle = new GUIStyle(EditorStyles.miniLabel)
         {
             fontSize = 10,
-            richText = true
+            richText = true,
+            wordWrap=true
         };
         GUIStyle headingStyle = new GUIStyle(EditorStyles.miniBoldLabel)
         {
@@ -194,13 +211,14 @@ public class _EditorHexWorld : EditorWindow
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Color One", txtStyle, GUILayout.Width(80));
-        _colorSetOne = EditorGUILayout.ColorField(new GUIContent(""), _colorSetOne);
+        _colorSetOne = EditorGUILayout.ColorField(new GUIContent(""), _colorSetOne, GUILayout.Width(120));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Color Two", txtStyle, GUILayout.Width(80));
         _colorSetTwo = EditorGUILayout.ColorField(new GUIContent(""), _colorSetTwo, GUILayout.Width(120));
         GUILayout.EndHorizontal();
+
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
@@ -250,15 +268,188 @@ public class _EditorHexWorld : EditorWindow
         GUILayout.EndHorizontal();
         GUILayout.Space(20);
 
+        
 
         GUILayout.EndVertical();
-
-
         #endregion
+        #region Brush&Prefabs
+        GUI.color = _editorColor;
+        GUI.backgroundColor = _windowColor;
+
+        GUILayout.Space(20);
+
+        if (prefabSectionFoldout)
+            GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(140),
+                GUILayout.Width(position.width));
+        else
+            GUILayout.BeginVertical(currentStyle, GUILayout.Height(20), GUILayout.MaxHeight(40),
+                GUILayout.Width(position.width));
+        GUI.backgroundColor = _editorColor;
+        prefabSectionFoldout = EditorGUILayout.Foldout(prefabSectionFoldout,
+            new GUIContent("Brush&Prefabs"), true);
+        if (!prefabSectionFoldout)
+            GUILayout.Label("Use this section to paint and create maps");
+        else
+        {
+            GUILayout.Label("Prefabs", headingStyle);
+            GUILayout.Space(10);
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Brush Radius", txtStyle, GUILayout.Width(150));
+            brushRadius = EditorGUILayout.IntSlider(brushRadius, 1, 5,
+                GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Enable Random Rotation", txtStyle, GUILayout.Width(150));
+            randomRotation = GUILayout.Toggle(randomRotation, "", GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Inherit Rotation", txtStyle, GUILayout.Width(150));
+            inheritRotation = GUILayout.Toggle(inheritRotation, "", GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Current GameObject", txtStyle, GUILayout.Width(150));
+            currentGameObject = (GameObject) EditorGUILayout.ObjectField(currentGameObject, typeof(GameObject), false,
+                GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+            /*GUILayout.BeginHorizontal();
+            GUILayout.Label("Current Prefab", txtStyle, GUILayout.Width(150));
+            currentPrefab = (Object)EditorGUILayout.ObjectField(currentPrefab, typeof(Object), false, GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();*/
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Tile Set:", txtStyle, GUILayout.Width(150));
+            _tileSet = (TileSet)EditorGUILayout.ObjectField(_tileSet, typeof(TileSet), false,
+                GUILayout.Width(position.width - 180));
+            GUILayout.EndHorizontal();
+
+
+            if (_tileSet != null)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(10);
+                GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(position.width-40));
+
+
+               
+                GUILayout.BeginVertical();
+
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Tileset Name:", txtStyle, GUILayout.Width(100));
+                GUILayout.Label(_tileSet.name, txtStyle, GUILayout.Width(position.width - 180));
+                if (GUILayout.Button(EditorGUIUtility.IconContent("_Help"), EditorStyles.boldLabel, GUILayout.Width(24)))
+                    Debug.LogError("Tusa vastın");
+                GUILayout.EndHorizontal();
+
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Tileset Type:", txtStyle, GUILayout.Width(100));
+                string type = "Combined";
+                if (_tileSet.GetType() == typeof(LayeredTileSet))
+                    type = "Layered";
+                GUILayout.Label(type, txtStyle, GUILayout.Width(position.width - 180));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Tileset Ecosystem:", txtStyle, GUILayout.Width(100));
+                GUILayout.Label(_tileSet.ecosystem, txtStyle, GUILayout.Width(position.width - 180));
+                GUILayout.EndHorizontal();
+
+                GUILayout.EndVertical();
+
+
+
+                GUILayout.EndVertical();
+
+                GUILayout.EndHorizontal();
+
+            }
+            else
+            {
+                GUILayout.BeginVertical(EditorStyles.helpBox);
+                GUIContent gUIContent = new GUIContent("Please assign a valid Tileset or create a new one in TileSet Generator.",_configuration.coloredBirchGamesLogo);
+                GUILayout.Label(gUIContent,txtStyle,GUILayout.Width(position.width-20),GUILayout.Height(48));
+                GUILayout.EndVertical();
+
+
+            }
+            GUILayout.Space(10);
+
+
+            if (_tileSet != null&& folderContents!=null)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(10);
+
+                GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(position.width - 40));
+                selectedFolder=GUILayout.Toolbar(selectedFolder,folderContents,EditorStyles.toolbarButton, GUILayout.Width(position.width - 45));
+
+
+                GUILayout.EndVertical();
+                GUILayout.EndHorizontal();
+            }
+          
+
+
+
+            GUILayout.BeginHorizontal(GUILayout.Width(position.width - 20));
+            GUILayout.Space(10);
+            GUI.color = _colorSetOne;
+
+            if (GUILayout.Button("Import Tileset", EditorStyles.toolbarButton,
+                GUILayout.Width((position.width - 40) / 2)))
+            {
+                folderContents=ImportTileSet(_tileSet);
+                //hexWorldPrefabSet = LoadPrefabs(loader,PrefabsDirectory);
+            }
+
+
+            if (GUILayout.Button("Go to Tileset", EditorStyles.toolbarButton,
+                GUILayout.Width((position.width - 40) / 2)))
+                _EditorUtility.FocusOnObject(_tileSet);
+
+            GUILayout.EndHorizontal();
+            GUILayout.Space(20);
+        }
+
+        GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        #endregion
+
+      
         GUILayout.EndScrollView();
     }
     #endregion
     #region Helper Functions
+
+    private GUIContent[] ImportTileSet(TileSet set)
+    {
+        if (set == null)
+        {
+            _EditorPopups.ShowMessage("Tileset is null!","Please assign a valid Tileset.");
+            return null;
+
+        }
+
+        if (set.GetPropCount() == 0)
+        {
+            _EditorPopups.ShowMessage("Tileset has no props!", "Please assign a valid Tileset.");
+            return null;
+        }
+        return set.GetFolderContents();
+    }
     private void CreateMap(MapSize mapSize, float hexSize, Material mat)
     {
         DeleteMap();

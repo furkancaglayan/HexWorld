@@ -9,6 +9,9 @@ public class _EditorCombinedTileSet : Editor
     private float labelWidth = 120;
     private int _selectedFolder = 0;
     private int propCount = 0;
+
+    private bool showPrefabs = true;
+    private bool showDefault = false;
     #endregion
 
     public void OnEnable()
@@ -44,11 +47,17 @@ public class _EditorCombinedTileSet : Editor
         GUILayout.Label(propCount.ToString(), labels);
         GUILayout.EndHorizontal();
 
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Show Prefabs:", labels, GUILayout.Width(labelWidth));
+        showPrefabs = GUILayout.Toggle(showPrefabs,"");
+        GUILayout.EndHorizontal();
 
-        ShowProps();
+        if (showPrefabs)
+            ShowProps();
 
-
-
+        showDefault = EditorGUILayout.Foldout(showDefault, "Show Default Inspector", true);
+        if (showDefault)
+            DrawDefaultInspector();
 
         GUILayout.EndVertical();
     }

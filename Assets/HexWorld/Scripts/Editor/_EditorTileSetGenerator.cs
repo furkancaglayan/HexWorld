@@ -43,7 +43,7 @@ public class _EditorTileSetGenerator : EditorWindow
     #endregion
     #region CombinedFields
     private string _path = _configuration.prefabsDirectory;
-    private string _savePath = _configuration.saveDirectory;
+    private string _savePath = _configuration.tileSetSaveDirectory;
     #endregion
 
     #region LayeredFields
@@ -52,7 +52,10 @@ public class _EditorTileSetGenerator : EditorWindow
 
     private string[] layerPaths =
     {
-        "Assets/HexWorld", "Assets/HexWorld", "Assets/HexWorld", "Assets/HexWorld"
+        "Assets/HexWorld/Prefabs/Tiles/",
+        "Assets/HexWorld/Prefabs/Tiles/",
+        "Assets/HexWorld/Prefabs/Tiles/",
+        "Assets/HexWorld/Prefabs/Tiles/"
     };
     #endregion
     #region ONGUI
@@ -211,8 +214,13 @@ public class _EditorTileSetGenerator : EditorWindow
             g.BeginHorizontal();
             g.Space(10);
             GUI.color = _color1;
+
+            g.BeginHorizontal();
+            g.Space(position.width / 2 - SecondFieldWidth / 2-20);
             if (g.Button("Create TileSet", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
                 _EditorTileSetUtility.CreateLayeredTileSet(_tilesetName,_tilesetEcosystem,_savePath, layerPaths);
+            g.EndHorizontal();
+
             GUI.color = Color.white;
 
             g.EndHorizontal();
