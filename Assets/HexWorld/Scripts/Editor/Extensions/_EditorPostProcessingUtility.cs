@@ -9,8 +9,11 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 #endif
 
-public static class _EditorPostProcessingUtility 
+namespace HexWorld
 {
+
+    public static class _EditorPostProcessingUtility
+    {
 #if UNITY_POST_PROCESSING_STACK_V2
     public static void AddEffect(HexWorldEffect effect)
     {
@@ -61,5 +64,7 @@ public static class _EditorPostProcessingUtility
 
     }
 #endif
+
+    }
 
 }

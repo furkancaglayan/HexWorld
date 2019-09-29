@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class LayerWrapper
+
+namespace HexWorld
 {
-    [SerializeField] public TileUpgrade upgrade;
-    [SerializeField] public ILayer[] layers = new ILayer[4];
+
+    [Serializable]
+    public class LayerWrapper
+    {
+        [SerializeField] public TileUpgrade upgrade;
+        [SerializeField] public ILayer[] layers = new ILayer[4];
+    }
+
 }

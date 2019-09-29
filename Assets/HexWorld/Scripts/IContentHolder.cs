@@ -1,7 +1,12 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface IContentHolder
+
+namespace HexWorld
 {
-    GUIContent[] GetContents();
+
+    public interface IContentHolder
+    {
+        GUIContent[] GetContents();
+    }
+
 }

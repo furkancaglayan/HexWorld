@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class PropLayer : ILayer
+namespace HexWorld
 {
-    [SerializeField] public Prop[] props;
+
+    [Serializable]
+    public class PropLayer : ILayer
+    {
+        [SerializeField] public Prop[] props;
+    }
+
 }

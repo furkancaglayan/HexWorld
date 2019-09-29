@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class River : TileUpgrade
+namespace HexWorld
 {
-   
+    [Serializable]
+    public class River : TileUpgrade
+    {
+
+    }
+
 }
+

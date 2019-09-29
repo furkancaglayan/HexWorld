@@ -3,8 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class PrefabLayer : ILayer
+namespace HexWorld
 {
-    [SerializeField] public Prop prefab;
+
+    [Serializable]
+    public class PrefabLayer : ILayer
+    {
+        [SerializeField] public Prop prefab;
+    }
+
 }
