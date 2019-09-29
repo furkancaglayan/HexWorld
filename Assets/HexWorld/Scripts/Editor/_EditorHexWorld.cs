@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -15,6 +16,19 @@ public class _EditorHexWorld : EditorWindow
         private Color _windowColor = new Color(241F / 255F, 235F / 255F, 235F / 255F);
         private Vector2 _editorScrollVal;
         private bool prefabSectionFoldout;
+
+    #endregion
+
+    #region StylingOptions
+    GUISkin globalSceneSkin;
+    GUIStyle YellowBox => globalSceneSkin.customStyles[142];
+    GUIStyle RedBox =>globalSceneSkin.customStyles[146];
+    GUIStyle BlueBox => globalSceneSkin.customStyles[136];
+    GUIStyle GrayBox =>globalSceneSkin.customStyles[134];
+    GUIStyle GrayBoxHighLighted =>globalSceneSkin.customStyles[135];
+    GUIStyle OrangeBox => globalSceneSkin.customStyles[144];
+    GUIStyle SeaGreenBox => globalSceneSkin.customStyles[138];
+    GUIStyle GrayButton =>globalSceneSkin.customStyles[515];
 
     #endregion
     #region Map
@@ -35,7 +49,10 @@ public class _EditorHexWorld : EditorWindow
     private TileSet _tileSet;
     private GameObject currentGameObject;
     private GUIContent[] folderContents;
+    private GUIContent[][] prefabContents;
     private int selectedFolder = 0;
+    private int selectedPrefab = 0;
+    private Vector2 _prefabsScrollVal;
     #endregion
     #endregion
     #region Configuration
@@ -64,6 +81,9 @@ public class _EditorHexWorld : EditorWindow
         SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
         SceneView.onSceneGUIDelegate += this.OnSceneGUI;
 #endif
+
+
+        globalSceneSkin=EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
        // brushContents = CreateBrushContents(brushes, brushIcons);
     }
     void OnSceneGUI(SceneView sceneView)
@@ -133,9 +153,12 @@ public class _EditorHexWorld : EditorWindow
     }
     private void OnGUI()
     {
+
         if(_configuration==null)
             _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
 
+        if(globalSceneSkin==null)
+            globalSceneSkin=EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
         #region Styles
 
 
@@ -159,15 +182,19 @@ public class _EditorHexWorld : EditorWindow
             fontStyle = FontStyle.BoldAndItalic,
         };
 
-        GUIStyle prefabStyle = new GUIStyle(GUI.skin.window)
-        {
+   
+        GUIStyle prefabStyle = new GUIStyle(globalSceneSkin.customStyles[50])
+        { 
             imagePosition = ImagePosition.ImageAbove,
-            padding = new RectOffset(0, 0, 40, 0),
+
+            padding = new RectOffset(0, 0, 32, 0),
             font = EditorStyles.miniBoldFont,
             fontStyle = FontStyle.Italic,
-            fontSize = 12
+            fontSize = 12,
+            
         };
-        GUIStyle toolbarStyle = new GUIStyle(EditorStyles.toolbarButton)
+        
+        GUIStyle toolbarStyle = new GUIStyle(GrayButton)
         {
             imagePosition = ImagePosition.ImageLeft,
             //padding = new RectOffset(0, 0, 40, 0)
@@ -328,6 +355,7 @@ public class _EditorHexWorld : EditorWindow
             currentPrefab = (Object)EditorGUILayout.ObjectField(currentPrefab, typeof(Object), false, GUILayout.Width(position.width - 180));
             GUILayout.EndHorizontal();*/
 
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Tile Set:", txtStyle, GUILayout.Width(150));
             _tileSet = (TileSet)EditorGUILayout.ObjectField(_tileSet, typeof(TileSet), false,
@@ -337,7 +365,7 @@ public class _EditorHexWorld : EditorWindow
 
             if (_tileSet != null)
             {
-                GUILayout.BeginHorizontal();
+               /* GUILayout.BeginHorizontal();
                 GUILayout.Space(10);
                 GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(position.width-40));
 
@@ -373,7 +401,7 @@ public class _EditorHexWorld : EditorWindow
 
                 GUILayout.EndVertical();
 
-                GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();*/
 
             }
             else
@@ -387,17 +415,30 @@ public class _EditorHexWorld : EditorWindow
             }
             GUILayout.Space(10);
 
-
-            if (_tileSet != null&& folderContents!=null)
+       
+            if (_tileSet != null && folderContents != null && prefabContents != null)
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(10);
 
-                GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(position.width - 40));
-                selectedFolder=GUILayout.Toolbar(selectedFolder,folderContents,EditorStyles.toolbarButton, GUILayout.Width(position.width - 45));
+                GUILayout.BeginVertical(OrangeBox, GUILayout.Width(position.width - 65));
+                selectedFolder=GUILayout.Toolbar(selectedFolder,folderContents,GrayButton, GUILayout.Width(position.width - 55));
+                _prefabsScrollVal = GUILayout.BeginScrollView(_prefabsScrollVal, GUILayout.MinHeight(500), GUILayout.MaxHeight(500), GUILayout.Height(500));
 
+                GUILayout.BeginVertical(GUI.skin.box, GUILayout.Width(position.width - 55));
+
+
+                GUIContent[] currentContents = prefabContents[selectedFolder];
+                if (selectedPrefab > currentContents.Length)
+                    selectedPrefab = 0;
+                selectedPrefab = GUILayout.SelectionGrid(selectedPrefab, currentContents, 3,
+                prefabStyle, GUILayout.Width(position.width - 60));
+                GUILayout.EndVertical();
+
+                GUILayout.EndScrollView();
 
                 GUILayout.EndVertical();
+
                 GUILayout.EndHorizontal();
             }
           
@@ -448,6 +489,11 @@ public class _EditorHexWorld : EditorWindow
             _EditorPopups.ShowMessage("Tileset has no props!", "Please assign a valid Tileset.");
             return null;
         }
+        int folderCount=typeof(CombinedTileSet)==set.GetType()?((CombinedTileSet) set).folders.Count : 4;
+        prefabContents = new GUIContent[folderCount][];
+        for (int i = 0; i < folderCount; i++)
+            prefabContents[i] = set.GetFileContentsInFolder(i);
+
         return set.GetFolderContents();
     }
     private void CreateMap(MapSize mapSize, float hexSize, Material mat)

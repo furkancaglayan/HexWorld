@@ -123,8 +123,13 @@ public static class _EditorUtility
     }
 
 
-    public static void FocusOnObject(Object @object)
+   
+    public static void FocusOnObject(Object @object) => EditorGUIUtility.PingObject(@object);
+    public static GUIContent[] GetFolderContents(List<Prop> props)
     {
-        EditorGUIUtility.PingObject(@object);
+        List<GUIContent> contents = new List<GUIContent>();
+        for (int i = 0; i < props.Count; i++)
+            contents.Add(new GUIContent(props[i].@object.name,AssetPreview.GetAssetPreview(props[i].@object)));
+        return contents.ToArray();
     }
 }
