@@ -27,22 +27,18 @@ namespace HexWorld
         [NonSerialized] public TileAddress address;
         [NonSerialized] public Map map;
 
-
         [SerializeField] private bool _isFull;
         [SerializeField] public LayerWrapper layerWrapper;
         public bool IsEmpty => !_isFull;
 
 
 
-
-
-        public Tile(Chunk chunk, int idX, int idY, Vector3 center, float radius)
+        public Tile(int idX, int idY, Vector3 center)
         {
             this.center = center;
             this.idY = idY;
             this.idX = idX;
-            corners = CreateCorners(center, radius);
-            address = CreateAddress(chunk);
+        
 
 
         }
@@ -95,25 +91,21 @@ namespace HexWorld
         /// <param name="center"></param>
         /// <param name="radius"></param>
         /// <returns>vec3 array of corners</returns>
-        private Vector3[] CreateCorners(Vector3 center, float radius)
+        public void CreateCorners(Vector3 center, float radius)
         {
-            Vector3[] crs = new Vector3[6];
-            crs[0] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-            crs[1] = center - new Vector3(0, 0, radius);
-            crs[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-            crs[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
-            crs[4] = center + new Vector3(0, 0, radius);
-            crs[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
-            return crs;
+            corners = new Vector3[6];
+            corners[0] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+            corners[1] = center - new Vector3(0, 0, radius);
+            corners[2] = center - new Vector3(-radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+            corners[3] = center + new Vector3(+radius * Mathf.Sqrt(3) / 2, 0, .5f * radius);
+            corners[4] = center + new Vector3(0, 0, radius);
+            corners[5] = center - new Vector3(radius * Mathf.Sqrt(3) / 2, 0, -.5f * radius);
         }
         /// <summary>
         /// Creates the address of the tile.
         /// </summary>
-        /// <returns></returns>
-        private TileAddress CreateAddress(Chunk chunk)
-        {
-            return new TileAddress(chunk.idX, chunk.idY, idX, idY);
-        }
+        public void CreateAddress(Chunk chunk)=>address = new TileAddress(chunk.idX, chunk.idY, idX, idY);
+            
         #endregion
 
     }

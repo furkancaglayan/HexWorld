@@ -3,7 +3,6 @@ using UnityEditor;
 
 namespace HexWorld
 {
-
     public static class _EditorTileSetUtility
     {
         public static void CreateCombinedDataSet(string path, string name, string ecosystem, string savePath)

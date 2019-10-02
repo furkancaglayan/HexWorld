@@ -13,26 +13,17 @@ namespace HexWorld
         [SerializeField] public Enums.MapSize mapSize;
         [SerializeField] public Chunk[] chunkList;
         [SerializeField] public float hexRadius;
-        [SerializeField] private string _mapName;
+        [SerializeField] protected string _mapName;
 
         [NonSerialized] public int chunkCount;
         [NonSerialized] public GameObject gameObject;
 
 
-        public Map(Enums.MapSize mapSize, float hexRadius, Material mat)
+        public Map(Enums.MapSize mapSize, float hexRadius)
         {
             this.mapSize = mapSize;
             this.hexRadius = hexRadius;
-
-            int chunk_capacity = 20;
-            chunkCount = DetermineChunkSize((int)mapSize, chunk_capacity);
-
-            Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
-            _mapName = CreateObjectName();
-            gameObject = CreateSceneReferences(mat, _mapName, chunkList, chunk_capacity);
-#if UNITY_EDITOR
-            UnityEditor.EditorUtility.ClearProgressBar();
-#endif
+        
         }
 
         /// <summary>
@@ -58,11 +49,10 @@ namespace HexWorld
         /// <param name="chunk_capacity">How many tiles there should be in a chunk.
         /// if chunk_capacity is 20, then chunk has 20x20 tiles.</param>
         /// <returns></returns>
-        private int DetermineChunkSize(int mSize, int chunk_capacity)
+        public void DetermineChunkSize(int mSize, int chunk_capacity)
         {
             //map is mapSize x mapSize
-            int length = Mathf.CeilToInt((float)mSize / chunk_capacity);
-            return length;
+            chunkCount = Mathf.CeilToInt((float)mSize / chunk_capacity);
         }
         /// <summary>
         /// Creates the scene references of the map. This includes
@@ -75,41 +65,40 @@ namespace HexWorld
         /// <param name="chunk_capacity">How many tiles there should be in a chunk.
         /// if chunk_capacity is 20, then chunk has 20x20 tiles.</param>
         /// <returns></returns>
-        private GameObject CreateSceneReferences(Material mat, string map_name, Chunk[] lst,
-            int chunk_capacity)
+        public virtual void CreateSceneReferences(Material material, int chunk_capacity)
         {
-            GameObject main = new GameObject(map_name);
+            GameObject main = new GameObject(_mapName);
             GameObject chunkObj = new GameObject("chunkList");
             chunkObj.transform.parent = main.transform;
-            foreach (var chunk in lst)
+            foreach (var chunk in chunkList)
             {
-                GameObject newChunk = chunk.CreateSceneReference(chunk_capacity, mat, hexRadius);
+                GameObject newChunk = chunk.CreateSceneReference(chunk_capacity, material, hexRadius);
                 newChunk.transform.parent = chunkObj.transform;
 
             }
 
-            return main;
+            gameObject= main;
         }
         /// <summary>
         /// Creates 2d array of chunks. Defines their corners, centers and colliders.
         /// </summary>
-        /// <param name="chunk_count"></param>
+        /// <param name="chunkCount"></param>
         /// <param name="chunk_capacity"></param>
         /// <param name="hex_radius"></param>
         /// <param name="mapSize"></param>
         /// <returns></returns>
-        private void Create2DChunkArray(int chunk_count, int chunk_capacity, float hex_radius, int mapSize)
+        public virtual void Create2DChunkArray(int chunk_capacity, float hex_radius, int mapSize)
         {
             float chunk_short = Constants.SHORT_SIDE * chunk_capacity * hex_radius;
             float chunk_long = Constants.LONG_SIDE * chunk_capacity * hex_radius * 3 / 4;
 
-            chunkList = new Chunk[chunk_count * chunk_count];
+            chunkList = new Chunk[chunkCount * chunkCount];
 
 
             string info = "";
-            for (int i = 0; i < chunk_count; i++)
+            for (int i = 0; i < chunkCount; i++)
             {
-                for (int j = 0; j < chunk_count; j++)
+                for (int j = 0; j < chunkCount; j++)
                 {
                     Vector3 left_down_corner = new Vector3(chunk_short * i
                         , 0, chunk_long * j);
@@ -119,8 +108,8 @@ namespace HexWorld
                     AddChunk(i, j, chunk);
 
 #if UNITY_EDITOR
-                    float progress = (i * (float)chunk_count + j) / ((chunkCount) * (chunkCount));
-                    info = (i * chunk_count + j).ToString() + "/" + ((chunkCount) * (chunkCount)).ToString();
+                    float progress = (i * (float)chunkCount + j) / ((this.chunkCount) * (this.chunkCount));
+                    info = (i * chunkCount + j).ToString() + "/" + ((this.chunkCount) * (this.chunkCount)).ToString();
                     string title = "Creating Map...";
                     UnityEditor.EditorUtility.DisplayProgressBar(title, info + " pieces.", progress);
 #endif
@@ -136,12 +125,12 @@ namespace HexWorld
         /// Returns a unique map name.
         /// </summary>
         /// <returns></returns>
-        private string CreateObjectName()
+        public virtual void CreateObjectName()
         {
             string time = System.DateTime.UtcNow.ToLocalTime().ToLongTimeString();
             string name = "[HexWorld_" + time + "_" + mapSize.ToString() + "]";
 
-            return name;
+            _mapName= name;
         }
         /// <summary>
         /// Creates map corners using mapSize and hexRadius. Dependent on these variables
