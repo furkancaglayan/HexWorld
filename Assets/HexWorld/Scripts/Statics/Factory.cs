@@ -24,13 +24,7 @@ public static class Factory  {
 
         return new Map(serialized, mat);
     }*/
-    public static LayeredTileSet CreateLayeredTileSet()
-    {
-        LayeredTileSet set = (LayeredTileSet)ScriptableObject.CreateInstance(typeof(LayeredTileSet));
-        set.CreateLayers();
-        return set;
-    }
-    public static CombinedTileSet CreateCombinedTileSet(string path)
+    public static CombinedTileSet CreateDataSet(string path)
     {
         CombinedTileSet set = (CombinedTileSet)ScriptableObject.CreateInstance(typeof(CombinedTileSet));
         set.LoadPrefabs(path);
@@ -40,21 +34,20 @@ public static class Factory  {
     {
         return new Prop(path);
     }
-    public static PropFolder CreatePropFolder(string name,string path)
+    public static PropFolder CreatePropFolder(string path)
     {
-        PropFolder folder = new PropFolder(name);
+        PropFolder folder = new PropFolder();
         folder.Create(path);
         return folder;
     }
-    public static PropFolder CreatePropFolder(string name)
+    public static PropFolder CreatePropFolder()
     {
-        PropFolder folder = new PropFolder(name);
+        PropFolder folder = new PropFolder();
         return folder;
     }
     public static Chunk create_chunk(int chunkSize, int id_x, int id_y, Vector3 left_down_corner, float hex_radius)
     {
         return new Chunk(chunkSize, id_x, id_y, left_down_corner, hex_radius);
     }
-
-   
+  
 }

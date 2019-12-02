@@ -16,9 +16,9 @@ public class CombinedTileSet : TileSet
         List<PropFolder> folderList = new List<PropFolder>();
         foreach (var variable in folders)
             if(RuntimeUtility.GetFileCountInFolder(variable,".prefab")!=0)
-                folderList.Add(Factory.CreatePropFolder(variable,variable));
+                folderList.Add(Factory.CreatePropFolder(variable));
         if (RuntimeUtility.GetFileCountInFolder(root, ".prefab") != 0)
-            folderList.Add(Factory.CreatePropFolder(root,root));
+            folderList.Add(Factory.CreatePropFolder(root));
         return folderList;
     }
 

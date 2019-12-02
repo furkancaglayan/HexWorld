@@ -3,6 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [Serializable]
-public abstract class TileUpgrade : ScriptableObject,IUpgrade
+public abstract class TileUpgrade
 {
 }
