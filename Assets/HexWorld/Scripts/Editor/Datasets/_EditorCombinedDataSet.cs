@@ -1,10 +1,10 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CombinedTileSet))]
-public class _EditorCombinedTileSet : Editor
+[CustomEditor(typeof(CombinedDataSet))]
+public class _EditorCombinedDataSet : Editor
 {
-    CombinedTileSet _instance;
+    CombinedDataSet _instance;
     #region Fields
     private float labelWidth = 120;
     private int _selectedFolder = 0;
@@ -13,7 +13,7 @@ public class _EditorCombinedTileSet : Editor
 
     public void OnEnable()
     {
-        _instance = (CombinedTileSet)target;
+        _instance = (CombinedDataSet)target;
         propCount = _instance.GetPropCount();
     }
 
@@ -30,7 +30,7 @@ public class _EditorCombinedTileSet : Editor
         GUILayout.BeginVertical();
 
         GUILayout.BeginHorizontal();
-        GUILayout.Label("TileSet name:", labels, GUILayout.Width(labelWidth));
+        GUILayout.Label("Dataset name:", labels, GUILayout.Width(labelWidth));
         GUILayout.Label(_instance.name, labels);
         GUILayout.EndHorizontal();
 

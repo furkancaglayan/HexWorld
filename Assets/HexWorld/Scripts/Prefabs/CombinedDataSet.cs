@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 [Serializable]
-public class CombinedTileSet : TileSet
+public class CombinedDataSet : Dataset
 {
     [SerializeField] public List<PropFolder> folders;
     public void LoadPrefabs(string path)

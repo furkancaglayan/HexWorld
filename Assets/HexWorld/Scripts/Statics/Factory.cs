@@ -24,9 +24,9 @@ public static class Factory  {
 
         return new Map(serialized, mat);
     }*/
-    public static CombinedTileSet CreateDataSet(string path)
+    public static CombinedDataSet CreateDataSet(string path)
     {
-        CombinedTileSet set = (CombinedTileSet)ScriptableObject.CreateInstance(typeof(CombinedTileSet));
+        CombinedDataSet set = (CombinedDataSet)ScriptableObject.CreateInstance(typeof(CombinedDataSet));
         set.LoadPrefabs(path);
         return set;
     }

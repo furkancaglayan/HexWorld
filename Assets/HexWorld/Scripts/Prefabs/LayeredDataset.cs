@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LayeredTileSet : TileSet
+public class LayeredDataset : Dataset
 {
     public override int GetPropCount()
     {

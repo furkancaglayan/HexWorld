@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class test : MonoBehaviour
 {
-    public CombinedTileSet set;
+    public CombinedDataSet set;
     void Start()
     {
-        set = (CombinedTileSet)ScriptableObject.CreateInstance(typeof(CombinedTileSet));
+        set = (CombinedDataSet)ScriptableObject.CreateInstance(typeof(CombinedDataSet));
         set.LoadPrefabs("Assets/HexWorld/Prefabs/Tiles");
         //folder.Create("Assets/HexWorld/Prefabs/Tiles/Forest Tiles");
     }
