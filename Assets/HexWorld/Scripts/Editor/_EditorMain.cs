@@ -982,7 +982,7 @@ public class _EditorMain : EditorWindow
             GUI.color = colorSetTwo;
             if (GUILayout.Button("Add Camera Controller", EditorStyles.toolbarButton, GUILayout.Width(position.width-40)))
             {
-               // RuntimeUtility.AddCameraController(minHeight,maxHeight,rotSpeed,Speed,ScrollSensitivity);
+               // Utils.AddCameraController(minHeight,maxHeight,rotSpeed,Speed,ScrollSensitivity);
             }
             GUI.color = editorColor;
             GUILayout.EndHorizontal();

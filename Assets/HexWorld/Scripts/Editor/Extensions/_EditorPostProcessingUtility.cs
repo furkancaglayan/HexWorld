@@ -20,8 +20,8 @@ public static class _EditorPostProcessingUtility
             return;
         }
 
-        Camera camera = RuntimeUtility.CreateCamera();
-        RuntimeUtility.ClearEffectsAndLights();
+        Camera camera = Utils.CreateCamera();
+        Utils.ClearEffectsAndLights();
         PostProcessLayer layer = camera.GetComponent<PostProcessLayer>();
         if (layer == null)
             layer = camera.gameObject.AddComponent<PostProcessLayer>();

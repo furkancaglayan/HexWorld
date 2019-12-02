@@ -148,14 +148,8 @@ public class _EditorDatasetGenerator : EditorWindow
             g.Space(10);
             GUI.color = _color1;
             if (g.Button("Create Dataset", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
-                _EditorDatasetUtility.CreateCombinedDataSet(_path,_datasetName,_datasetEcosystem,_savePath,_singleFolderSet
-                    
-                    );
+                _EditorDatasetUtility.CreateDataSet();
             GUI.color = Color.white;
-                
-                
-               
-               
             if (g.Button("Open Prefab Generator", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
                 _EditorPrefabGeneratorWindow.Init();
             g.EndHorizontal();

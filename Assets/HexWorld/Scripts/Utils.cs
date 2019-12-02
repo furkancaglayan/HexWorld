@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 #pragma warning disable 0168 
 
-public static class RuntimeUtility  {
+public static class Utils  {
 
 
 
@@ -14,7 +16,7 @@ public static class RuntimeUtility  {
     public static void ShowDialog(string title, string message, string ok)
     {
 #if UNITY_EDITOR
-        UnityEditor.EditorUtility.DisplayDialog(title,message,ok);
+        EditorUtility.DisplayDialog(title,message,ok);
 #endif
     }
 
@@ -25,7 +27,7 @@ public static class RuntimeUtility  {
     /// <param name="folderPath"></param>
     /// <param name="extension"></param>
     /// <returns></returns>
-    public static int GetFileCountInFolder(string folderPath, string extension)
+    private static int GetFileCountInFolder(string folderPath, string extension)
     {
         string[] rootFilePaths = Directory.GetFiles(folderPath);
 

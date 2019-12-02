@@ -24,7 +24,7 @@ public static class _EditorSaveLoadUtility
 
         HexWorldSerialized static_data = ScriptableObject.CreateInstance<HexWorldSerialized>();
         if (chosen == 2)
-            mapName = RuntimeUtility.CreateName(18);
+            mapName = Utils.CreateName(18);
 
         static_data.name = mapName;
         static_data.LoadData(map);

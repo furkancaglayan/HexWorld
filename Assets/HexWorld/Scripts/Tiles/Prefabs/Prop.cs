@@ -14,9 +14,8 @@ public class Prop
 
     public Prop(string path)
     {
-        string correctedPath = path.Replace("\\", "/");
-        this.path = correctedPath;
-        @object = LoadObject(correctedPath);
+        this.path = path;
+        @object = LoadObject(path);
     }
 
     private Object LoadObject(string objPath)

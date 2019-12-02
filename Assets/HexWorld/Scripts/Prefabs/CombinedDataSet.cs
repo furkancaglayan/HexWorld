@@ -11,15 +11,15 @@ public class CombinedDataSet : Dataset
     {
         folders = singleFolder?CreateSingleDataFolder(path): CreateMultipleDataFolders(path);
     }
+    //TODO:if file number is zero, pass that folder
+    //TODO:Change path formatting in folder and props like \ to /
     private List<PropFolder> CreateMultipleDataFolders(string root)
     {
         string[] folders = Directory.GetDirectories(root);
         List<PropFolder> folderList = new List<PropFolder>();
         foreach (var variable in folders)
-            if(RuntimeUtility.GetFileCountInFolder(variable,".prefab")!=0)
-                folderList.Add(Factory.CreatePropFolder(variable));
-        if (RuntimeUtility.GetFileCountInFolder(root, ".prefab") != 0)
-            folderList.Add(Factory.CreatePropFolder(root));
+            folderList.Add(Factory.CreatePropFolder(variable));
+        folderList.Add(Factory.CreatePropFolder(root));
         return folderList;
     }
 
