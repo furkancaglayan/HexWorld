@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-
 #pragma warning disable 0168 
 #pragma warning disable 0219
+
 [Serializable]
 public class HexWorldPrefabSet
 {
@@ -16,8 +16,8 @@ public class HexWorldPrefabSet
     {
         path = root;
     }
-    #region PUBLIC
-    public bool ValidIndices(int folderInd, int prefabInd)
+
+    public bool validIndices(int folderInd, int prefabInd)
     {
         try
         {
@@ -38,24 +38,8 @@ public class HexWorldPrefabSet
         }
 
     }
-    /// <summary>
-    /// Creates the data set.
-    /// </summary>
-    /// <returns></returns>
     public bool Create()
     {
-        bool FailTest()
-        {
-            //if passes the test, return false
-            if (path.Length < 6)
-            {
-                //no "Assets"
-                Utils.ShowDialog("Directory Exception", "Invalid Directory Path", "Ok");
-                return true;
-            }
-
-            return !Utils.CheckIfDirectoryIsValid(path, false);
-        }
         bool failed = FailTest();
         if (failed)
             return false;
@@ -65,69 +49,19 @@ public class HexWorldPrefabSet
         return true;
     }
 
-
-
-    /// <summary>
-    /// Returns a 1d array of GUIContents. It's made of folder contents.
-    /// </summary>
-    /// <returns></returns>
-    public GUIContent[] GetFolderContents()
+    private bool FailTest()
     {
-        int size = folders.Count;
-        GUIContent[] folderContents = new GUIContent[size];
-        for (int i = 0; i < size; i++)
-            folderContents[i] = folders[i].content;
-        return folderContents;
-    }
-    /// <summary>
-    /// Creates and returns a 2d array of GUIContents.
-    /// Rows are prefabs and columns are folders. It can be used to make a selection grid of prefabs.
-    /// </summary>
-    /// <returns></returns>
-    public GUIContent[][] GetPrefabContents()
-    {
-        int size = folders.Count;
-        GUIContent[][] prefabContents = new GUIContent[size][];
-        for (int i = 0; i < size; i++)
+        //if passes the test, return false
+        if (path.Length < 6)
         {
-            HexWorldFolder folder = folders[i];
-            int prefabCount = folder.Size;
-
-            prefabContents[i] = new GUIContent[prefabCount];
-            for (int j = 0; j < prefabCount; j++)
-                prefabContents[i][j] = folder.prefabs[j].content;
-
+            //no "Assets"
+            Utils.ShowDialog("Directory Exception", "Invalid Directory Path", "Ok");
+            return true;
         }
-        return prefabContents;
+
+        return !Utils.CheckIfDirectoryIsValid(path,false);
     }
 
-    /// <summary>
-    /// Get a prefab by its <paramref name="folder"/> and <paramref name="prefab"/> index.
-    /// </summary>
-    /// <param name="folder"></param>
-    /// <param name="prefab"></param>
-    /// <returns></returns>
-    public HexWorldPrefab Get(int folder, int prefab)
-    {
-        return folders[folder].prefabs[prefab];
-    }
-    /// <summary>
-    /// Get a folder by its <paramref name="folder"/> index.
-    /// </summary>
-    /// <param name="folder"></param>
-    /// <returns></returns>
-    public HexWorldFolder Get(int folder)
-    {
-        return folders[folder];
-    }
-    #endregion
-    #region PRIVATE
-    /// <summary>
-    /// Creates Data folders.
-    /// </summary>
-    /// <param name="root"></param>
-    /// <param name="texture"></param>
-    /// <returns></returns>
     private List<HexWorldFolder> CreateDataFolders(string root, Texture2D texture)
     {
         string[] folders = Directory.GetDirectories(root);
@@ -137,5 +71,35 @@ public class HexWorldPrefabSet
         folderList.Add(Factory.create_datafolder(root, texture));
         return folderList;
     }
-    #endregion
+
+    public GUIContent[] GetFolderContents()
+    {
+        int size = folders.Count;
+        GUIContent[] folderContents = new GUIContent[size];
+        for (int i = 0; i < size; i++)
+            folderContents[i] = folders[i].content;
+        return folderContents;
+    }
+    public GUIContent[][] GetPrefabContents()
+    {
+        int size = folders.Count;
+        GUIContent[][] prefabContents = new GUIContent[size][];
+        for (int i = 0; i < size; i++)
+        {
+            HexWorldFolder folder = folders[i];
+            int prefabCount = folder.Size();
+
+            prefabContents[i] = new GUIContent[prefabCount];
+            for (int j = 0; j < prefabCount; j++)
+                prefabContents[i][j] = folder.prefabs[j].GetContent();
+
+        }
+        return prefabContents;
+    }
+
+    public HexWorldPrefab Get(int folder, int prefab)
+    {
+        return folders[folder].prefabs[prefab];
+    }
+  
 }

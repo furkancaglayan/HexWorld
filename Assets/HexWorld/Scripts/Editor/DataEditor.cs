@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CustomEditor(typeof(HexWorldPrefabLoader))]
-public class _EditorPrefabLoader : Editor
+public class DataEditor : Editor
 {
 
  
@@ -15,6 +15,7 @@ public class _EditorPrefabLoader : Editor
     private bool defaultInspector;
 
 
+    private int selectedPrefab = 0;
     private int selectedPrefabFolder = 0;
     private GUIContent[][] prefabContents;
     private GUIContent[] folderContents;
@@ -51,7 +52,10 @@ public class _EditorPrefabLoader : Editor
 
     
 
-      
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Prefab Type:", labels, GUILayout.Width(labelWidth));
+        _instance.prefabType = (Enums.PrefabType)EditorGUILayout.EnumPopup(_instance.prefabType,EditorStyles.toolbarPopup);
+        GUILayout.EndHorizontal();
 
 
         GUI.color = Color.green;
@@ -105,7 +109,8 @@ public class _EditorPrefabLoader : Editor
             fontStyle = FontStyle.Italic,
             fontSize = 12
         };
-        GUILayout.BeginVertical(GUI.skin.box);
+        GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(400), GUILayout.MinWidth(400),
+            GUILayout.MinHeight(250));
         selectedPrefabFolder =GUILayout.Toolbar(selectedPrefabFolder, folderContents, EditorStyles.toolbarButton);
         GUILayout.Space(3);
         int rows = 4;
@@ -118,7 +123,8 @@ public class _EditorPrefabLoader : Editor
                 /*selectedPrefab = GUILayout.SelectionGrid(selectedPrefab, prefabContents[selectedPrefabFolder],
                     3, prefabStyle,GUILayout.Height(400));*/
 
-                GUILayout.BeginVertical();
+                GUILayout.BeginVertical(GUILayout.Width(400), GUILayout.MinWidth(400),
+                    GUILayout.MinHeight(250));
                 for (int i = 0; i < prefabContents[selectedPrefabFolder].Length; i++)
                 {
                     if (i % rows == 0)
@@ -130,7 +136,7 @@ public class _EditorPrefabLoader : Editor
                    
 
                     GUIContent content = prefabContents[selectedPrefabFolder][i];
-                    GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(75));
+                    GUILayout.BeginVertical(GUI.skin.box,GUILayout.Width(400/rows));
                     GUILayout.Label(content.image,EditorStyles.helpBox);
                     GUILayout.Label(content.text,EditorStyles.boldLabel);
 
@@ -143,7 +149,7 @@ public class _EditorPrefabLoader : Editor
                     EditorGUI.ProgressBar(rect, .3f, "Rate");
 
                     if (GUILayout.Button("Delete",EditorStyles.toolbarButton,GUILayout.Width(rect.width)))
-                        _instance.hexWorldPrefabSet.Get(selectedPrefabFolder).DeletePrefab(i);
+                        _instance.hexWorldPrefabSet.folders[selectedPrefab].DeletePrefab(selectedPrefab);
 
                     GUILayout.Space(3);
                     GUILayout.EndVertical();
@@ -160,10 +166,17 @@ public class _EditorPrefabLoader : Editor
             else
             {
                 GUILayout.BeginVertical();
-                GUILayout.Label("No prefabs are present at : " + folderContents[selectedPrefabFolder].tooltip);
+                GUILayout.Label("No prefabs are present at : " + folderContents[selectedPrefabFolder].tooltip,
+                    GUILayout.Width(labelWidth));
                 GUILayout.Label(
                     "Enter a valid 'Prefabs Directory' and click on 'Load Prefabs'.\nThis will load the assets that are in the path.");
                 GUILayout.Space(20);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
+                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
+                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
+                GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
+                GUILayout.EndHorizontal();
                 GUILayout.EndVertical();
             }
         }

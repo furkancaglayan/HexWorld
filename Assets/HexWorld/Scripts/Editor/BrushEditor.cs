@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-public static class _EditorBrush
+public static class BrushEditor
 {
     
     public static void DrawBrush(HexWorldTile tile,HexWorldMap map, Enums.BrushType brushType, float rad,int brushRadius)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class _EditorModelViewer : EditorWindow {
+public class ModelViewer : EditorWindow {
 
     private static Texture2D birchgamesLogo;
     private static readonly string birchgamesLogoPath = "Assets/HexWorld/Textures/birchgames_logo.png";
@@ -15,7 +15,7 @@ public class _EditorModelViewer : EditorWindow {
     {
         content = contentToShow;
          birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
-        _EditorModelViewer window = (_EditorModelViewer)GetWindow(typeof(_EditorModelViewer));
+        ModelViewer window = (ModelViewer)GetWindow(typeof(ModelViewer));
         window.minSize.Set(512, 512);
         window.maxSize.Set(512, 512);
 

@@ -39,9 +39,10 @@ public class Enums  {
         DARK
     }
 
-    public enum RiverType
+    public enum PrefabType
     {
-        Edge,
-        Centered
+        PREFAB,
+        TILE,
+        BOTH
     }
 }

@@ -14,7 +14,6 @@ public class HexWorldFolder
     public GUIContent content;
 
     [SerializeField]public List<HexWorldPrefab> prefabs;
-   
 
     public HexWorldFolder(string folderPath,Texture2D texture)
     {
@@ -27,20 +26,38 @@ public class HexWorldFolder
         prefabs = CreatePrefabs(this.folderPath, this.texture);
 
     }
-    #region PRIVATE
-    private GUIContent CreateContent(string name, Texture2D texture, string tooltip) => new GUIContent(name, texture, tooltip);
-    private List<HexWorldPrefab> CreatePrefabs(string folderPath, Texture2D texture)
+
+
+
+    public int Size()
+    {
+        return prefabs.Count;
+    }
+    private GUIContent CreateContent(string name,Texture2D texture,string tooltip)
+    {
+        return new GUIContent(name, texture, tooltip);
+    }
+
+
+    public void DeletePrefab(int index)
+    {
+        prefabs.RemoveAt(index);
+    }
+    public void DeletePrefab(HexWorldPrefab item)
+    {
+        prefabs.Remove(item);
+    }
+    private List<HexWorldPrefab> CreatePrefabs(string folderPath,Texture2D texture)
     {
         string[] files = Directory.GetFiles(folderPath);
         List<HexWorldPrefab> hexWorldPrefabs = new List<HexWorldPrefab>();
         foreach (var VARIABLE in files)
-            if (!VARIABLE.Contains(".meta") && VARIABLE.Contains(".prefab"))
-                hexWorldPrefabs.Add(Factory.create_prefab(VARIABLE));
+            if (!VARIABLE.Contains(".meta")&& VARIABLE.Contains(".prefab"))
+                    hexWorldPrefabs.Add(Factory.create_prefab(VARIABLE));
 
         return hexWorldPrefabs;
 
     }
-
     /// <summary>
     /// Create a shortened name for a given folder folderPath. For example
     /// 'Plain Tiles' is 11 character long. return name will be
@@ -50,10 +67,10 @@ public class HexWorldFolder
     /// <param name="separator">separator to use-> \\ for paths</param>
     /// <param name="tooltip">out tooltip variable->full name of the folder</param>
     /// <returns></returns>
-    private string CreateShortenedFolderName(string folderPath, int length, out string tooltip)
-    {
-        string[] splitPath = folderPath.TrimEnd('/').Split('\\');
-        string[] split = splitPath[splitPath.Length - 1].Split('/');
+    private string CreateShortenedFolderName(string folderPath,int length,out string tooltip)
+    {   string[] splitPath= folderPath.Split('\\');
+
+        string[] split = splitPath[splitPath.Length-1].Split('/');
         string folder = split[split.Length - 1];
         tooltip = folder;
 
@@ -61,13 +78,4 @@ public class HexWorldFolder
             folder = folder.Substring(0, length - 2) + "..";
         return folder;
     }
-    #endregion
-    #region PUBLIC
-    public int Size => prefabs.Count;
-    public void DeletePrefab(int index) => prefabs.RemoveAt(index);
-    public void DeletePrefab(HexWorldPrefab item) => prefabs.Remove(item);
-    #endregion
-
-
-
 }

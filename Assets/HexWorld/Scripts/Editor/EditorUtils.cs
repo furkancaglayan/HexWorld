@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 using UnityEngine.Rendering.PostProcessing;
 #endif
 
-public static class _EditorUtils 
+public static class EditorUtils 
 {
     public static void AddLayer(string layer)
     {
@@ -161,7 +161,7 @@ public static class _EditorUtils
 #if UNITY_2018_3_OR_NEWER
         asset = PrefabUtility.SaveAsPrefabAsset(copy, fullPath);
 #else
-        asset = PrefabUtility.CreatePrefab(path, copy);
+        asset = PrefabUtility.CreatePrefab(fullPath, copy);
 
 #endif
         Object.DestroyImmediate(copy);
@@ -213,7 +213,7 @@ public static class _EditorUtils
             return;
 
 
-        HexWorldSerialized static_data = ScriptableObject.CreateInstance<HexWorldSerialized>();
+        HexWorldStaticData static_data = ScriptableObject.CreateInstance<HexWorldStaticData>();
         if (chosen == 2)
             mapName = Utils.CreateName(18);
 

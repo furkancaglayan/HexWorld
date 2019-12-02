@@ -9,31 +9,38 @@ using Object = UnityEngine.Object;
 public class HexWorldPrefab 
 {
 
-    public string path;
+    public string fullPath;
     public string shortName;
     public string toolTip;
-    public Texture texture;
+    public Texture2D texture;
 
-    public Object @object;
-    public GUIContent content;
+    public Object objectReference;
 
-    public GameObject GameObject => @object as GameObject;
+    public GUIContent prefabContent;
 
-    public HexWorldPrefab(string path)
+    public HexWorldPrefab(string fullPath)
     {
 
-        this.path = path;
-        toolTip = this.path;
+        this.fullPath = fullPath;
+        toolTip = this.fullPath;
         toolTip=toolTip.Replace('\\','/');
 
-        @object = LoadObject(path);
-        shortName = @object.name;
+        objectReference = LoadObject(fullPath);
+        shortName = CreateShortName(objectReference);
 #if UNITY_EDITOR
-        texture = AssetPreview.GetAssetPreview(@object);
+        texture = AssetPreview.GetAssetPreview(objectReference);
 #endif
-        content = new GUIContent(shortName, texture);
+        prefabContent = new GUIContent(shortName, texture);
+    }
+    public GUIContent GetContent()
+    {
+        return prefabContent;
     }
 
+    private string CreateShortName(Object obj)
+    {
+        return obj.name;
+    }
 
     private Object LoadObject(string path)
     {
@@ -44,7 +51,18 @@ public class HexWorldPrefab
 #endif
     }
 
+    public GameObject GetGameObject()
+    {
+        return objectReference as GameObject;
+    }
+    public Object GetObject()
+    {
+        return objectReference;
+    }
 
+    public Texture2D GetTexture()
+    {
+        return texture;
 
- 
+    }
 }
