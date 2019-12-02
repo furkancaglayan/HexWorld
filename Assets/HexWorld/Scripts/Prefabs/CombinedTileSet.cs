@@ -43,12 +43,9 @@ public class CombinedTileSet : TileSet
     public override GUIContent[] GetFolderContents()
     {
         List<GUIContent> contents = new List<GUIContent>();
-        string[] names = GetFolderNames();
         for (int i = 0; i < folders.Count; i++)
-            contents.Add(new GUIContent(names[i]));
+            contents.Add(new GUIContent(folders[i].name));
         return contents.ToArray();
     }
-
-    public override GUIContent[] GetFileContentsInFolder(int folderIndex) =>  folders[folderIndex].GetContents();
 }
 

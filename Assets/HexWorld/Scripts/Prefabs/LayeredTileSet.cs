@@ -30,24 +30,4 @@ public class LayeredTileSet : TileSet
                 count += layer.props.Count;
         return count;
     }
-
-
-    public override GUIContent[] GetFolderContents()
-    {
-        return new []
-        {
-            new GUIContent("Tile Layer"),
-            new GUIContent("First Layer"),
-            new GUIContent("Second Layer"),
-            new GUIContent("Third Layer")
-
-        };
-    }
-
-    public override GUIContent[] GetFileContentsInFolder(int folderIndex)
-    {
-        if (folderIndex > 3)
-            return null;
-        return layers[folderIndex].GetContents();
-    }
 }

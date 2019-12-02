@@ -4,8 +4,6 @@ public class EditorConfiguration:Configuration
 {
     public Texture2D hexWorldLogo;
     public Texture2D birchGamesLogo;
-    public Texture2D coloredBirchGamesLogo;
-
     public Texture2D defaultAssetPreview;
     public Texture2D postProcessLogo;
     [Space(10)]
@@ -16,7 +14,6 @@ public class EditorConfiguration:Configuration
     public Texture rotateRightToolTexture;
     [Space(10)]
     public string prefabsDirectory = "Assets/HexWorld/Prefabs/Tiles";
-    public string tileSetSaveDirectory = "Assets/HexWorld/TileSets";
-    public string mapSaveDirectory = "Assets/HexWorld/SavedMaps";
+    public string saveDirectory = "Assets/HexWorld/SavedMaps";
 
 }

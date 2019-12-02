@@ -15,8 +15,6 @@ MonoBehaviour:
   name: Config
   hexWorldLogo: {fileID: 2800000, guid: a5617c5e9327be840bf165279777c934, type: 3}
   birchGamesLogo: {fileID: 2800000, guid: 00427e15b305c0f4182f1e3582433e41, type: 3}
-  coloredBirchGamesLogo: {fileID: 2800000, guid: d54c5b33b82c7754286aa1bbf5574ecd,
-    type: 3}
   defaultAssetPreview: {fileID: 2800000, guid: e5d81b5dfa8c0c44b87bab8acbca7c54, type: 3}
   postProcessLogo: {fileID: 2800000, guid: ccfde5e58162c0c468bf985aaca2eb4c, type: 3}
   placementToolTexture: {fileID: 2800000, guid: 77f6cd65eb0caa7458dd006bf024e392,
@@ -28,5 +26,4 @@ MonoBehaviour:
   rotateRightToolTexture: {fileID: 2800000, guid: 6ae9ee24144b364419145ece9f2eac02,
     type: 3}
   prefabsDirectory: Assets/HexWorld/Prefabs/Tiles
-  tileSetSaveDirectory: Assets/HexWorld/TileSets
-  mapSaveDirectory: Assets/HexWorld/SavedMaps
+  saveDirectory: Assets/HexWorld/SavedMaps
