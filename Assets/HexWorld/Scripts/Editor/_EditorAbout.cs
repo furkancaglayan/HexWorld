@@ -1,16 +1,19 @@
-﻿using UnityEditor;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public class _EditorAbout : EditorWindow {
 
-    private static EditorConfiguration _configuration;
-
-    [MenuItem("HexWorld/About Us")]
+    private static Texture2D birchgamesLogo;
+    private static readonly string birchgamesLogoPath = "Assets/HexWorld/Textures/birchgames_logo.png";
+    [MenuItem("HexWorld/_EditorAbout Us", priority =1)]
     public static void Init()
     {
-        _configuration = (EditorConfiguration)AssetDatabase.LoadAssetAtPath("Assets/HexWorld/Configuration/BaseSettings.asset", typeof(EditorConfiguration));
+
+        birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
         _EditorAbout window = (_EditorAbout)GetWindow(typeof(_EditorAbout));
         window.autoRepaintOnSceneChange = true;
-        window.titleContent = new GUIContent("_EditorAbout Us", _configuration.birchGamesLogo);
+        window.titleContent = new GUIContent("_EditorAbout Us", birchgamesLogo);
         window.Show(false);
 
         window.maxSize = new Vector2(450, 600);
@@ -18,7 +21,12 @@ public class _EditorAbout : EditorWindow {
 
 
     }
-    
+    public static void OnEnable()
+    {
+        
+
+        birchgamesLogo = (Texture2D)AssetDatabase.LoadAssetAtPath(birchgamesLogoPath, typeof(Texture2D));
+    }
 
   
     private void OnGUI()
@@ -44,8 +52,8 @@ public class _EditorAbout : EditorWindow {
         GUI.color = new Color(255F / 255F, 211F / 255F, 89F / 255F, .8F);
         GUILayout.BeginHorizontal(logoStyle, GUILayout.Width(position.width), GUILayout.Height(128));
         GUILayout.Space(position.width / 2 - 148);
-        /*GUILayout.Label(IconPack.GetBirchgamesLogo(), GUILayout.Width(128), GUILayout.Height(128));
-        GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));*/
+        GUILayout.Label(IconPack.GetBirchgamesLogo(), GUILayout.Width(128), GUILayout.Height(128));
+        GUILayout.Label(IconPack.GetHexworldLogo(), GUILayout.Width(128), GUILayout.Height(128));
         GUILayout.EndHorizontal();
 
 

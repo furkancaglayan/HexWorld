@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 699493ecf9520d84890426ae0a385989, type: 3}
+  m_Name: Desert
+  m_EditorClassIdentifier: 
+  path: Assets/HexWorld/Prefabs/Tiles/Mountains
+  ecosystemName: Mountains
+  hexWorldPrefabSet:
+    folders:
+    - folderPath: Assets/HexWorld/Prefabs/Tiles/Mountains
+      tooltip: Mountains
+      texture: {fileID: 2800000, guid: e5d81b5dfa8c0c44b87bab8acbca7c54, type: 3}
+      content:
+        m_Text: Moun..
+        m_Image: {fileID: 2800000, guid: e5d81b5dfa8c0c44b87bab8acbca7c54, type: 3}
+        m_Tooltip: Mountains
+      prefabs:
+      - path: Assets/HexWorld/Prefabs/Tiles/Mountains\Mountain_Tile_01.prefab
+        shortName: Mountain_Tile_01
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Mountains/Mountain_Tile_01.prefab
+        texture: {fileID: 0}
+        object: {fileID: 1290635035201136, guid: 84442d3cf203dc7499433ced015143fd,
+          type: 3}
+        content:
+          m_Text: Mountain_Tile_01
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - path: Assets/HexWorld/Prefabs/Tiles/Mountains\Mountain_Tile_02.prefab
+        shortName: Mountain_Tile_02
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Mountains/Mountain_Tile_02.prefab
+        texture: {fileID: 0}
+        object: {fileID: 1252195924364194, guid: c918616637adbec43a8fefa495a1afd5,
+          type: 3}
+        content:
+          m_Text: Mountain_Tile_02
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - path: Assets/HexWorld/Prefabs/Tiles/Mountains\Mountain_Tile_03.prefab
+        shortName: Mountain_Tile_03
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Mountains/Mountain_Tile_03.prefab
+        texture: {fileID: 0}
+        object: {fileID: 1324879028371956, guid: 5b176bf335c88764781aefaf80aec8c9,
+          type: 3}
+        content:
+          m_Text: Mountain_Tile_03
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+      - path: Assets/HexWorld/Prefabs/Tiles/Mountains\Volcano_Tile.prefab
+        shortName: Volcano_Tile
+        toolTip: Assets/HexWorld/Prefabs/Tiles/Mountains/Volcano_Tile.prefab
+        texture: {fileID: 0}
+        object: {fileID: 1472069065961818, guid: 718e692f082213e47820172681b4e351,
+          type: 3}
+        content:
+          m_Text: Volcano_Tile
+          m_Image: {fileID: 0}
+          m_Tooltip: 
+    path: Assets/HexWorld/Prefabs/Tiles/Mountains
