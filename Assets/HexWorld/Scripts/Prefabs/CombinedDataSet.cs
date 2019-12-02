@@ -6,11 +6,12 @@ using UnityEngine;
 public class CombinedDataSet : Dataset
 {
     [SerializeField] public List<PropFolder> folders;
-    public void LoadPrefabs(string path)
+
+    public void LoadPrefabs(string path,bool singleFolder)
     {
-        folders = CreateDataFolders(path);
+        folders = singleFolder?CreateSingleDataFolder(path): CreateMultipleDataFolders(path);
     }
-    private List<PropFolder> CreateDataFolders(string root)
+    private List<PropFolder> CreateMultipleDataFolders(string root)
     {
         string[] folders = Directory.GetDirectories(root);
         List<PropFolder> folderList = new List<PropFolder>();
@@ -22,22 +23,19 @@ public class CombinedDataSet : Dataset
         return folderList;
     }
 
-
-    public string[] GetFolderNames()
+    private List<PropFolder> CreateSingleDataFolder(string root)
     {
-        string[] names = new string[folders.Count];
-        int index = 0;
-        foreach (var VARIABLE in folders)
-            names[index++] = VARIABLE.path.Split('/')[VARIABLE.path.Split('/').Length - 1];
-        return names;
+        string[] files = Directory.GetFiles(root);
+        List<Prop> propList = new List<Prop>();
+        foreach (var variable in files)
+            propList.Add(Factory.CreateProp(variable));
+
+        List<PropFolder> propFolders = new List<PropFolder>();
+        PropFolder rootFolder = Factory.CreatePropFolder();
+        //set props to the rootFolder;
+        propFolders.Add(rootFolder);
+
+        return propFolders;
     }
 
-    public override int GetPropCount()
-    {
-        int count = 0;
-        foreach (var VARIABLE in folders)
-            count += VARIABLE.props.Count;
-        return count;
-    }
 }
-

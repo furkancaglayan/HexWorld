@@ -31,8 +31,4 @@ public class PropFolder
         this.props = newProps;
     }
 
-    public void DeleteProp(int index)
-    {
-        props.RemoveAt(index);
-    }
 }
