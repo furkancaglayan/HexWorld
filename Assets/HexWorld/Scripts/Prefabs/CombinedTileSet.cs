@@ -39,13 +39,5 @@ public class CombinedTileSet : TileSet
             count += VARIABLE.props.Count;
         return count;
     }
-
-    public override GUIContent[] GetFolderContents()
-    {
-        List<GUIContent> contents = new List<GUIContent>();
-        for (int i = 0; i < folders.Count; i++)
-            contents.Add(new GUIContent(folders[i].name));
-        return contents.ToArray();
-    }
 }
 

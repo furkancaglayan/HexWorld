@@ -121,10 +121,4 @@ public static class _EditorUtility
         }
         return true;
     }
-
-
-    public static void FocusOnObject(Object @object)
-    {
-        EditorGUIUtility.PingObject(@object);
-    }
 }
