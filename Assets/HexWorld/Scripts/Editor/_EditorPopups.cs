@@ -2,14 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace HexWorld
+public static class _EditorPopups
 {
-    public static class _EditorPopups
+    public static void ShowMessage(string title,string message)
     {
-        public static void ShowMessage(string title, string message)
-        {
-            EditorUtility.DisplayDialog(title, message, "Ok");
-        }
+        EditorUtility.DisplayDialog(title,message,"Ok");
     }
-
 }

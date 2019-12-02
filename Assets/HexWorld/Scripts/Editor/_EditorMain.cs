@@ -10,9 +10,6 @@ using UnityEngine.Rendering.PostProcessing;
 #pragma warning disable 0168 
 #pragma warning disable 0414 
 
-namespace HexWorld
-{
-
 public class _EditorMain : EditorWindow
 {
     private float minHeight = 10, maxHeight = 100, rotSpeed = 60, Speed = 10, ScrollSensitivity = .3f;
@@ -1181,5 +1178,4 @@ GUILayout.Space(10);
     }*/
 
 #endregion
-}    
 }
