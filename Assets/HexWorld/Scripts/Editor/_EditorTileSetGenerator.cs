@@ -141,7 +141,7 @@ public class _EditorTileSetGenerator : EditorWindow
             g.Space(10);
             GUI.color = _color1;
             if (g.Button("Create TileSet", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
-                _EditorTileSetUtility.CreateCombinedDataSet(_path,_tilesetName,_tilesetEcosystem,_savePath
+                _EditorDatasetUtility.CreateCombinedDataSet(_path,_tilesetName,_tilesetEcosystem,_savePath
                     );
             GUI.color = Color.white;
                 
