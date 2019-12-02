@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
-[Serializable]
+
 public class HexWorldFolder
 {
     public string folderPath;
@@ -13,7 +12,7 @@ public class HexWorldFolder
     public Texture2D texture;
     public GUIContent content;
 
-    [SerializeField]public List<HexWorldPrefab> prefabs;
+    public List<HexWorldPrefab> prefabs;
 
     public HexWorldFolder(string folderPath,Texture2D texture)
     {
@@ -39,14 +38,7 @@ public class HexWorldFolder
     }
 
 
-    public void DeletePrefab(int index)
-    {
-        prefabs.RemoveAt(index);
-    }
-    public void DeletePrefab(HexWorldPrefab item)
-    {
-        prefabs.Remove(item);
-    }
+
     private List<HexWorldPrefab> CreatePrefabs(string folderPath,Texture2D texture)
     {
         string[] files = Directory.GetFiles(folderPath);

@@ -6,10 +6,9 @@ using UnityEngine;
 #pragma warning disable 0168 
 #pragma warning disable 0219
 
-[Serializable]
 public class HexWorldPrefabSet
 {
-    [SerializeField] public List<HexWorldFolder> folders;
+    public List<HexWorldFolder> folders;
     public string path;
 
     public HexWorldPrefabSet(string root)
@@ -68,7 +67,6 @@ public class HexWorldPrefabSet
         List<HexWorldFolder> folderList = new List<HexWorldFolder>();
         foreach (var variable in folders)
             folderList.Add(Factory.create_datafolder(variable, texture));
-        folderList.Add(Factory.create_datafolder(root, texture));
         return folderList;
     }
 

@@ -39,10 +39,5 @@ public class Enums  {
         DARK
     }
 
-    public enum PrefabType
-    {
-        PREFAB,
-        TILE,
-        BOTH
-    }
+
 }

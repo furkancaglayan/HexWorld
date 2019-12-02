@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+
 public static class BrushEditor
 {
     
@@ -40,6 +41,14 @@ public static class BrushEditor
                 Handles.DrawLine(tileLst[i].corners[j], tileLst[i].corners[j] + new Vector3(0, rad, 0));
         }
        
+    }
+    public static void DrawBrush(HexWorldTile tile, Enums.BrushType brushType, float size,Color col)
+    {
+        Handles.color = col;
+        DrawHexagon(tile, 0);
+        DrawHexagon(tile, size);
+        for (int i = 0; i < 6; i++)
+            Handles.DrawLine(tile.corners[i], tile.corners[i] + new Vector3(0, size, 0));
     }
 
     private static void DrawHexagon(HexWorldTile tile, float size)

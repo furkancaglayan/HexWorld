@@ -261,7 +261,7 @@ public class HexWorldEditor : EditorWindow
 
 #region Builtin Functions
 
-    [MenuItem("HexWorld/Map Generator", priority = -1)]
+    [MenuItem("Window/HexWorld/Create Worlds", priority = 0)]
     public static void Init()
     {
         EditorUtils.AddTag("HexWorld");

@@ -6,7 +6,7 @@ public class About : EditorWindow {
 
     private static Texture2D birchgamesLogo;
     private static readonly string birchgamesLogoPath = "Assets/HexWorld/Textures/birchgames_logo.png";
-    [MenuItem("HexWorld/About Us", priority =1)]
+    [MenuItem("Window/HexWorld/About Us", priority =1)]
     public static void Init()
     {
 

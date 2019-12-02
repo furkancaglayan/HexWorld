@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-[Serializable]
 public class HexWorldPrefab 
 {
 
-    public string fullPath;
-    public string shortName;
-    public string toolTip;
-    public Texture2D texture;
+    private string fullPath;
+    private string shortName;
+    private string toolTip;
+    private Texture2D texture;
 
-    public Object objectReference;
+    private Object objectReference;
 
-    public GUIContent prefabContent;
+    private GUIContent prefabContent;
 
     public HexWorldPrefab(string fullPath)
     {
