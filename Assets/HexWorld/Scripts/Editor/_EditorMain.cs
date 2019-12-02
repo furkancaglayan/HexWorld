@@ -118,7 +118,7 @@ public class _EditorMain : EditorWindow
 
     private void SaveMapData(string savePath, string mapName, Map data)
     {
-        bool valid = _EditorUtility.CheckIfDirectoryIsValid(savePath, false);
+        bool valid = Utils.CheckIfDirectoryIsValid(savePath, false);
         if (!valid)
             return;
 
@@ -132,8 +132,8 @@ public class _EditorMain : EditorWindow
             {
                 if (data.IsEmpty())
                     EditorUtility.DisplayDialog("Map is empty.", "Add some tiles first.", "Ok");
-                /*else
-                    _EditorUtility.SaveMap(savePath, mapName, data);*/
+                else
+                    _EditorUtils.SaveMap(savePath, mapName, data);
             }
         }
     }
@@ -273,7 +273,7 @@ public class _EditorMain : EditorWindow
     [MenuItem("HexWorld/Map GeneratorOld", priority = -1)]
     public static void Init()
     {
-        _EditorUtility.AddTag("HexWorld");
+        _EditorUtils.AddTag("HexWorld");
         _EditorMain window = (_EditorMain) GetWindow(typeof(_EditorMain));
 
         //IconPack.Load();
@@ -865,7 +865,7 @@ public class _EditorMain : EditorWindow
                     GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
                 if (GUILayout.Button("Check Directory", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    _EditorUtility.CheckIfDirectoryIsValid("Assets/" + MapsDirectory, true);
+                    Utils.CheckIfDirectoryIsValid("Assets/" + MapsDirectory, true);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -895,7 +895,7 @@ public class _EditorMain : EditorWindow
                     GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
                 if (GUILayout.Button("Check Directory", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    _EditorUtility.CheckIfDirectoryIsValid("Assets/" + MapPrefabDirectory, true);
+                    Utils.CheckIfDirectoryIsValid("Assets/" + MapPrefabDirectory, true);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -904,8 +904,8 @@ public class _EditorMain : EditorWindow
                 GameObjectName = GUILayout.TextField(GameObjectName, EditorStyles.textField,
                     GUILayout.Width(position.width - 380));
                 GUI.color = colorSetOne;
-                /*if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
-                    _EditorUtility.SavePrefab(GameObjectName, MapPrefabDirectory, _map);*/
+                if (GUILayout.Button("Save as GameObject", EditorStyles.toolbarButton, GUILayout.Width(290)))
+                    _EditorUtils.SavePrefab(GameObjectName, MapPrefabDirectory, _map);
                 GUI.color = editorColor;
                 GUILayout.EndHorizontal();
 
@@ -1015,7 +1015,7 @@ public class _EditorMain : EditorWindow
             if (GUILayout.Button("Add Effects", EditorStyles.toolbarButton, GUILayout.Width(194)))
             {
                 HexWorldEffect effect = GetEffect(colorScheme);
-                _EditorUtility.AddEffect(effect);
+                _EditorUtils.AddEffect(effect);
             }
             GUILayout.EndHorizontal();
 
@@ -1027,7 +1027,7 @@ public class _EditorMain : EditorWindow
                 (HexWorldEffect)EditorGUILayout.ObjectField(customEffect,typeof(HexWorldEffect),false, GUILayout.Width(position.width - 340));
             if (GUILayout.Button("Add Effects", EditorStyles.toolbarButton, GUILayout.Width(194)))
             {
-                _EditorUtility.AddEffect(customEffect);
+                _EditorUtils.AddEffect(customEffect);
             }
             GUILayout.EndHorizontal();
 

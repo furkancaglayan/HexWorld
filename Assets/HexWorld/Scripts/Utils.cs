@@ -48,7 +48,52 @@ public static class Utils  {
 
  
 
-    
+    public static bool CheckIfDirectoryIsValid(string path,bool showFinalDialog)
+    {
+
+        string title = "";
+        string message = "";
+        bool retVal = false;
+
+        try
+        {
+            Directory.GetFiles(path);
+            retVal = true;
+        }
+        catch (DirectoryNotFoundException e)
+        {
+            title = "Directory Exception";
+            message = e.Message + "\n" + e.HelpLink;
+            retVal= false;
+        }
+        catch (UnauthorizedAccessException e)
+        {
+            title = "Directory Exception";
+            message = "Invalid Directory Path";
+            retVal = false;
+        }
+        catch (ArgumentException e)
+        {
+            title = "Directory Exception";
+            message = e.Message + "\n" + e.HelpLink;
+            retVal = false;
+
+        }
+        catch (IOException e)
+        {
+            title = "Directory Exception";
+            message = "Invalid Directory Path";
+            retVal = false;
+            
+        }
+        if (!retVal)
+            ShowDialog(title, message, "Ok");
+        else if(showFinalDialog)
+            ShowDialog("Valid", "Directory seems to be valid.", "Ok");
+
+        return retVal;
+
+    }
 
 
     public static string CreateName(int length)
