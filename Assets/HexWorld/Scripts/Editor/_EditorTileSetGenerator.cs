@@ -45,16 +45,6 @@ public class _EditorTileSetGenerator : EditorWindow
     private string _path = _configuration.prefabsDirectory;
     private string _savePath = _configuration.saveDirectory;
     #endregion
-
-    #region LayeredFields
-
-    private string[] layerNames = {"Tiling Layer","First Layer","Second Layer","Third Layer" };
-
-    private string[] layerPaths =
-    {
-        "Assets/HexWorld", "Assets/HexWorld", "Assets/HexWorld", "Assets/HexWorld"
-    };
-    #endregion
     #region ONGUI
     private void OnGUI()
     {
@@ -180,42 +170,10 @@ public class _EditorTileSetGenerator : EditorWindow
 
             g.BeginHorizontal(EditorStyles.helpBox, g.Width(position.width - 30));
             g.Space(10);
-            g.Label("Layered TileSet allows you to define prefabs for 4 different layers. " +
-                    "First Layer is for tiles, and other tiles are for other props. ", textstyle);
+            g.Label("Layered TileSet allows you to buraya bilgi gelecek ehehehhehe", textstyle);
             g.EndHorizontal();
             g.Space(10);
 
-
-
-            for (int i = 0; i < 4; i++)
-            {
-                g.BeginHorizontal();
-                g.Space(10);
-                g.Label(layerNames[i]+" Path:", textstyle, g.Width(labelWidth));
-                layerPaths[i] = g.TextField(layerPaths[i], textfield, g.Width(FieldWidth - 50));
-                g.Space(10);
-                GUI.color = _color2;
-                if (g.Button(new GUIContent("F", "Check if directory is valid!"), EditorStyles.toolbarButton, g.Width(40)))
-                    _EditorUtility.CheckIfDirectoryIsValid(layerPaths[i], true);
-                GUI.color = Color.white;
-                g.EndHorizontal();
-            }
-
-
-
-
-
-
-
-            g.Space(4);
-            g.BeginHorizontal();
-            g.Space(10);
-            GUI.color = _color1;
-            if (g.Button("Create TileSet", EditorStyles.toolbarButton, g.Width(SecondFieldWidth)))
-                _EditorTileSetUtility.CreateLayeredTileSet(_tilesetName,_tilesetEcosystem,_savePath, layerPaths);
-            GUI.color = Color.white;
-
-            g.EndHorizontal();
 
             g.EndVertical();
         }

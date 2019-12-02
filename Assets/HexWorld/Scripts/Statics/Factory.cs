@@ -24,19 +24,15 @@ public static class Factory  {
 
         return new Map(serialized, mat);
     }*/
-    public static LayeredTileSet CreateLayeredTileSet(string name,string ecosystem,string[] paths)
+    public static LayeredTileSet CreateLayeredTileSet()
     {
         LayeredTileSet set = (LayeredTileSet)ScriptableObject.CreateInstance(typeof(LayeredTileSet));
-        set.name = name;
-        set.ecosystem = ecosystem;
-        set.CreateLayers(paths);
+        set.CreateLayers();
         return set;
     }
-    public static CombinedTileSet CreateCombinedTileSet(string name, string ecosystem, string path)
+    public static CombinedTileSet CreateCombinedTileSet(string path)
     {
         CombinedTileSet set = (CombinedTileSet)ScriptableObject.CreateInstance(typeof(CombinedTileSet));
-        set.ecosystem = ecosystem;
-        set.name = name;
         set.LoadPrefabs(path);
         return set;
     }

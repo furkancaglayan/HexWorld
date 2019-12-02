@@ -6,28 +6,24 @@ using UnityEngine;
 public class LayeredTileSet : TileSet
 {
 
-    [SerializeField] public PropFolder[] layers;
 
-    public void CreateLayers(string[] paths)
+    [SerializeField] public PropFolder tileLayer;
+    [SerializeField] public PropFolder firstLayer;
+    [SerializeField] public PropFolder secondLayer;
+    [SerializeField] public PropFolder thirdLayer;
+
+
+    [SerializeField] public TileUpgrade tileUpgrade;
+
+    public void CreateLayers()
     {
-        PropFolder A = Factory.CreatePropFolder("Tile Layer");
-        PropFolder B = Factory.CreatePropFolder("First Layer");
-        PropFolder C = Factory.CreatePropFolder("Second Layer");
-        PropFolder D = Factory.CreatePropFolder("Third Layer");
-
-        layers = new[] {A, B, C, D};
-
-        for (int i = 0; i < 4; i++)
-            layers[i].Create(paths[i]);
+        tileLayer = Factory.CreatePropFolder("Tile Layer");
+        firstLayer = Factory.CreatePropFolder("First Layer");
+        secondLayer = Factory.CreatePropFolder("Second Layer");
+        thirdLayer = Factory.CreatePropFolder("Third Layer");
     }
     public override int GetPropCount()
     {
-        if (layers == null)
-            return 0;
-        int count = 0;
-        foreach (var layer in layers)
-            if (layer != null)
-                count += layer.props.Count;
-        return count;
+        throw new System.NotImplementedException();
     }
 }

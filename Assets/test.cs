@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class test : MonoBehaviour
 {
-    public GameObject myObject, otherObject;
-
+    public CombinedTileSet set;
     void Start()
     {
-        Type collidertype = myObject.GetComponent<Collider2D>().GetType();
-        Component component=otherObject.AddComponent(collidertype);
+        set = (CombinedTileSet)ScriptableObject.CreateInstance(typeof(CombinedTileSet));
+        set.LoadPrefabs("Assets/HexWorld/Prefabs/Tiles");
+        //folder.Create("Assets/HexWorld/Prefabs/Tiles/Forest Tiles");
     }
 
     // Update is called once per frame

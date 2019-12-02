@@ -21,17 +21,15 @@ public class Map
         this.mapSize = mapSize;
         this.hexRadius = hexRadius;
 
+
         int chunk_capacity = 20;
         chunkCount = DetermineChunkSize((int)mapSize, chunk_capacity);
 
         Create2DChunkArray(chunkCount, chunk_capacity, hexRadius, (int)mapSize);
-        _mapName = CreateObjectName();
+        this._mapName = CreateObjectName();
         gameObject = CreateSceneReferences( mat, _mapName, chunkList, chunk_capacity);
-#if UNITY_EDITOR
-        UnityEditor.EditorUtility.ClearProgressBar();
-#endif
     }
-
+ 
     /// <summary>
     /// Given a vector3 <paramref name="pos"/>, find the Chunk object that includes it.
     /// </summary>
@@ -100,10 +98,9 @@ public class Map
         float chunk_short = Constants.SHORT_SIDE * chunk_capacity * hex_radius;
         float chunk_long = Constants.LONG_SIDE * chunk_capacity * hex_radius * 3 / 4;
 
+        int cloneMapSize = mapSize * mapSize;
         chunkList = new Chunk[chunk_count * chunk_count];
 
-
-        string info = "";
         for (int i = 0; i < chunk_count; i++)
         {
             for (int j = 0; j < chunk_count; j++)
@@ -114,20 +111,9 @@ public class Map
                 Chunk chunk = Factory.create_chunk(chunk_capacity, i, j, left_down_corner, hexRadius);
                 chunk.CreateTiles(this);
                 AddChunk(i,j, chunk);
-
-#if UNITY_EDITOR
-                float progress = ( i * (float)chunk_count + j) / ((chunkCount) * (chunkCount));
-                info= (i * chunk_count + j).ToString()+"/"+ ((chunkCount) * (chunkCount)).ToString();
-                string title = "Creating Map...";
-                UnityEditor.EditorUtility.DisplayProgressBar(title, info,progress);
-#endif
             }
 
         }
-#if UNITY_EDITOR
-        UnityEditor.EditorUtility.DisplayProgressBar("Finishing Up", info, 1f);
-#endif
-
     }
     /// <summary>
     /// Returns a unique map name.
