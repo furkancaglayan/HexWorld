@@ -9,11 +9,11 @@ namespace HexWorld
     public class CombinedTileSet : TileSet
     {
         [SerializeField] public List<PropFolder> folders;
-        public virtual void LoadPrefabs(string path)
+        public void LoadPrefabs(string path)
         {
             folders = CreateDataFolders(path);
         }
-        protected virtual List<PropFolder> CreateDataFolders(string root)
+        private List<PropFolder> CreateDataFolders(string root)
         {
             string[] folders = Directory.GetDirectories(root);
             List<PropFolder> folderList = new List<PropFolder>();

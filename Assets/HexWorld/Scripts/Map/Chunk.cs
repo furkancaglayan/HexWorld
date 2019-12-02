@@ -26,7 +26,7 @@ namespace  HexWorld
 
 
 
-        public Chunk(int chunk_size, int id_x, int id_y, float gridRadius)
+        public Chunk(int chunk_size, int id_x, int id_y, Vector3 leftDownCorner, float gridRadius)
         {
             this.capacity = chunk_size;
             this.idX = id_x;
@@ -34,7 +34,7 @@ namespace  HexWorld
             this.gridRadius = gridRadius;
 
 
-           
+            CreateCorners(leftDownCorner, capacity);
 
 
         }
@@ -43,7 +43,7 @@ namespace  HexWorld
         /// </summary>
         /// <param name="left_down_corner"></param>
         /// <param name="chunkSize"></param>
-        public void CreateCorners(Vector3 leftDownCorner, int chunkSize)
+        private void CreateCorners(Vector3 leftDownCorner, int chunkSize)
         {
             _chunkCorners = new Vector3[4];
             _chunkCorners[0] = leftDownCorner;
@@ -66,7 +66,7 @@ namespace  HexWorld
         /// <param name="mat"></param>
         /// <param name="hexRadius"></param>
         /// <returns></returns>
-        public virtual GameObject CreateSceneReference(int chunkCapacity, Material mat, float hexRadius)
+        public GameObject CreateSceneReference(int chunkCapacity, Material mat, float hexRadius)
         {
             gameObject = new GameObject("Chunk_" + idX.ToString() + idY.ToString())
             {
@@ -95,7 +95,7 @@ namespace  HexWorld
         /// <param name="corners"></param>
         /// <param name="hex_radius"></param>
         /// <returns>2d list of tiles.</returns>
-        public virtual void CreateTiles(Map map)
+        public void CreateTiles(Map map)
         {
             tiles = new Tile[capacity * capacity];
 

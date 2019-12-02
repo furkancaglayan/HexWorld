@@ -356,11 +356,13 @@ namespace HexWorld
                 currentPrefab = (Object)EditorGUILayout.ObjectField(currentPrefab, typeof(Object), false, GUILayout.Width(position.width - 180));
                 GUILayout.EndHorizontal();*/
 
+
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Tile Set:", txtStyle, GUILayout.Width(150));
                 _tileSet = (TileSet)EditorGUILayout.ObjectField(_tileSet, typeof(TileSet), false,
                     GUILayout.Width(position.width - 180));
                 GUILayout.EndHorizontal();
+
 
                 if (_tileSet != null)
                 {

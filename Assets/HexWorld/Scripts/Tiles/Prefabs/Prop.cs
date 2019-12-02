@@ -17,16 +17,17 @@ namespace HexWorld
 
         public Prop(string path)
         {
-            this.path = path.Replace("\\", "/"); ;
-             
+            string correctedPath = path.Replace("\\", "/");
+            this.path = correctedPath;
+            @object = LoadObject(correctedPath);
         }
 
-        public virtual void LoadObject()
+        private Object LoadObject(string objPath)
         {
 #if UNITY_EDITOR
-            @object= UnityEditor.AssetDatabase.LoadAssetAtPath(path, typeof(Object));
+            return UnityEditor.AssetDatabase.LoadAssetAtPath(objPath, typeof(Object));
 #else
-        @object null;
+        return null;
 #endif
         }
     }
